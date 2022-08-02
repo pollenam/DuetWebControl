@@ -21,8 +21,8 @@ export default {
             Control: {
                 Dashboard: {
                     icon: 'mdi-view-dashboard',
-                    caption: 'menu.control.dashboard',
-                    path: '/'
+                    caption: 'Dashboard (legacy)',
+                    path: '/legacy'
                 }
             }
         });

@@ -62,6 +62,7 @@ const store = new Vuex.Store({
 				const module = machine(connectorInstance, pluginCacheFields, pluginSettingFields);
 				commit('addMachine', { hostname, module });
 				connectorInstance.register(module);
+				console.log("test");
 
 				commit('setSelectedMachine', hostname);
 				logGlobal('success', i18n.t('events.connected', [hostname]));
@@ -276,7 +277,8 @@ for (const submodule in store._modules.root._children.machine._children) {
 
 // Debug function to replicate different machine states
 if (process.env.NODE_ENV !== 'production') {
-	window.updateMachineStore = function(newStore) {
+	window.updateMachineStore = function (newStore) {
+		console.log("test");
 		store.dispatch('machine/update', newStore);
 	}
 }

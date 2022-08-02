@@ -610,6 +610,7 @@ export default {
 		},
 		jobControl: {
 			caption: 'Job Control',
+			running: 'Job Running',
 			cancelJob: 'Cancel Job',
 			cancelPrint: 'Cancel Print',
 			cancelSimulation: 'Cancel Simulation',

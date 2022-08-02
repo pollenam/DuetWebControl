@@ -5,6 +5,7 @@ import VueRouter from 'vue-router'
 
 import Status from './Control/Status.vue'
 import Dashboard from './Control/Dashboard.vue'
+import DashboardPollen from './Control/DashboardPollen.vue'
 import Console from './Control/Console.vue'
 
 import Filaments from './Files/Filaments.vue'
@@ -182,6 +183,7 @@ export function registerSettingTab(general, name, component, caption, translated
 // Control
 Vue.use(Status)
 Vue.use(Dashboard)
+Vue.use(DashboardPollen)
 Vue.use(Console)
 
 // Files
