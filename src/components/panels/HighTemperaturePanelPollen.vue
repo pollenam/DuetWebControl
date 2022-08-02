@@ -26,10 +26,7 @@
 						XX / <tool-input style="display: inline-block;"  :tool="tool" :tool-heater-index="toolHeaterIndex" active></tool-input>
 					</span>
 				</v-col>
-
 			</v-row>
-
-
 		</v-card-text>
 	</v-card>
 </template>

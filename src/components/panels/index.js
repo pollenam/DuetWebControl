@@ -36,7 +36,9 @@ import SpindleSpeedPanel from './SpindleSpeedPanel'
 
 import FFFDashboardPanelPollen from './FFFDashboardPanelPollen.vue'
 import JobControlPanelPollen from './JobControlPanelPollen.vue'
-import HighTemperaturePollen from './HighTemperaturePollen.vue'
+import HighTemperaturePanelPollen from './HighTemperaturePanelPollen.vue'
+import LightFactorPanelPollen from './LightFactorPanelPollen.vue'
+import BuildSurfacePanelPollen from './BuildSurfacePanelPollen.vue'
 
 Vue.component('atx-panel', ATXPanel)
 Vue.component('extrude-panel', ExtrudePanel)
@@ -71,5 +73,7 @@ Vue.component('cnc-dashboard-panel', CNCDashboardPanel)
 Vue.component('spindle-speed-panel', SpindleSpeedPanel)
 
 Vue.component('job-control-panel-pollen', JobControlPanelPollen)
-Vue.component('high-temperature-panel-pollen', HighTemperaturePollen)
+Vue.component('high-temperature-panel-pollen', HighTemperaturePanelPollen)
 Vue.component('fff-dashboard-pollen-panel', FFFDashboardPanelPollen)
+Vue.component('light-factor-pollen-panel', LightFactorPanelPollen)
+Vue.component('build-surface-pollen-panel', BuildSurfacePanelPollen)
