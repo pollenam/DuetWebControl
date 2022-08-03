@@ -12,19 +12,24 @@ import router from './routes'
 import store from './store'
 import './registerServiceWorker.js'
 
+import light from './theme'
+
+import './scss/overrides.scss'
+
 Vue.config.productionTip = false
 Vue.use(Vuetify)
 
 export default new Vue({
-	el: '#app',
-	i18n,
-	render: h => h(App),
-	router,
-	store,
-	vuetify: new Vuetify({
-		icons: {
-			iconfont: 'mdiSvg',
-		},
-		lang: { t: (key, ...params) => i18n.t(key, params) }
-	})
+  el: '#app',
+  i18n,
+  render: h => h(App),
+  router,
+  store,
+  vuetify: new Vuetify({
+    icons: {
+      iconfont: 'mdiSvg',
+    },
+    lang: { t: (key, ...params) => i18n.t(key, params) },
+    theme: { themes: { light: light } }
+  })
 })

@@ -1,0 +1,38 @@
+$white: #fff;
+
+div[data-app='true'] {
+  background: url('../assets/background.jpg') no-repeat center center fixed !important;
+  background-size: cover;
+}
+
+.theme--light.v-app-bar.v-toolbar.v-sheet {
+  background-color: #272727;
+  color: $white;
+}
+
+.theme--light.v-btn:not(.v-btn--has-bg) {
+  color: inherit;
+}
+
+.theme--light.v-sheet {
+  background-color: rgba(255, 255, 255, 0.17);
+
+  .v-card__title {
+    background-color: rgba(255, 255, 255, 0.54);
+  }
+}
+
+.theme--light.v-btn.v-btn--has-bg {
+  /* background-color: #fee5bd; */
+  /* border-color: #ecca92; */
+  /* color: #7f7561; */
+  /* color: #2c2721; */
+}
+
+.v-dialog {
+  background-color: $white;
+}
+
+.theme--light.v-menu__content {
+  background-color: $white;
+}

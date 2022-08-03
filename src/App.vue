@@ -96,7 +96,7 @@ textarea {
 
 			<v-spacer/>
 
-			<code-input class="mx-3 hidden-sm-and-down"/>
+      <v-img src="./assets/honeyprint-sx2-logo.png" contain height="45px"></v-img>
 
 			<v-spacer/>
 

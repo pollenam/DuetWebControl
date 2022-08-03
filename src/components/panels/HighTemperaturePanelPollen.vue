@@ -1,13 +1,13 @@
 
 <template>
-	<v-card>
-		<v-card-title class="pb-1">
+	<v-card :elevation="0">
+		<v-card-title>
 			<v-col>
 				High Temperature
 			</v-col>
 		</v-card-title>
 
-		<v-card-text class="pt-0">
+		<v-card-text>
 			<v-row dense>
 				<v-col class="d-flex flex-column">
 					<strong>
