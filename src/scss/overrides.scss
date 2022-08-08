@@ -10,7 +10,7 @@ div[data-app='true'] {
   color: $white;
 }
 
-.theme--light.v-btn:not(.v-btn--has-bg) {
+.theme--light.v-btn:not(.v-btn--has-bg), .theme--light.v-icon {
   color: inherit;
 }
 
@@ -35,4 +35,9 @@ div[data-app='true'] {
 
 .theme--light.v-menu__content {
   background-color: $white;
+}
+
+.v-toolbar-pollen-item {
+  display: flex;
+  align-items: center;
 }

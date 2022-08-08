@@ -572,10 +572,13 @@ export default {
 	},
 	panel: {
 		atx: {
-			caption: 'ATX Power',
+			caption: 'VPower',
 			on: 'On',
 			off: 'Off'
 		},
+    doors: {
+      caption: 'Doors'
+    },
 		babystepping: {
 			caption: 'Z Babystepping',
 			current: 'Current Offset: {0}'

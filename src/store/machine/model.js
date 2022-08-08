@@ -218,6 +218,7 @@ export class MachineModel {
 	state = {
 		atxPower: null,
 		atxPowerPort: null,
+    doorsLocked: null, // FIXME: Compute initial state ?
         beep: null,
 		currentTool: -1,
         deferredPowerDown: null,

@@ -93,6 +93,20 @@ export default function(connector, pluginCacheFields = {}, pluginSettingFields =
 				}
 			},
 
+      async runFile({ dispatch }, fileNameOrPath) {
+        if (this.uiFrozen) {
+          return;
+        }
+
+        try {
+          dispatch('sendCode', `M98 P"${fileNameOrPath}"`);
+        } catch (e) {
+          if (!(e instanceof DisconnectedError)) {
+            console.warn(e);
+          }
+        }
+      },
+
 			// Upload one or more files. Payload can be either:
 			// {
 			//   filename: Name of the file to upload,

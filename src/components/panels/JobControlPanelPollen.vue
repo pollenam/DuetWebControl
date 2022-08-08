@@ -2,6 +2,7 @@
 <template>
 	<v-card :elevation="0">
 		<v-card-title>
+			<v-row dense>
 			<v-col>
 				{{ $t('panel.jobControl.running') }} : {{ printFile }}
 			</v-col>
@@ -16,11 +17,12 @@
 					<v-icon class="mr-1">mdi-stop</v-icon> {{ cancelText }}
 				</code-btn>
 			</v-col>
-			<v-col>
+			<v-col v-if="!isPrinting && processAnotherCode">
 				<code-btn v-if="!isPrinting && processAnotherCode" color="success" block :code="processAnotherCode">
 					<v-icon class="mr-1">mdi-restart</v-icon> {{ processAnotherText }}
 				</code-btn>
 			</v-col>
+      </v-row>
 		</v-card-title>
 
 		<v-card-text>

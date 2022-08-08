@@ -485,10 +485,13 @@ export default {
 	},
 	panel: {
 		atx: {
-			caption: 'Contrôle de l\'alim',
+			caption: 'VPower',
 			on: 'On',
 			off: 'Off'
 		},
+    doors: {
+      caption: 'Portes'
+    },
 		babystepping: {
 			caption: 'Z Babystepping',
 			current: 'Décalage Actuel: {0}'

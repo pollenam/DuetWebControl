@@ -8,6 +8,7 @@ import ListEditor from './ListEditor.vue'
 import NotificationDisplay from './NotificationDisplay.vue'
 import PanelLink from './PanelLink.vue'
 import StatusLabel from './StatusLabel.vue'
+import StatusLabelPollen from './StatusLabelPollen.vue'
 import ThumbnailImg from './ThumbnailImg.vue'
 
 Vue.component('directory-breadcrumbs', DirectoryBreadcrumbs)
@@ -16,4 +17,5 @@ Vue.component('list-editor', ListEditor)
 Vue.component('notification-display', NotificationDisplay)
 Vue.component('panel-link', PanelLink)
 Vue.component('status-label', StatusLabel)
+Vue.component('status-label-pollen', StatusLabelPollen)
 Vue.component('thumbnail-img', ThumbnailImg)

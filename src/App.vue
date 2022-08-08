@@ -94,21 +94,31 @@ textarea {
 			</v-toolbar-title>
 			<connect-btn v-if="showConnectButton" class="hidden-xs-only ml-3"/>
 
+      <atx-btn-pollen class="ml-12"></atx-btn-pollen>
+      <doors-btn-pollen></doors-btn-pollen>
+
+      <a href="https://pollenam.zendesk.com/" target="_blank" rel="nooperner" class="ml-5 text-white">Support</a>
+
 			<v-spacer/>
 
-      <v-img src="./assets/honeyprint-sx2-logo.png" contain height="45px"></v-img>
+      <v-img src="./assets/honeyprint-sx2-logo.png" contain height="30px"></v-img>
 
 			<v-spacer/>
 
-			<upload-btn target="start" :elevation="1" class="mr-3 hidden-sm-and-down"/>
+      <div class="v-toolbar-pollen-item mr-12">
+        <v-icon small class="mr-1">mdi-information</v-icon> {{ $t('panel.status.caption') }}
+
+        <status-label-pollen class="ml-2"></status-label-pollen>
+      </div>
+
 			<emergency-btn/>
 		</v-app-bar>
 
 		<v-main id="content">
-			<!-- <v-container class="hidden-sm-and-down" id="global-container" fluid>
-				<fff-container-panel v-if="isFFForUnset"/>
+			<v-container class="hidden-sm-and-down" id="global-container" fluid v-if="isLegacyView">
+				<fff-container-panel v-if="isFFForUnset" />
 				<cnc-container-panel v-else/>
-			</v-container> -->
+			</v-container>
 
 			<v-divider class="hidden-sm-and-down"/>
 
@@ -204,6 +214,13 @@ export default {
 				return !this.machineMode || this.machineMode === MachineMode.fff;
 			}
 			return this.dashboardMode === DashboardMode.fff;
+		},
+		isLegacyView() {
+      // FIXME: Update to take into account all legacy views
+
+			const currentRoute = this.$route;
+
+      return currentRoute.path.match(/legacy/);
 		},
 		showBottomNavigation() {
 			return this.$vuetify.breakpoint.mobile && !this.$vuetify.breakpoint.xsOnly && this.bottomNavigation;
