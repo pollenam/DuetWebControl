@@ -67,7 +67,7 @@ export default {
 		},
 		home: {
 			caption: 'Home {0}',
-			captionAll: 'Home All',
+			captionAll: 'Home',
 			title: 'Home the {0} axis (G28 {0})',
 			titleAll: 'Home all axes (G28)'
 		},

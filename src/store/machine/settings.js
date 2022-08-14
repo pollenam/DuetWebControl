@@ -37,10 +37,10 @@ export default function(connector, pluginSettingFields) {
 			displayedExtruders: [0, 1, 2, 3, 4, 5],
 			displayedFans: [-1, 0, 1, 2],
 			moveSteps: {								// mm
-				X: [100, 50, 10, 1, 0.1],
-				Y: [100, 50, 10, 1, 0.1],
-				Z: [50, 25, 5, 0.5, 0.05],
-				default: [100, 50, 10, 1, 0.1]
+				X: [100, 10, 1, 0.1],
+				Y: [100, 10, 1, 0.1],
+				Z: [100, 10, 1, 0.1],
+				default: [100, 10, 1, 0.1]
 			},
 			moveFeedrate: 6000,							// mm/min
 			toolChangeMacros: [ToolChangeMacro.free, ToolChangeMacro.pre, ToolChangeMacro.post],
