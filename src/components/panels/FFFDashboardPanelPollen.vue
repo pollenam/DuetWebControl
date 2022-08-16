@@ -12,14 +12,26 @@
 					<light-factor-pollen-panel  class="mb-2"></light-factor-pollen-panel>
 				</v-col>
 			</v-row>
-		</v-col>
-		<v-col cols="12" sm="12" md="12" lg="12" xl="12">
 			<v-row>
 				<v-col cols="9" sm="9" md="9" lg="9" xl="9">
 					<build-surface-pollen-panel  class="mb-2"></build-surface-pollen-panel>
 				</v-col>
 				<v-col class="hidden-xs-only" sm="3" md="3" lg="3" xl="3">
 					<macro-list></macro-list>
+				</v-col>
+			</v-row>
+			<v-row>
+				<v-col cols="3" sm="3" md="3" lg="3" xl="3">
+					<extruder-pollen-panel></extruder-pollen-panel>
+				</v-col>
+					<v-col cols="3" sm="3" md="3" lg="3" xl="3">
+					<extruder-pollen-panel></extruder-pollen-panel>
+				</v-col>
+					<v-col cols="3" sm="3" md="3" lg="3" xl="3">
+					<extruder-pollen-panel></extruder-pollen-panel>
+				</v-col>
+					<v-col cols="3" sm="3" md="3" lg="3" xl="3">
+					<extruder-pollen-panel></extruder-pollen-panel>
 				</v-col>
 			</v-row>
 		</v-col>

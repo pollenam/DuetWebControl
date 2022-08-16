@@ -39,6 +39,7 @@ import JobControlPanelPollen from './JobControlPanelPollen.vue'
 import HighTemperaturePanelPollen from './HighTemperaturePanelPollen.vue'
 import LightFactorPanelPollen from './LightFactorPanelPollen.vue'
 import BuildSurfacePanelPollen from './BuildSurfacePanelPollen.vue'
+import ExtruderPanelPollen from './ExtruderPanelPollen.vue'
 
 Vue.component('atx-panel', ATXPanel)
 Vue.component('extrude-panel', ExtrudePanel)
@@ -77,3 +78,4 @@ Vue.component('high-temperature-panel-pollen', HighTemperaturePanelPollen)
 Vue.component('fff-dashboard-pollen-panel', FFFDashboardPanelPollen)
 Vue.component('light-factor-pollen-panel', LightFactorPanelPollen)
 Vue.component('build-surface-pollen-panel', BuildSurfacePanelPollen)
+Vue.component('extruder-pollen-panel', ExtruderPanelPollen)
