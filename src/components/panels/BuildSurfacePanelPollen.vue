@@ -70,6 +70,11 @@
 			<v-row :dense="$vuetify.breakpoint.mobile">
 				<v-col cols="7">
 					<v-row>
+						<v-col class="ma-auto" cols="2">
+							<code-btn outlined fab large class="home_btn" code="G28" :disabled="!canHome" :title="$t('button.home.titleAll')" >
+								{{ $t('button.home.captionAll') }}
+							</code-btn>
+						</v-col>
 						<v-col cols="10">
 							<!-- Mobile home buttons -->
 							<v-row class="hidden-md-and-up py-2" no-gutters>
@@ -96,9 +101,6 @@
 								<!-- Decreasing movements -->
 								<v-col>
 									<v-row no-gutters>
-										<v-col>
-											{{ getMovementDescription(axis.letter, "start") }}
-										</v-col>
 										<v-col v-for="index in numMoveSteps" :key="index"  :class="getMoveCellClass(index)">
 											<code-btn :code="getMoveCode(axis, index - 1, true)" :disabled="!canMove(axis)" no-wait @contextmenu.prevent="showMoveStepDialog(axis.letter, index - 1)" block tile class="move-btn">
 												{{ showSign(-moveSteps(axis.letter)[index - 1]) }}
@@ -115,61 +117,65 @@
 												{{ moveSteps(axis.letter)[numMoveSteps - index] }}
 											</code-btn>
 										</v-col>
-										<v-col>
-											{{ getMovementDescription(axis.letter, "end") }}
-										</v-col>
 									</v-row>
 								</v-col>
 							</v-row>
 						</v-col>
-						<v-col class="ma-auto" cols="2">
-							<code-btn outlined fab large class="home_btn" code="G28" :disabled="!canHome" :title="$t('button.home.titleAll')" >
-								{{ $t('button.home.captionAll') }}
-							</code-btn>
-						</v-col>
+
 					</v-row>
 					<v-row align-content:center>
-						<span>Speed Factor</span> <percentage-input></percentage-input>
+						<span>Speed Factor</span> <percentage-input v-model="speedFactor" :min="speedFactorMin" :max="speedFactorMax" :disabled="uiFrozen"></percentage-input>
 					</v-row>
-				</v-col>
-
-
-				<v-divider vertical></v-divider>
-				<v-col cols="2" sm="2" md="2" lg="2" xl="2">
-					<v-col>
-						<v-row class="mb-2">
-							<strong>Level</strong>
-						</v-row>
-						<v-row class="mb-1">
-							<code-btn code="XXX">
-								- 0.05mm
-						</code-btn>
-						</v-row>
-						<v-row class="mb-1">
-							<code-btn code="XXX">
-								+ 0.05mm
-						</code-btn>
-						</v-row>
-						<v-row>
-							<code-btn code="XXX" >
-								Set 0
-						</code-btn>
-						</v-row>
-					</v-col>
 				</v-col>
 				<v-divider vertical></v-divider>
 				<v-col cols="3" sm="3" md="3" lg="3" xl="3">
 					<v-col>
+						<v-row class="mb-2">
+							<strong>Level {{ $t('panel.babystepping.current', [$displayZ(babystepping)]) }}</strong>
+						</v-row>
+						<v-row class="mb-1">
+							<code-btn :code="`M290 R1 Z${-babystepAmount}`" no-wait block>
+								<v-icon>mdi-arrow-collapse-vertical</v-icon> {{ $displayZ(-babystepAmount) }}
+							</code-btn>
+						</v-row>
+						<v-row class="mb-1">
+							<code-btn :code="`M290 R1 Z${babystepAmount}`" no-wait block>
+								<v-icon>mdi-arrow-split-horizontal</v-icon> +{{ $displayZ(babystepAmount) }}
+							</code-btn>
+						</v-row>
+						<v-row class="align-center">
+							<v-col>
+								<v-row class="align-center">
+									<span>Z Limits</span>
+									<v-switch hide-details="auto" class="ml-2 mt-0" :disabled="uiFrozen">
+									</v-switch>
+								</v-row>
+							</v-col>
+							<v-col>
+							<code-btn code="M290 R0 S0" no-wait block>
+								Set 0
+							</code-btn>
+							</v-col>
+						</v-row>
+					</v-col>
+				</v-col>
+				<v-divider vertical></v-divider>
+				<v-col cols="2" sm="2" md="2" lg="2" xl="2">
+					<v-col>
 						<v-row>
 							<v-col>
-								<v-row>
-									<strong>
-											Bed
-									</strong>
-								</v-row>
-								<v-row>
-									XX /<tool-input active></tool-input>
-								</v-row>
+								<template v-for="(bedHeater, bedIndex) in bedHeaters">
+										<template v-if="bedHeater">
+											<v-row :key="`bed-title-${bedIndex}-0`">
+												<strong>
+													Bed
+												</strong>
+											</v-row>
+											<v-row :key="`bed-value-${bedIndex}-0`">
+												{{ getHeaterValue(bedHeater) }} / <tool-input :bed="bedHeater" :bed-index="bedIndex" active></tool-input>
+											</v-row>
+										</template>
+								</template>
 							</v-col>
 						</v-row>
 						<v-divider horizontal></v-divider>
@@ -179,7 +185,7 @@
 							</strong>
 						</v-row>
 						<v-row>
-							<percentage-input></percentage-input>
+							<percentage-input v-model="fanValue" :disabled="uiFrozen"></percentage-input>
 						</v-row>
 					</v-col>
 				</v-col>
@@ -211,10 +217,39 @@ import { KinematicsName, StatusType } from '@/store/machine/modelEnums'
 
 export default {
 	computed: {
-		...mapGetters(['isConnected', 'uiFrozen']),
-		...mapState('machine/model', ['move', 'state']),
+		...mapGetters(['isConnected', 'uiFrozen'], ['fans']),
+		...mapState('machine/model', ['move', 'state', 'heat']),
 		...mapState('machine/settings', ['moveFeedrate']),
+		...mapState('machine/settings', ['babystepAmount']),
+		...mapState('machine/model', {
+			machineSpeedFactor: state => state.move.speedFactor,
+			babystepping: state => (state.move.axes.length >= 3) ? state.move.axes[2].babystep : 0
+		}),
+		speedFactor: {
+			get() { return (this.machineSpeedFactor !== null) ? (this.machineSpeedFactor * 100): 100; },
+			set(value) { this.sendCode(`M220 S${value}`); }
+		},
+		speedFactorMin() { return Math.max(1, Math.min(100, this.speedFactor - 50)); },
+		speedFactorMax() { return Math.max(150, this.speedFactor + 50); },
 		...mapGetters('machine/settings', ['moveSteps', 'numMoveSteps']),
+			fanValue: {
+			get() {
+				// Even though RRF allows multiple fans to be assigned to a tool,
+				// we assume they all share the same fan value if such a config is set
+				const fan = (this.fan === -1)
+					? ((this.currentTool && this.currentTool.fans.length > 0) ? this.currentTool.fans[0] : -1)
+					: this.fan;
+				return (fan >= 0 && fan < this.fans.length && this.fans[fan]) ? Math.round(this.fans[fan].requestedValue * 100) : 0;
+			},
+			set(value) {
+				value = Math.min(100, Math.max(0, value)) / 100;
+				if (this.fan === -1) {
+					this.sendCode(`M106 S${value.toFixed(2)}`);
+				} else {
+					this.sendCode(`M106 P${this.fan} S${value.toFixed(2)}`);
+				}
+			}
+		},
 		isCompensationEnabled() { return this.move.compensation.type.toLowerCase() !== 'none' },
 		visibleAxes() { return this.move.axes.filter(axis => axis.visible); },
 		isDelta() {
@@ -228,7 +263,16 @@ export default {
 				this.state.status !== StatusType.resuming
 			);
 		},
-		unhomedAxes() { return this.move.axes.filter(axis => axis.visible && !axis.homed); }
+		unhomedAxes() { return this.move.axes.filter(axis => axis.visible && !axis.homed); },
+		bedHeaters() {
+			return this.heat.bedHeaters
+				.map(heaterIndex => {
+					if (heaterIndex >= 0 && heaterIndex < this.heat.heaters.length && this.heat.heaters[heaterIndex]) {
+						return this.heat.heaters[heaterIndex];
+					}
+					return null;
+				});
+		}
 	},
 	data() {
 		return {
@@ -273,27 +317,14 @@ export default {
 		moveStepDialogConfirmed(value) {
 			this.setMoveStep({ axis: this.moveStepDialog.axis, index: this.moveStepDialog.index, value });
 		},
-		getMovementDescription(axis, position) {
-			if (axis === "X" && position === "start") {
-				return "Back"
+		getHeaterValue(heater) {
+			if (heater && heater.sensor >= 0 && heater.sensor < this.sensors.analog.length) {
+				const sensor = this.sensors.analog[heater.sensor];
+				if (sensor) {
+					return this.formatSensorValue(sensor);
+				}
 			}
-			if (axis === "Y" && position === "start") {
-				return "Left"
-			}
-			if (axis === "Z" && position === "start") {
-				return "Up"
-			}
-			if (axis === "X" && position === "end") {
-				return "Front"
-			}
-			if (axis === "Y" && position === "end") {
-				return "Right"
-			}
-			if (axis === "Z" && position === "end") {
-				return "Down"
-			}
-
-				return "Unknown"
+			return this.$t('generic.noValue');
 		}
 	},
 	watch: {
