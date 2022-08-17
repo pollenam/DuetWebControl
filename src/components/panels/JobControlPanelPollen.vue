@@ -1,78 +1,81 @@
-
 <template>
 	<v-card :elevation="0">
-		<v-card-title>
-			<v-row dense>
-			<v-col>
-				{{ $t('panel.jobControl.running') }} : {{ printFile }}
-			</v-col>
-			<v-col>
-				<code-btn color="warning" block :disabled="uiFrozen || !isPrinting || isPausing" :code="isPaused ? 'M24' : 'M25'" tabindex="0">
+		<v-card-title class="v-card__title--dense justify-space-between">
+      <div v-if="isPrinting">
+        <v-icon class="mr-2">mdi-play</v-icon>
+        {{ $t('panel.jobControl.running') }}
+        <span class="text--gray">
+        {{ printFile }}
+        </span>
+      </div>
+
+      <div v-if="!isPrinting">
+        <v-icon class="mr-2">mdi-sleep</v-icon>
+        {{ $t('generic.status.idle') }}
+      </div>
+
+      <div>
+				<code-btn small class="ms-0 ms-md-2 mt-2 mt-md-0" :disabled="uiFrozen || !isPrinting || isPausing" :code="isPaused ? 'M24' : 'M25'" tabindex="0">
 					<v-icon class="mr-1">{{ isPaused ? 'mdi-play' : 'mdi-pause' }}</v-icon> {{ pauseResumeText }}
 				</code-btn>
-			</v-col>
 
-			<v-col>
-				<code-btn color="error" block code="M0">
+				<code-btn small class="ms-0 ms-md-2 mt-2 mt-md-0" code="M0">
 					<v-icon class="mr-1">mdi-stop</v-icon> {{ cancelText }}
 				</code-btn>
-			</v-col>
-			<v-col v-if="!isPrinting && processAnotherCode">
-				<code-btn v-if="!isPrinting && processAnotherCode" color="success" block :code="processAnotherCode">
+
+				<code-btn small class="ms-0 ms-md-2 mt-2 mt-md-0" v-if="!isPrinting && processAnotherCode" :code="processAnotherCode">
 					<v-icon class="mr-1">mdi-restart</v-icon> {{ processAnotherText }}
 				</code-btn>
-			</v-col>
-      </v-row>
+      </div>
 		</v-card-title>
 
 		<v-card-text>
-			<v-row dense>
-				<v-col class="d-flex flex-column">
+			<v-row dense class="row--separated-cols row--dashboard-first-row">
+				<v-col class="d-flex flex-column justify-center text-center">
 					<strong>
 						{{ $t('panel.jobData.jobDuration') }}
 					</strong>
 					<span>
-						{{ $displayTime(jobDuration) }}
+            {{ displayJobDuration }}
 					</span>
 				</v-col>
 
-				<v-col class="d-flex flex-column">
+				<v-col class="d-flex flex-column justify-center text-center">
 					<strong>
-						Progress
+						{{ $t('panel.jobData.progress') }}
 					</strong>
 					<span>
-						{{ jobProgress * 100 }} %
+						{{ displayJobProgress }}
 					</span>
 				</v-col>
 
-				<v-col class="d-flex flex-column">
+				<v-col class="d-flex flex-column justify-center text-center">
 					<strong>
-						<strong>{{ $t('panel.jobInfo.layerHeight') }}</strong>
+						{{ $t('panel.jobData.layerHeight') }}
 					</strong>
 					<span>
-						{{ $displayZ(jobFile.layerHeight) }}
+						{{ displayLayerHeight }}
 					</span>
 				</v-col>
 
-								<v-col class="d-flex flex-column">
+        <v-col class="d-flex flex-column justify-center text-center">
 					<strong>
-						Nozzle size
+						{{ $t('panel.jobData.nozzleSize') }}
 					</strong>
 					<span>
-						??
+						{{ nozzleSize }}
 					</span>
 				</v-col>
-								<v-col class="d-flex flex-column">
+
+        <v-col class="d-flex flex-column justify-center text-center">
 					<strong>
-						Speed
+						{{ $t('panel.jobData.speed') }}
 					</strong>
 					<span>
-						??
+						{{ jobSpeed }}
 					</span>
 				</v-col>
 			</v-row>
-
-
 		</v-card-text>
 	</v-card>
 </template>
@@ -80,6 +83,7 @@
 <script>
 'use strict'
 
+import Vue from 'vue'
 import { mapState, mapGetters } from 'vuex'
 
 import { MachineMode, StatusType, isPaused, isPrinting } from '@/store/machine/modelEnums'
@@ -152,7 +156,36 @@ export default {
 		},
 		printFile() {
 			return (this.job.file.fileName !== null) ? extractFileName(this.job.file.fileName) : null;
-		}
+		},
+    nozzleSize() {
+      return 'n/a' // FIXME
+    },
+    jobSpeed() {
+      console.log('this.job', this.job);
+      console.log('this.job.file', this.job.file);
+      return 'n/a'; // FIXME
+    },
+    displayJobProgress() {
+      if (!isPrinting() && this.jobProgress == 0) {
+        return 'n/a';
+      }
+
+      return `${(this.jobProgress * 100).toFixed(2)} %`;
+    },
+    displayLayerHeight() {
+      if (!isPrinting() && this.jobFile.layerHeight == 0) {
+        return 'n/a';
+      }
+
+      return Vue.prototype.$displayZ(this.jobFile.layerHeight);
+    },
+    displayJobDuration() {
+      if (!isPrinting() && this.jobDuration == 0) {
+        return 'n/a';
+      }
+
+      return Vue.prototype.$displayTime(this.jobDuration);
+    }
 	},
 	data() {
 		return {

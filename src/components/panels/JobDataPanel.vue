@@ -63,6 +63,7 @@ export default {
 			return this.job.layers[this.job.layers.length - 1].time;
 		},
 		jobDuration() {
+    console.log(this.job);
 			return isPrinting(this.state.status) ? this.job.duration : this.job.lastDuration;
 		}
 	}

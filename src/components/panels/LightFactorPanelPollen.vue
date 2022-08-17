@@ -1,14 +1,15 @@
 <template>
-	<v-card>
-		<v-card-title class="pb-0">
-			Light
+	<v-card :elevation="0">
+		<v-card-title class="v-card__title--dense">
+      <v-icon class="mr-2">mdi-weather-sunny</v-icon>
+      {{ $t('panel.lightFactorPollen.title') }}
 			<v-spacer></v-spacer>
 			<a v-show="speedFactor !== 100 && !uiFrozen" href="javascript:void(0)" @click.prevent="sendCode('M220 S100')" class="subtitle-2">
 				<v-icon small class="mr-1">mdi-backup-restore</v-icon> {{ $t('generic.reset') }}
 			</a>
 		</v-card-title>
 
-		<v-card-text class="py-0">
+		<v-card-text>
 			<percentage-input v-model="speedFactor" :min="speedFactorMin" :max="speedFactorMax" :disabled="uiFrozen"></percentage-input>
 		</v-card-text>
 	</v-card>

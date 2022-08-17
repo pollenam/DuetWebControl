@@ -611,9 +611,15 @@ export default {
 			fan: 'Fan {0}',
 			noFans: 'No Fans'
 		},
+    lightFactorPollen: {
+      title: 'Lights'
+    },
+    highTemperaturePollen: {
+      title: 'High Temperature'
+    },
 		jobControl: {
 			caption: 'Job Control',
-			running: 'Job Running',
+      running: 'Printing:',
 			cancelJob: 'Cancel Job',
 			cancelPrint: 'Cancel Print',
 			cancelSimulation: 'Cancel Simulation',
@@ -633,7 +639,11 @@ export default {
 			warmUpDuration: 'Warm-Up Time',
 			currentLayerTime: 'Current Layer Time',
 			lastLayerTime: 'Last Layer Time',
-			jobDuration: 'Job Duration'
+			jobDuration: 'Duration',
+			progress: 'Progress',
+			layerHeight: 'Layer Height',
+			nozzleSize: 'Nozzle Size',
+			speed: 'Speed'
 		},
 		jobEstimations: {
 			caption: 'Estimations based on',

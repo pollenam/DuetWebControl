@@ -1,14 +1,12 @@
-
 <template>
 	<v-card :elevation="0">
-		<v-card-title>
-			<v-col>
-				High Temperature
-			</v-col>
+		<v-card-title class="v-card__title--dense">
+      <v-icon class="mr-2">mdi-thermometer-chevron-up</v-icon>
+      {{ $t('panel.highTemperaturePollen.title') }}
 		</v-card-title>
 
 		<v-card-text>
-			<v-row dense>
+			<v-row dense class="row--separated-cols row--dashboard-first-row">
 				<v-col class="d-flex flex-column">
 					<strong>
 						Room

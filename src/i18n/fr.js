@@ -524,6 +524,12 @@ export default {
 			fan: 'Ventilateur {0}',
 			noFans: 'Aucun Ventilateur'
 		},
+    lightFactorPollen: {
+      title: 'Lumières'
+    },
+    highTemperaturePollen: {
+      title: 'Haute Temperature'
+    },
 		jobControl: {
 			caption: 'Contrôle du Travail',
 			cancelJob: 'Annuler Travail',
@@ -537,14 +543,19 @@ export default {
 			resumeSimulation: 'Reprendre Simulation',
 			repeatJob: 'Recommencer',
 			repeatPrint: 'Réimprimer',
-			repeatSimulation: 'Simuler à Nouveau'
+			repeatSimulation: 'Simuler à Nouveau',
+      running: 'Impression :'
 		},
 		jobData: {
 			caption: 'Données Collectés',
 			warmUpDuration: 'Temps de Chauffe',
 			currentLayerTime: 'Durée de la Couche Actuelle',
 			lastLayerTime: 'Durée de la Dernière Couche',
-			jobDuration: 'Durée du Travail'
+			jobDuration: 'Durée Totale',
+			progress: 'Progression',
+			layerHeight: 'Hauteur de Couche',
+			nozzleSize: 'Taille Nozzle',
+			speed: 'Vitesse'
 		},
 		jobEstimations: {
 			caption: 'Estimations basée sur',
