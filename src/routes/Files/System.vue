@@ -10,6 +10,7 @@
 'use strict'
 
 import { registerRoute } from '..'
+import store from '@/store'
 
 export default {
 	install() {
@@ -19,7 +20,8 @@ export default {
 				System: {
 					icon: 'mdi-cog',
 					caption: 'menu.files.system',
-					path: '/Files/System'
+					path: '/legacy/Files/System',
+					condition: () => store.state.settings.legacyMode == true
 				}
 			}
 		});

@@ -474,32 +474,32 @@ export default {
 	},
 	menu: {
 		control: {
-            caption: 'Control',
-            status: 'Status',
+			caption: 'Control',
+			status: 'Status (legacy)',
 			dashboard: 'Dashboard',
 			console: 'Console'
 		},
 		job: {
 			caption: 'Job',
-			status: 'Status',
-			webcam: 'Webcam'
+			status: 'Status (legacy)',
+			webcam: 'Webcam (legacy)'
 		},
 		files: {
-			caption: 'Files',
-			jobs: 'Jobs',
-			filaments: 'Filaments',
-			macros: 'Macros',
-			menu: 'Display',
-			system: 'System',
-			web: 'Web'
+			caption: 'Files (legacy)',
+			jobs: 'G-Code files',
+			filaments: 'Filaments (legacy)',
+			macros: 'Macros (legacy)',
+			menu: 'Display (legacy)',
+			system: 'System (legacy)',
+			web: 'Web (legacy)'
 		},
 		plugins: {
-			caption: 'Plugins'
+			caption: 'Plugins (legacy)'
 		},
 		settings: {
 			caption: 'Settings',
-			general: 'General',
-			machine: 'Machine-Specific'
+			general: 'General (legacy)',
+			machine: 'Machine-Specific (legacy)'
 		}
 	},
 	notification: {

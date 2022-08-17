@@ -15,11 +15,11 @@ export default {
 	install() {
 		// Register a route via Files -> Jobs
 		registerRoute(this, {
-			Files: {
+			Job: {
 				Jobs: {
 					icon: 'mdi-play',
 					caption: 'menu.files.jobs',
-					path: '/Files/Jobs'
+					path: '/Job/Jobs'
 				}
 			}
 		});

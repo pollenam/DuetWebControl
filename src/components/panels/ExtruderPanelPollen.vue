@@ -30,13 +30,13 @@
 				Mixer <percentage-input></percentage-input>
 			</v-row>
 			<v-row class="justify-space-between align-center pl-2">
-				<div>Feeder </div> <div>XX / <tool-input style="display: inline-block;"  :tool="tool" :tool-heater-index="toolHeaterIndex" active></tool-input></div>
+				<div>Feeder </div> <div>XX / <tool-input style="display: inline-block;"  active></tool-input></div>
 			</v-row>
 			<v-row class="justify-space-between align-center pl-2">
-				<div>Screw </div> <div>XX / <tool-input style="display: inline-block;"  :tool="tool" :tool-heater-index="toolHeaterIndex" active></tool-input></div>
+				<div>Screw </div> <div>XX / <tool-input style="display: inline-block;"  active></tool-input></div>
 			</v-row>
 			<v-row class="justify-space-between align-center pl-2">
-				<div>Nozzle </div> <div>XX / <tool-input style="display: inline-block;"  :tool="tool" :tool-heater-index="toolHeaterIndex" active></tool-input></div>
+				<div>Nozzle </div> <div>XX / <tool-input style="display: inline-block;"  active></tool-input></div>
 			</v-row>
 			<v-row class="align-center pl-2 mb-1">
 				Extrusion Factor <percentage-input></percentage-input>

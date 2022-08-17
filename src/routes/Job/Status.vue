@@ -82,6 +82,7 @@
 'use strict'
 
 import { registerRoute } from '..'
+import store from '@/store'
 
 export default {
 	install() {
@@ -91,7 +92,8 @@ export default {
 				Status: {
 					icon: 'mdi-information',
 					caption: 'menu.job.status',
-					path: '/Job/Status'
+					path: '/legacy/Job/Status',
+					condition: () => store.state.settings.legacyMode == true
 				}
 			}
 		});

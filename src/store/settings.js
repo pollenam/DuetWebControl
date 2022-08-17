@@ -30,7 +30,7 @@ export default {
         numericInputs: false,
 		iconMenu: false,
 
-		settingsStorageLocal: false,
+		settingsStorageLocal: true,  //Pollen activate localstorage for legacyMode
 		settingsSaveDelay: 500,							// ms - how long to wait before settings updates are saved
 		cacheStorageLocal: localStorageSupported,
 		cacheSaveDelay: 1000,							// ms - how long to wait before cache updates are saved
@@ -50,8 +50,9 @@ export default {
 			flip: 'none'
 		},
 
-		enabledPlugins: ['Height Map'],
-		plugins: {}									    // Third-party values
+		enabledPlugins: ['Height Map', 'G-Code Viewer'],
+		plugins: {},									    // Third-party values
+		legacyMode: true
 	},
 	actions: {
 		async applyDefaults({ state, dispatch }) {
@@ -147,7 +148,9 @@ export default {
 			state.lastHostname = hostname;
 			setLocalSetting('lastHostname', hostname);
 		},
-
+		legacyMode(state, legacyMode) {
+			state.legacyMode = legacyMode
+		},
 		load(state, payload) {
 			const updateSettingsTime = (payload.ignoreFileTimestamps === undefined) && (payload.settingsSaveDelay === 2000);
 			const updateCacheTime = (payload.ignoreFileTimestamps === undefined) && (payload.settingsSaveDelay === 4000);

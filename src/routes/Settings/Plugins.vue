@@ -38,6 +38,7 @@
 'use strict'
 
 import { mapGetters, mapState } from 'vuex'
+import store from '@/store'
 
 import { registerRoute } from '..'
 
@@ -49,7 +50,8 @@ export default {
                 Plugins: {
                     icon: 'mdi-power-plug',
                     caption: 'menu.plugins.caption',
-                    path: '/Plugins'
+                    path: '/legacy/Plugins',
+                    condition: () => store.state.settings.legacyMode == true
                 }
             }
         });

@@ -14,6 +14,11 @@
 #global-container .v-card.theme--light {
 	background-color: #F5F5F5 !important;
 }
+
+.not_legacy {
+	height: 100%
+}
+
 .global-control.theme--dark {
 	background-color: #515151 !important;
 }
@@ -96,7 +101,7 @@ textarea {
 
       <atx-btn-pollen class="ml-12"></atx-btn-pollen>
       <doors-btn-pollen></doors-btn-pollen>
-
+			<v-switch v-model="legacyMode"></v-switch>
       <a href="https://pollenam.zendesk.com/" target="_blank" rel="nooperner" class="ml-5 text-white">Support</a>
 
 			<v-spacer/>
@@ -122,7 +127,7 @@ textarea {
 
 			<v-divider class="hidden-sm-and-down"/>
 
-			<v-container fluid>
+			<v-container :class="{not_legacy: !isLegacyView }" fluid>
 				<keep-alive>
 					<router-view/>
 				</keep-alive>
@@ -171,6 +176,14 @@ import { DashboardMode } from './store/settings.js'
 
 export default {
 	computed: {
+		legacyMode: {
+			get() {
+				return this.$store.state.settings.legacyMode;
+			},
+			set(val) {
+				this.$store.commit("settings/legacyMode", val);
+			}
+		},
 		...mapState({
 			boards: state => state.machine.model.boards,
 			menuDirectory: state => state.machine.model.directories.menu,
@@ -182,7 +195,6 @@ export default {
 			machineMode: state => state.machine.model.state.machineMode,
 			bottomNavigation: state => state.settings.bottomNavigation,
 			iconMenu: state => state.settings.iconMenu,
-
 			injectedComponents: state => state.uiInjection.injectedComponents
 		}),
 		...mapState('settings',['dashboardMode']),
@@ -244,7 +256,10 @@ export default {
 			return true;
 		},
 		getPages(category) {
-			return category.pages.filter(page => page.condition);
+			return category.pages.filter(page => {
+				console.log(page);
+				return page.condition
+				});
 		},
 		updateTitle() {
 			if (this.status === StatusType.disconnected) {

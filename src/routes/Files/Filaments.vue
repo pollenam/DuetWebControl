@@ -21,8 +21,8 @@ export default {
 				Filaments: {
 					icon: 'mdi-database',
 					caption: 'menu.files.filaments',
-					path: '/Files/Filaments',
-					condition: () => !store.state.machine.model.state.machineMode || store.state.machine.model.state.machineMode === MachineMode.fff
+					path: 'legacy/Files/Filaments',
+					condition: () => ( !store.state.machine.model.state.machineMode || store.state.machine.model.state.machineMode === MachineMode.fff ) && store.state.settings.legacyMode == true
 				}
 			}
 		});

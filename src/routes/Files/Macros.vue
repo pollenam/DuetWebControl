@@ -10,6 +10,7 @@
 'use strict'
 
 import { registerRoute } from '..'
+import store from '@/store'
 
 export default {
 	install() {
@@ -19,7 +20,8 @@ export default {
 				Macros: {
 					icon: 'mdi-polymer',
 					caption: 'menu.files.macros',
-					path: '/Files/Macros'
+					path: '/Files/Macros',
+					condition: () => store.state.settings.legacyMode == true
 				}
 			}
 		});

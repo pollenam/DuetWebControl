@@ -16,6 +16,7 @@
 'use strict'
 
 import { registerRoute, GeneralSettingTabs } from '..'
+import store from '@/store'
 
 export default {
 	install() {
@@ -25,7 +26,8 @@ export default {
 				General: {
 					icon: 'mdi-tune',
 					caption: 'menu.settings.general',
-					path: '/Settings/General'
+					path: '/legacy/Settings/General',
+					condition: () => store.state.settings.legacyMode == true
 				}
 			}
 		});

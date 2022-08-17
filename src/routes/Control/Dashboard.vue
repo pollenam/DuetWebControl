@@ -9,6 +9,7 @@
 'use strict';
 
 import { mapState } from 'vuex';
+import store from '@/store'
 
 import { registerRoute } from '..'
 import { DashboardMode } from '../../store/settings.js'
@@ -22,7 +23,8 @@ export default {
                 Dashboard: {
                     icon: 'mdi-view-dashboard',
                     caption: 'Dashboard (legacy)',
-                    path: '/legacy'
+                    path: '/legacy',
+										condition: () => store.state.settings.legacyMode == true
                 }
             }
         });

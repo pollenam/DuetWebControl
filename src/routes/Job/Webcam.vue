@@ -20,7 +20,7 @@ export default {
 				Webcam: {
 					icon: 'mdi-webcam',
 					caption: 'menu.job.webcam',
-					path: '/Job/Webcam',
+					path: '/legacy/Job/Webcam',
 					condition: () => store.state.settings.webcam.url !== ''
 				}
 			}

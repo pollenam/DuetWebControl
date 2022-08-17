@@ -16,6 +16,7 @@
 'use strict'
 
 import { registerRoute, MachineSettingTabs } from '..'
+import store from '@/store'
 
 export default {
 	install() {
@@ -25,7 +26,8 @@ export default {
 				Machine: {
 					icon: 'mdi-cogs',
 					caption: 'menu.settings.machine',
-					path: '/Settings/Machine'
+					path: '/legacy/Settings/Machine',
+					condition: () => store.state.settings.legacyMode == true
 				}
 			}
 		});

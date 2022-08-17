@@ -676,7 +676,7 @@ export default {
 				return;
 			}
 			this.loading = true;
-			this.preLoadSettings();		
+			this.preLoadSettings();
 			await viewer.reload();
 			this.loading = false;
 			viewer.setCursorVisiblity(this.showCursor);
@@ -732,7 +732,7 @@ export default {
 				viewer.gcodeProcessor.g1AsExtrusion = true;
 				viewer.gcodeProcessor.updateForceWireMode(true);
 			}
-			
+
 		},
 		async fileSelected(e) {
 			const reader = new FileReader();
@@ -924,7 +924,7 @@ export default {
 		},
 		'g1AsExtrusion': async function(to){
 			viewer.gcodeProcessor.g1AsExtrusion = to;
-			await this.reloadviewer();		
+			await this.reloadviewer();
 		}
 
 	},
