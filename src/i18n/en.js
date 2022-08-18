@@ -451,6 +451,7 @@ export default {
 		},
 		macro: {
 			caption: 'Macros',
+			pollenTitle: 'Automation',
 			noMacros: 'No Macros',
 			run: 'Run Macro',
 			root: 'Root'
@@ -571,6 +572,9 @@ export default {
 		}
 	},
 	panel: {
+    extruderPollen: {
+      title: 'Ext.'
+    },
 		atx: {
 			caption: 'VPower',
 			on: 'On',

@@ -41,8 +41,10 @@ div[data-app='true'] {
   align-items: center;
 }
 
+$pollen-row-padding: 8px 24px;
+
 .v-card__title--dense {
-  padding: 8px 16px;
+  padding: $pollen-row-padding;
 }
 
 .row.row--separated-cols {
@@ -61,4 +63,24 @@ div[data-app='true'] {
 
 .row.row--dashboard-first-row {
   height: 80px;
+}
+
+.v-card__title + .v-card__text.v-card__text--with-rows-highlighted {
+  padding-top: 0px;
+}
+
+.v-card__text--with-rows-highlighted {
+  padding: 0px;
+
+  .row {
+    margin: 0px;
+    /* margin-left: 0px; */
+    /* margin-right: 0px; */
+    padding: $pollen-row-padding;
+  }
+
+  .row.row--highlighted {
+    background-color: rgba(255, 255, 255, 0.1724);
+    /* padding: 4px; */
+  }
 }

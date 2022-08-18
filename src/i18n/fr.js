@@ -375,6 +375,7 @@ export default {
 		},
 		macro: {
 			caption: 'Macros',
+			pollenTitle: 'Automatisation',
 			noMacros: 'Aucun Macros',
 			run: 'Lancer Macro',
 			root: 'Source'
@@ -484,6 +485,9 @@ export default {
 		}
 	},
 	panel: {
+    extruderPollen: {
+      title: 'Ext.'
+    },
 		atx: {
 			caption: 'VPower',
 			on: 'On',
