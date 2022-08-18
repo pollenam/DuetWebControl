@@ -179,7 +179,7 @@
 												</strong>
 											</v-row>
 											<v-row :key="`bed-value-${bedIndex}-0`">
-												{{ getHeaterValue(bedHeater) }} / <tool-input :bed="bedHeater" :bed-index="bedIndex" active></tool-input>
+												<temperature-tool-input :bed="bedHeater" :bed-index="bedIndex" active></temperature-tool-input>
 											</v-row>
 										</template>
 								</template>

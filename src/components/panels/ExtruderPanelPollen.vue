@@ -38,7 +38,7 @@
           Mixer
         </v-col>
         <v-col cols="9 d-flex align-center">
-         <percentage-input></percentage-input>
+          <percentage-input></percentage-input>
         </v-col>
       </v-row>
 			<v-row>
@@ -46,7 +46,7 @@
           Feeder
         </v-col>
         <v-col cols="9 d-flex align-center">
-         XX / <tool-input style="display: inline-block;"  active></tool-input>
+          <temperature-tool-input :bed="bedHeaters[0]" :bed-index="0" active></temperature-tool-input>
         </v-col>
 			</v-row>
 			<v-row class="row--highlighted justify-space-between align-center">
@@ -54,7 +54,7 @@
           Screw
         </v-col>
         <v-col cols="9 d-flex align-center">
-         XX / <tool-input style="display: inline-block;"  active></tool-input>
+          <temperature-tool-input :bed="bedHeaters[0]" :bed-index="0" active></temperature-tool-input>
         </v-col>
 			</v-row>
 			<v-row class="justify-space-between align-center">
@@ -62,7 +62,7 @@
           Nozzle
         </v-col>
         <v-col cols="9 d-flex align-center">
-         XX / <tool-input style="display: inline-block;"  active></tool-input>
+          <temperature-tool-input :bed="bedHeaters[0]" :bed-index="0" active></temperature-tool-input>
         </v-col>
 			</v-row>
 			<v-row class="row--highlighted">
@@ -93,6 +93,16 @@ export default {
 		...mapGetters(['uiFrozen']),
 		...mapState('machine/model', ['move']),
 		...mapState('machine/settings', ['displayedExtruders']),
+    ...mapState('machine/model', ['heat']),
+		bedHeaters() {
+			return this.heat.bedHeaters
+				.map(heaterIndex => {
+					if (heaterIndex >= 0 && heaterIndex < this.heat.heaters.length && this.heat.heaters[heaterIndex]) {
+						return this.heat.heaters[heaterIndex];
+					}
+					return null;
+				});
+		}
 	},
 	methods: {
 		...mapActions('machine', ['sendCode']),

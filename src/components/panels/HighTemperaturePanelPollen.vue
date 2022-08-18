@@ -12,7 +12,7 @@
 						Room
 					</strong>
 					<span>
-            XX / <tool-input style="display: inline-block;" :tool="tool" :tool-heater-index="toolHeaterIndex" active></tool-input>
+						<temperature-tool-input :bed="bedHeaters[0]" :bed-index="0" active></temperature-tool-input>
 					</span>
 				</v-col>
 
@@ -21,7 +21,7 @@
 						Radiant
 					</strong>
 					<span>
-						XX / <tool-input style="display: inline-block;"  :tool="tool" :tool-heater-index="toolHeaterIndex" active></tool-input>
+						<temperature-tool-input :bed="bedHeaters[0]" :bed-index="0" active></temperature-tool-input>
 					</span>
 				</v-col>
 			</v-row>
@@ -32,8 +32,20 @@
 <script>
 'use strict'
 
+import { mapState } from 'vuex'
+
 export default {
 	computed: {
+		...mapState('machine/model', ['heat']),
+		bedHeaters() {
+			return this.heat.bedHeaters
+				.map(heaterIndex => {
+					if (heaterIndex >= 0 && heaterIndex < this.heat.heaters.length && this.heat.heaters[heaterIndex]) {
+						return this.heat.heaters[heaterIndex];
+					}
+					return null;
+				});
+		}
 	},
 	mounted() {
 	},
