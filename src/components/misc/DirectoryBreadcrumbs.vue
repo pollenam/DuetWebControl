@@ -41,9 +41,9 @@ export default {
 			required: true
 		},
 		isPublicOnly: {
-			type: Boolean,
+			type: String,
 			required: false,
-			default: false
+			default: "false"
 		}
 	},
 	computed: {
@@ -54,7 +54,7 @@ export default {
 				pathItems[0] = '0:';
 			}
 
-			if(this.isPublicOnly) {
+			if(this.isPublicOnly === "true") {
 				pathItems.shift();
 			}
 
@@ -66,7 +66,7 @@ export default {
 					pathItems.shift();
 					pathItems[0] = this.directories.gCodes;
 					rootCaption = this.$t('directory.gcodes');
-				} else if (Path.startsWith(this.value, this.directories.macrosPublic) && this.isPublicOnly) {
+				} else if (Path.startsWith(this.value, this.directories.macrosPublic) && this.isPublicOnly === "true") {
 					pathItems.shift();
 					pathItems[0] = this.directories.macrosPublic;
 					rootCaption = "Macro Public";
@@ -136,7 +136,6 @@ export default {
 	methods: {
 		...mapActions('machine', ['move']),
 		changeDirectory(directory) {
-			console.log(directory);
 			this.$emit('input', directory);
 		},
 		dragOver(directory, e) {

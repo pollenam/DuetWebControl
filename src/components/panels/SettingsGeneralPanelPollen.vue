@@ -27,7 +27,7 @@
 			</v-row>
 			<v-row :dense="$vuetify.breakpoint.mobile">
 				<v-col cols="12" sm="12">
-					<v-btn @click="disableLegacyMode" :disabled="!legacyMode">Disable legacy mode</v-btn>
+					<v-btn @click="clickLegacyModeBtn">{{ getBtnStateText() }}</v-btn>
 				</v-col>
 			</v-row>
 		</v-card-text>
@@ -38,7 +38,7 @@
 'use strict'
 
 import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
-
+var md5 = require("md5");
 
 export default {
 	computed: {
@@ -51,22 +51,42 @@ export default {
 			}
 		},
 		...mapState(['settings']),
-		...mapGetters(['uiFrozen'])
+		...mapGetters(['uiFrozen']),
+		...mapState({
+			name: state => state.machine.model.network.name,
+		})
 	},
 	methods: {
 		...mapActions('settings', ['reset']),
 		...mapMutations('settings', ['update']),
 		submit() {
-			if(this.password == "SuperPassword") {
+			if(process.env.NODE_ENV === 'development') {
 				this.$store.commit("settings/legacyMode", true);
 				this.password = "";
 				this.error = false;
 			} else {
-				this.error = true
+				if(this.password == md5(this.name).substring(0, 10)) {
+					this.$store.commit("settings/legacyMode", true);
+					this.password = "";
+					this.error = false;
+				} else {
+					this.error = true
+				}
 			}
 		},
-		disableLegacyMode() {
-			this.$store.commit("settings/legacyMode", false);
+		clickLegacyModeBtn() {
+			if(this.legacyMode === true) {
+				this.$store.commit("settings/legacyMode", false);
+			} else {
+				this.submit();
+			}
+		},
+		getBtnStateText(){
+			if(this.legacyMode) {
+				return "Disable legacy mode"
+			} else {
+				return "Activate legacy mode"
+			}
 		}
 	},
 	data() {

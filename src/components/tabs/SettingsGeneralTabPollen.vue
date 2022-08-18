@@ -8,7 +8,7 @@
 			</v-row>
 			<v-row :dense="$vuetify.breakpoint.mobile">
 				<v-col cols="12" sm="12">
-					<settings-about-panel></settings-about-panel>
+					<settings-about-pollen-panel></settings-about-pollen-panel>
 				</v-col>
 			</v-row>
 		</v-col>
@@ -17,6 +17,11 @@
 			<v-row :dense="$vuetify.breakpoint.mobile">
 				<v-col cols="12">
 					<settings-general-pollen-panel></settings-general-pollen-panel>
+				</v-col>
+			</v-row>
+			<v-row :dense="$vuetify.breakpoint.mobile">
+				<v-col cols="12">
+					<settings-apperance-pollen-panel></settings-apperance-pollen-panel>
 				</v-col>
 			</v-row>
 		</v-col>

@@ -41,6 +41,8 @@ import LightFactorPanelPollen from './LightFactorPanelPollen.vue'
 import BuildSurfacePanelPollen from './BuildSurfacePanelPollen.vue'
 import ExtruderPanelPollen from './ExtruderPanelPollen.vue'
 import SettingsGeneralPanelPollen from './SettingsGeneralPanelPollen.vue'
+import SettingsAboutPanelPollen from './SettingsAboutPanelPollen.vue'
+import SettingsAppearancePanelPollen from './SettingsAppearancePanelPollen.vue'
 
 Vue.component('atx-panel', ATXPanel)
 Vue.component('extrude-panel', ExtrudePanel)
@@ -81,3 +83,5 @@ Vue.component('light-factor-pollen-panel', LightFactorPanelPollen)
 Vue.component('build-surface-pollen-panel', BuildSurfacePanelPollen)
 Vue.component('extruder-pollen-panel', ExtruderPanelPollen)
 Vue.component('settings-general-pollen-panel', SettingsGeneralPanelPollen)
+Vue.component('settings-about-pollen-panel', SettingsAboutPanelPollen)
+Vue.component('settings-apperance-pollen-panel', SettingsAppearancePanelPollen)
