@@ -32,45 +32,45 @@
 		<v-card-text>
 			<v-row dense class="row--separated-cols row--dashboard-first-row">
 				<v-col class="d-flex flex-column justify-center text-center">
-					<strong>
+					<span class="pollen-attr-header">
 						{{ $t('panel.jobData.jobDuration') }}
-					</strong>
+					</span>
 					<span>
             {{ displayJobDuration }}
 					</span>
 				</v-col>
 
 				<v-col class="d-flex flex-column justify-center text-center">
-					<strong>
+					<span class="pollen-attr-header">
 						{{ $t('panel.jobData.progress') }}
-					</strong>
+					</span>
 					<span>
 						{{ displayJobProgress }}
 					</span>
 				</v-col>
 
 				<v-col class="d-flex flex-column justify-center text-center">
-					<strong>
+					<span class="pollen-attr-header">
 						{{ $t('panel.jobData.layerHeight') }}
-					</strong>
+					</span>
 					<span>
 						{{ displayLayerHeight }}
 					</span>
 				</v-col>
 
         <v-col class="d-flex flex-column justify-center text-center">
-					<strong>
+					<span class="pollen-attr-header">
 						{{ $t('panel.jobData.nozzleSize') }}
-					</strong>
+					</span>
 					<span>
 						{{ nozzleSize }}
 					</span>
 				</v-col>
 
         <v-col class="d-flex flex-column justify-center text-center">
-					<strong>
+					<span class="pollen-attr-header">
 						{{ $t('panel.jobData.speed') }}
-					</strong>
+					</span>
 					<span>
 						{{ jobSpeed }}
 					</span>

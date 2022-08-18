@@ -48,13 +48,13 @@ $pollen-row-padding: 8px 24px;
 }
 
 .row.row--separated-cols {
-  .col:not(:last-child) {
+  & > .col:not(:last-child) {
     border-right: 1px solid #{map-get($material-light, "primary")};
 
     padding-right: 16px;
   }
 
-  .col:not(:first-child) {
+  & > .col:not(:first-child) {
     border-left: 1px solid rgba(255, 255, 255, 0.5);
 
     padding-left: 16px;
@@ -83,4 +83,23 @@ $pollen-row-padding: 8px 24px;
     background-color: rgba(255, 255, 255, 0.1724);
     /* padding: 4px; */
   }
+}
+
+.pollen-attr-header {
+  color: rgba(44, 34, 33, 0.7);
+}
+
+.theme--light.v-card {
+  /* color: rgba(0, 0, 0, 0.87); */
+  color: rgba(44, 34, 33, 1.0);
+}
+.theme--light.v-card > .v-card__text,
+.theme--light.v-card > .v-card__subtitle {
+  /* color: rgba(0, 0, 0, 0.6); */
+  color: rgba(44, 34, 33, 1.0);
+}
+
+.v-input--checkbox--extruder-selection {
+  padding: 0px;
+  margin: 0px;
 }

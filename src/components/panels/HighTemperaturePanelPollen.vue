@@ -8,18 +8,18 @@
 		<v-card-text>
 			<v-row dense class="row--separated-cols row--dashboard-first-row">
 				<v-col class="d-flex flex-column">
-					<strong>
+					<span class="pollen-attr-header">
 						Room
-					</strong>
+					</span>
 					<span>
 						<temperature-tool-input :bed="bedHeaters[0]" :bed-index="0" active></temperature-tool-input>
 					</span>
 				</v-col>
 
 				<v-col class="d-flex flex-column">
-					<strong>
+					<span class="pollen-attr-header">
 						Radiant
-					</strong>
+					</span>
 					<span>
 						<temperature-tool-input :bed="bedHeaters[0]" :bed-index="0" active></temperature-tool-input>
 					</span>

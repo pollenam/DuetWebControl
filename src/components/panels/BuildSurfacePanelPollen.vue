@@ -74,7 +74,7 @@
 		</v-card-title>
 
 		<v-card-text v-show="visibleAxes.length !== 0">
-			<v-row :dense="$vuetify.breakpoint.mobile">
+			<v-row dense class="row--separated-cols">
 				<v-col cols="7">
 					<v-row>
 						<v-col class="ma-auto" cols="2">
@@ -130,15 +130,19 @@
 						</v-col>
 
 					</v-row>
-					<v-row align-content:center>
-						<span>Speed Factor</span> <percentage-input v-model="speedFactor" :min="speedFactorMin" :max="speedFactorMax" :disabled="uiFrozen"></percentage-input>
+					<v-row>
+            <v-col class="d-flex flex-column justify-center" offset="2" cols="3">
+              <span class="pollen-attr-header">Speed Factor</span>
+            </v-col>
+            <v-col class="d-flex flex-column justify-center" cols="7">
+              <percentage-input v-model="speedFactor" :min="speedFactorMin" :max="speedFactorMax" :disabled="uiFrozen"></percentage-input>
+            </v-col>
 					</v-row>
 				</v-col>
-				<v-divider vertical></v-divider>
-				<v-col cols="3" sm="3" md="3" lg="3" xl="3">
+				<v-col cols="3">
 					<v-col>
 						<v-row class="mb-2">
-							<strong>Level {{ $t('panel.babystepping.current', [$displayZ(babystepping)]) }}</strong>
+							<span class="pollen-attr-header">Level {{ $t('panel.babystepping.current', [$displayZ(babystepping)]) }}</span>
 						</v-row>
 						<v-row class="mb-1">
 							<code-btn :code="`M290 R1 Z${-babystepAmount}`" no-wait block>
@@ -166,35 +170,27 @@
 						</v-row>
 					</v-col>
 				</v-col>
-				<v-divider vertical></v-divider>
-				<v-col cols="2" sm="2" md="2" lg="2" xl="2">
-					<v-col>
+				<v-col cols="2">
 						<v-row>
 							<v-col>
 								<template v-for="(bedHeater, bedIndex) in bedHeaters">
 										<template v-if="bedHeater">
 											<v-row :key="`bed-title-${bedIndex}-0`">
-												<strong>
-													Bed
-												</strong>
-											</v-row>
-											<v-row :key="`bed-value-${bedIndex}-0`">
-												<temperature-tool-input :bed="bedHeater" :bed-index="bedIndex" active></temperature-tool-input>
+                        <v-col class="d-flex flex-column">
+                          <span class="pollen-attr-header">Bed</span>
+                          <temperature-tool-input :bed="bedHeater" :bed-index="bedIndex" active></temperature-tool-input>
+                        </v-col>
 											</v-row>
 										</template>
 								</template>
 							</v-col>
 						</v-row>
-						<v-divider horizontal></v-divider>
-						<v-row class="mt-1">
-							<strong>
-								Fan
-							</strong>
-						</v-row>
 						<v-row>
-							<percentage-input v-model="fanValue" :disabled="uiFrozen"></percentage-input>
+              <v-col class="d-flex flex-column">
+                <span class="pollen-attr-header">Fan</span>
+                <percentage-input v-model="fanValue" :disabled="uiFrozen"></percentage-input>
+              </v-col>
 						</v-row>
-					</v-col>
 				</v-col>
 			</v-row>
 		</v-card-text>

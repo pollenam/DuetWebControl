@@ -1,24 +1,24 @@
 <style>
-.temperature-tool-input {
-	max-width: 100px;
+.temperature-tool-component {
+	width: 50px;
+  display: inline-block;
 }
 
 .temperature-row {
 	margin-bottom: 10px;
 	padding:0px;
 }
-
 </style>
+
 <template>
-		<v-col cols="12">
-			<v-row class="temperature-row align-center justify-center flex-nowrap ">
-				<div class="text-body-1 mr-2">{{ getHeaterValue() }} <span class="text-h6">/</span> </div>
-				<v-combobox hide-details="'auto'" ref="input" type="number" min="-273" max="1999" step="any" class="temperature-tool-input pt-0 mt-0" :label="label" :menu-props="{ maxHeight: '50%' }"
-							:value="inputValue" :search-input="inputValue" @update:search-input="change" @keyup.enter="apply" @blur="blur"
-							:loading="applying" :disabled="uiFrozen || !isValid" :items="items" hide-selected>
-				</v-combobox>
-			</v-row>
-		</v-col>
+  <div class="temperature-row">
+    <span class="temperature-tool-component">{{ getHeaterValue() }}</span>
+    <span class="gray--text mx-2">/</span>
+    <v-combobox hide-details="auto" ref="input" type="number" min="-273" max="1999" step="any" class="temperature-tool-component pt-0 mt-0" :label="label" :menu-props="{ maxHeight: '50%' }"
+          :value="inputValue" :search-input="inputValue" @update:search-input="change" @keyup.enter="apply" @blur="blur"
+          :loading="applying" :disabled="uiFrozen || !isValid" :items="items" hide-selected>
+    </v-combobox>
+  </div>
 </template>
 
 <script>

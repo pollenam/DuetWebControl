@@ -11,14 +11,14 @@
       <v-icon class="mr-1">mdi-water-outline</v-icon>
 			{{ $t('panel.extruderPollen.title') }} {{ extruderNumber }}
 			<v-spacer></v-spacer>
-			TODO SELECTED BUTTONS
+			<v-checkbox class="v-input--checkbox--extruder-selection" hide-details="auto" color="success"></v-checkbox>
 		</v-card-title>
 
 		<v-card-text class="d-flex flex-column v-card__text--with-rows-highlighted">
 			<v-row class="row--highlighted">
         <v-col cols="12 d-flex flex-column">
           <div class="center-label">XX tr/min</div>
-          <percentage-input></percentage-input>
+          <percentage-input-pollen></percentage-input-pollen>
         </v-col>
       </v-row>
       <v-row class="row--highlighted" dense>
@@ -35,15 +35,15 @@
       </v-row>
       <v-row class="row--highlighted">
         <v-col cols="3 d-flex align-center">
-          Mixer
+          <span class="pollen-attr-header">Mixer</span>
         </v-col>
         <v-col cols="9 d-flex align-center">
-          <percentage-input></percentage-input>
+          <percentage-input-pollen></percentage-input-pollen>
         </v-col>
       </v-row>
 			<v-row>
         <v-col cols="3 d-flex align-center">
-          Feeder
+          <span class="pollen-attr-header">Feeder</span>
         </v-col>
         <v-col cols="9 d-flex align-center">
           <temperature-tool-input :bed="bedHeaters[0]" :bed-index="0" active></temperature-tool-input>
@@ -51,7 +51,7 @@
 			</v-row>
 			<v-row class="row--highlighted justify-space-between align-center">
         <v-col cols="3 d-flex align-center">
-          Screw
+          <span class="pollen-attr-header">Screw</span>
         </v-col>
         <v-col cols="9 d-flex align-center">
           <temperature-tool-input :bed="bedHeaters[0]" :bed-index="0" active></temperature-tool-input>
@@ -59,7 +59,7 @@
 			</v-row>
 			<v-row class="justify-space-between align-center">
         <v-col cols="3 d-flex align-center">
-          Nozzle
+          <span class="pollen-attr-header">Nozzle</span>
         </v-col>
         <v-col cols="9 d-flex align-center">
           <temperature-tool-input :bed="bedHeaters[0]" :bed-index="0" active></temperature-tool-input>
@@ -67,10 +67,10 @@
 			</v-row>
 			<v-row class="row--highlighted">
         <v-col cols="3 d-flex align-center">
-          Extrusion Factor
+          <span class="pollen-attr-header">Extrusion Factor</span>
         </v-col>
         <v-col cols="9 d-flex align-center">
-          <percentage-input></percentage-input>
+          <percentage-input-pollen></percentage-input-pollen>
         </v-col>
 			</v-row>
 		</v-card-text>
