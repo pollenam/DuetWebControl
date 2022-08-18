@@ -101,7 +101,6 @@ textarea {
 
       <atx-btn-pollen class="ml-12"></atx-btn-pollen>
       <doors-btn-pollen></doors-btn-pollen>
-			<v-switch v-model="legacyMode"></v-switch>
       <a href="https://pollenam.zendesk.com/" target="_blank" rel="nooperner" class="ml-5 text-white">Support</a>
 
 			<v-spacer/>
@@ -176,14 +175,6 @@ import { DashboardMode } from './store/settings.js'
 
 export default {
 	computed: {
-		legacyMode: {
-			get() {
-				return this.$store.state.settings.legacyMode;
-			},
-			set(val) {
-				this.$store.commit("settings/legacyMode", val);
-			}
-		},
 		...mapState({
 			boards: state => state.machine.model.boards,
 			menuDirectory: state => state.machine.model.directories.menu,

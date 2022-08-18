@@ -19,7 +19,9 @@ import Webcam from './Job/Webcam.vue'
 import General from './Settings/General.vue'
 import Machine from './Settings/Machine.vue'
 import Plugins from './Settings/Plugins.vue'
+
 import MacrosPollen from './Settings/MacrosPollen.vue'
+import GeneralPollen from './Settings/GeneralPollen.vue'
 
 import Page404 from './Page404.vue'
 
@@ -151,6 +153,8 @@ function registerRouteInternal(menu, component, route) {
 }
 
 export const GeneralSettingTabs = Vue.observable([])
+export const GeneralSettingTabsPollen = Vue.observable([])
+
 export const MachineSettingTabs = Vue.observable([])
 
 // Register a new settings page and a Vue component
@@ -175,7 +179,13 @@ export function registerSettingTab(general, name, component, caption, translated
 
 	Vue.component(name, component);
 	if (general) {
-		GeneralSettingTabs.push(tab);
+		console.log(name);
+		if (name.includes("pollen")){
+			console.log("addeeeed");
+			GeneralSettingTabsPollen.push(tab);
+		} else {
+			GeneralSettingTabs.push(tab);
+		}
 	} else {
 		MachineSettingTabs.push(tab);
 	}
@@ -202,6 +212,7 @@ Vue.use(General)
 Vue.use(Machine)
 Vue.use(Plugins)
 Vue.use(MacrosPollen)
+Vue.use(GeneralPollen)
 
 
 // 404 page

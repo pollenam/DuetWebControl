@@ -39,6 +39,11 @@ export default {
 		value: {
 			type: String,
 			required: true
+		},
+		isPublicOnly: {
+			type: Boolean,
+			required: false,
+			default: false
 		}
 	},
 	computed: {
@@ -48,6 +53,11 @@ export default {
 			if (pathItems[0] === '') {
 				pathItems[0] = '0:';
 			}
+
+			if(this.isPublicOnly) {
+				pathItems.shift();
+			}
+
 			pathItems = pathItems.filter(item => item !== '');
 
 			let rootCaption = (pathItems.length === 0) ? this.$t('generic.noValue') : pathItems[0], showDropdown = false;
@@ -56,6 +66,10 @@ export default {
 					pathItems.shift();
 					pathItems[0] = this.directories.gCodes;
 					rootCaption = this.$t('directory.gcodes');
+				} else if (Path.startsWith(this.value, this.directories.macrosPublic) && this.isPublicOnly) {
+					pathItems.shift();
+					pathItems[0] = this.directories.macrosPublic;
+					rootCaption = "Macro Public";
 				} else if (Path.startsWith(this.value, this.directories.macros)) {
 					pathItems.shift();
 					pathItems[0] = this.directories.macros;
@@ -122,6 +136,7 @@ export default {
 	methods: {
 		...mapActions('machine', ['move']),
 		changeDirectory(directory) {
+			console.log(directory);
 			this.$emit('input', directory);
 		},
 		dragOver(directory, e) {
