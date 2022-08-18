@@ -15,15 +15,22 @@
 
 <template>
 	<v-card>
-		<v-card-title>
+		<v-card-title class="v-card__title--dense justify-space-between">
 			<!-- TODO I18N -->
+      <v-icon class="mr-2">mdi-axis-arrow</v-icon>
 			Build Surface
+      <v-div class="ms-5 grey--text" v-if="!uiFrozen">
+        <v-span v-for="(axis, index) in visibleAxes" :key="index" class="ms-3">
+          {{ axis.letter }}:
+          {{ displayAxisPosition(axis, index) }}
+        </v-span>
+      </v-div>
 
 			<v-spacer></v-spacer>
 
 			<v-menu offset-y left>
 				<template #activator="{ on }">
-					<v-btn v-show="visibleAxes.length" color="primary" small class="mx-0" :elevation="1" v-on="on">
+					<v-btn v-show="visibleAxes.length" small class="mx-0" :elevation="0" v-on="on">
 						{{ $t('panel.movement.compensation') }} <v-icon>mdi-menu-down</v-icon>
 					</v-btn>
 				</template>
@@ -325,7 +332,11 @@ export default {
 				}
 			}
 			return this.$t('generic.noValue');
-		}
+		},
+		displayAxisPosition(axis) {
+			const position = this.displayToolPosition ? axis.userPosition : axis.machinePosition;
+			return (axis.letter === 'Z') ? this.$displayZ(position, false) : this.$display(position, 1);
+		},
 	},
 	watch: {
 		isConnected() {
