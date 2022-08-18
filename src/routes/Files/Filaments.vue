@@ -21,7 +21,7 @@ export default {
 				Filaments: {
 					icon: 'mdi-database',
 					caption: 'menu.files.filaments',
-					path: 'legacy/Files/Filaments',
+					path: '/legacy/Files/Filaments',
 					condition: () => ( !store.state.machine.model.state.machineMode || store.state.machine.model.state.machineMode === MachineMode.fff ) && store.state.settings.legacyMode == true
 				}
 			}

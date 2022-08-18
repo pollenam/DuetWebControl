@@ -19,6 +19,7 @@ import Webcam from './Job/Webcam.vue'
 import General from './Settings/General.vue'
 import Machine from './Settings/Machine.vue'
 import Plugins from './Settings/Plugins.vue'
+import MacrosPollen from './Settings/MacrosPollen.vue'
 
 import Page404 from './Page404.vue'
 
@@ -200,6 +201,8 @@ Vue.use(Webcam)
 Vue.use(General)
 Vue.use(Machine)
 Vue.use(Plugins)
+Vue.use(MacrosPollen)
+
 
 // 404 page
 router.addRoute(

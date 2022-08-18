@@ -9,7 +9,7 @@
 		<v-card-text class="pa-0" v-show="loading || filelist.length || !isRootDirectory">
 			<v-progress-linear v-show="loading" :indeterminate="true" class="my-0"></v-progress-linear>
 
-			<v-list   style="max-height: 235px"  class="overflow-y-auto pt-0" dense>
+			<v-list class="pt-0" dense>
 				<v-list-item v-if="!isRootDirectory" @click="goUp">
 					<v-list-item-avatar :size="32">
 						<v-icon small class="list-icon mr-1 grey lighten-1 white--text">mdi-arrow-up</v-icon>

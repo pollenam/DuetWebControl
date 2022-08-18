@@ -50,6 +50,8 @@ export class MachineModel {
 		firmware: Path.system,
 		gCodes: Path.gCodes,
 		macros: Path.macros,
+		macrosPublic: Path.macrosPublic,
+		macrosUser: Path.macrosUser,
 		menu: Path.menu,
 		scans: Path.scans,
 		system: Path.system,

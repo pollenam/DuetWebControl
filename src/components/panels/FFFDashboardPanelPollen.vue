@@ -17,7 +17,7 @@
 					<build-surface-pollen-panel  class="mb-2"></build-surface-pollen-panel>
 				</v-col>
 				<v-col class="hidden-xs-only" sm="3" md="3" lg="3" xl="3">
-					<macro-list></macro-list>
+					<macro-list-pollen></macro-list-pollen>
 				</v-col>
 			</v-row>
 			<v-row>

@@ -257,7 +257,6 @@ export default {
 		},
 		getPages(category) {
 			return category.pages.filter(page => {
-				console.log(page);
 				return page.condition
 				});
 		},

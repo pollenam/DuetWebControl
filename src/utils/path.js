@@ -150,6 +150,7 @@ const pathObj = {
 	firmware: '0:/sys',
 	gCodes: '0:/gcodes',
 	macros: '0:/macros',
+	macrosPublic: '0:/macros/public',
 	menu: '0:/menu',
 	scans: '0:/scans',
 	system: '0:/sys',

@@ -9,7 +9,7 @@
 		<v-card-text class="pa-0" v-show="loading || filelist.length || !isRootDirectory">
 			<v-progress-linear v-show="loading" :indeterminate="true" class="my-0"></v-progress-linear>
 
-			<v-list class="pt-0" dense>
+			<v-list style="max-height: 235px" class="overflow-y-auto pt-0" dense>
 				<v-list-item v-if="!isRootDirectory" @click="goUp">
 					<v-list-item-avatar :size="32">
 						<v-icon small class="list-icon mr-1 grey lighten-1 white--text">mdi-arrow-up</v-icon>
@@ -58,7 +58,7 @@ export default {
 		...mapState(['selectedMachine']),
 		...mapGetters(['isConnected', 'uiFrozen']),
 		...mapState('machine/model', {
-			macrosDirectory: state => state.directories.macros,
+			macrosDirectory: state => state.directories.macrosPublic,
 			volumes: state => state.volumes
 		}),
 		currentDirectory() {
@@ -77,7 +77,7 @@ export default {
 		return {
 			loading: false,
 			wasMounted: false,
-			directory: Path.macros,
+			directory: Path.macrosPublic,
 			filelist: []
 		}
 	},
@@ -168,7 +168,7 @@ export default {
 				this.wasMounted = (this.volumes.length > 0) && this.volumes[0].mounted;
 				this.refresh();
 			} else {
-				this.directory = Path.macros;
+				this.directory = Path.macrosPublic;
 				this.filelist = [];
 			}
 		},
@@ -178,7 +178,7 @@ export default {
 				this.wasMounted = (this.volumes.length > 0) && this.volumes[0].mounted;
 				this.refresh();
 			} else {
-				this.directory = Path.macros;
+				this.directory = Path.macrosPublic;
 				this.filelist = [];
 			}
 		},
