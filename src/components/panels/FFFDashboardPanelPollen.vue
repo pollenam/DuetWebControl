@@ -22,16 +22,16 @@
 			</v-row>
 			<v-row>
 				<v-col cols="3" sm="3" md="3" lg="3" xl="3">
-					<extruder-pollen-panel></extruder-pollen-panel>
+					<extruder-panel-pollen :extruderNumber="1"></extruder-panel-pollen>
 				</v-col>
 					<v-col cols="3" sm="3" md="3" lg="3" xl="3">
-					<extruder-pollen-panel></extruder-pollen-panel>
+					<extruder-panel-pollen :extruderNumber="2"></extruder-panel-pollen>
 				</v-col>
 					<v-col cols="3" sm="3" md="3" lg="3" xl="3">
-					<extruder-pollen-panel></extruder-pollen-panel>
+					<extruder-panel-pollen :extruderNumber="3"></extruder-panel-pollen>
 				</v-col>
 					<v-col cols="3" sm="3" md="3" lg="3" xl="3">
-					<extruder-pollen-panel></extruder-pollen-panel>
+					<extruder-panel-pollen :extruderNumber="4"></extruder-panel-pollen>
 				</v-col>
 			</v-row>
 		</v-col>

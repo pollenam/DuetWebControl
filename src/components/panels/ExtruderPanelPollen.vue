@@ -6,9 +6,9 @@
 
 </style>
 <template>
-	<v-card>
-		<v-card-title class="pb-0">
-			Extruder XX
+	<v-card elevation="0">
+		<v-card-title class="v-card__title--dense justify-space-between">
+			Ext. {{ extruderNumber }}
 			<v-spacer></v-spacer>
 			TODO SELECTED BUTTONS
 		</v-card-title>
@@ -51,6 +51,12 @@
 import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
 
 export default {
+  props: {
+    extruderNumber: {
+      type: Number,
+      required: true
+    }
+  },
 	computed: {
 		...mapGetters(['uiFrozen']),
 		...mapState('machine/model', ['move']),

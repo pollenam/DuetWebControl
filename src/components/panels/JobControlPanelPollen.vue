@@ -95,6 +95,7 @@ export default {
 		...mapState('machine/model', {
 			lastFileName: state => state.job.lastFileName,
 			lastFileSimulated: state => state.job.lastFileSimulated,
+			move: state => state.move,
 			machineMode: state => state.state.machineMode,
 			status: state => state.state.status,
 			thumbnails: state => state.job.file.thumbnails,
@@ -158,12 +159,16 @@ export default {
 			return (this.job.file.fileName !== null) ? extractFileName(this.job.file.fileName) : null;
 		},
     nozzleSize() {
+      console.log('this.job', this.job);
+      console.log('this.job.file', this.job.file);
       return 'n/a' // FIXME
     },
     jobSpeed() {
-      console.log('this.job', this.job);
-      console.log('this.job.file', this.job.file);
-      return 'n/a'; // FIXME
+      if (!isPrinting() && this.move.currentMove.topSpeed == 0) {
+        return 'n/a';
+      }
+
+      return Vue.prototype.$display(this.move.currentMove.topSpeed, 0, 'mm/s')
     },
     displayJobProgress() {
       if (!isPrinting() && this.jobProgress == 0) {

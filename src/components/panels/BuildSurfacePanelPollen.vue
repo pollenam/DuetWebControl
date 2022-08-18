@@ -14,7 +14,7 @@
 </style>
 
 <template>
-	<v-card>
+	<v-card elevation="0">
 		<v-card-title class="v-card__title--dense justify-space-between">
 			<!-- TODO I18N -->
       <v-icon class="mr-2">mdi-axis-arrow</v-icon>
