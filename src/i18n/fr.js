@@ -542,6 +542,7 @@ export default {
       title: 'Haute Temperature'
     },
     buildSurfacePollen: {
+      title: 'Zone Construction',
       level: 'Niveau',
       setZero: 'Mettre à zero',
       zLimits: 'Limites en Z',

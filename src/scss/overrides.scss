@@ -25,7 +25,6 @@ div[data-app='true'] {
 .theme--light.v-btn.v-btn--has-bg {
   background-color: #fee5bd;
   border: 1px solid #ecca92;
-  color: #2c2721;
 }
 
 .v-dialog {
@@ -59,6 +58,13 @@ $pollen-row-padding: 8px 24px;
 
     padding-left: 16px;
   }
+}
+
+hr.hr--separated-rows {
+  margin: 16px 16px;
+
+  border-top: 1px solid #{map-get($material-light, "primary")};
+  border-bottom: 1px solid rgba(255, 255, 255, 0.5);
 }
 
 .v-card__title + .v-card__text.v-card__text--with-rows-highlighted {

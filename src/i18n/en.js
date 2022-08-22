@@ -629,6 +629,7 @@ export default {
       title: 'High Temperature'
     },
     buildSurfacePollen: {
+      title: 'Build Surface',
       level: 'Level',
       setZero: 'Set Zero',
       zLimits: 'Z Limits',

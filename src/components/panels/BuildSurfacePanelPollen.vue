@@ -1,4 +1,4 @@
-<style>
+<style lang="scss">
 .move-btn {
 	padding-left: 0 !important;
 	padding-right: 0 !important;
@@ -11,14 +11,41 @@
 	min-width: 0;
 }
 
+.theme--light.v-btn.v-btn--outlined {
+  background-color: #fee5bd;
+  border: 1px solid #f8a531;
+}
+
+.axes-movements-wrapper {
+  button.move-btn.theme--light.v-btn.v-btn--has-bg {
+    border: 0px;
+  }
+
+  .row.axes-movements-row-wrapper {
+    .col:not(:first-child) {
+
+      button.move-btn.theme--light.v-btn.v-btn--has-bg {
+        border-left: 1px solid #fdd48e;
+      }
+    }
+  }
+
+  & > .row:not(:first-child) {
+    border-top: 1px solid #f8a531;
+  }
+
+  .col.axes-command-bordered-left {
+    border-left: 1px solid #f8a531;
+  }
+}
+
 </style>
 
 <template>
 	<v-card elevation="0">
 		<v-card-title class="v-card__title--dense justify-space-between">
-			<!-- TODO I18N -->
       <v-icon class="mr-2">mdi-axis-arrow</v-icon>
-			Build Surface
+			{{ $t('panel.buildSurfacePollen.title') }}
       <v-div class="ms-5 grey--text" v-if="!uiFrozen">
         <v-span v-for="(axis, index) in visibleAxes" :key="index" class="ms-3">
           {{ axis.letter }}:
@@ -76,38 +103,22 @@
 		<v-card-text v-show="visibleAxes.length !== 0">
 			<v-row dense class="row--separated-cols">
 				<v-col cols="7">
-					<v-row>
-						<v-col class="ma-auto" cols="2">
+					<v-row no-gutters>
+						<v-col class="d-flex align-center justify-start" cols="2">
 							<code-btn outlined fab large class="home_btn" code="G28" :disabled="!canHome" :title="$t('button.home.titleAll')" >
 								{{ $t('button.home.captionAll') }}
 							</code-btn>
 						</v-col>
-						<v-col cols="10">
-							<!-- Mobile home buttons -->
-							<v-row class="hidden-md-and-up py-2" no-gutters>
-								<v-col>
-									<code-btn color="primary" code="G28" :disabled="!canHome" :title="$t('button.home.titleAll')" block tile>
-										{{ $t('button.home.captionAll') }}
-									</code-btn>
-								</v-col>
-								<template v-if="!isDelta">
-									<v-col v-for="(axis, axisIndex) in visibleAxes" :key="axisIndex">
-										<code-btn :color="axis.homed ? 'primary' : 'warning'" :disabled="!canHome" :title="$t('button.home.title', [axis.letter])" :code="getHomeCode(axis)" block tile>
-											{{ $t('button.home.caption', [axis.letter]) }}
-										</code-btn>
-									</v-col>
-								</template>
-							</v-row>
-
-							<v-row v-for="(axis, axisIndex) in visibleAxes" :key="axisIndex" dense>
+						<v-col cols="10" class="axes-movements-wrapper">
+							<v-row v-for="(axis, axisIndex) in visibleAxes" :key="axisIndex" no-gutters>
 								<!-- Regular home buttons -->
-								<v-col v-if="!isDelta" cols="auto" class="flex-shrink-1 hidden-sm-and-down">
+								<v-col v-if="!isDelta" cols="auto" class="flex-shrink-1 hidden-sm-and-down d-flex justify-center align-center text-body-1 ps-2 pe-3">
 									{{ axis.letter }}
 								</v-col>
 
 								<!-- Decreasing movements -->
 								<v-col>
-									<v-row no-gutters>
+									<v-row no-gutters class="axes-movements-row-wrapper">
 										<v-col v-for="index in numMoveSteps" :key="index"  :class="getMoveCellClass(index)">
 											<code-btn :code="getMoveCode(axis, index - 1, true)" :disabled="!canMove(axis)" no-wait @contextmenu.prevent="showMoveStepDialog(axis.letter, index - 1)" block tile class="move-btn">
 												{{ showSign(-moveSteps(axis.letter)[index - 1]) }}
@@ -117,8 +128,8 @@
 								</v-col>
 
 								<!-- Increasing movements -->
-								<v-col>
-									<v-row no-gutters>
+								<v-col class="axes-command-bordered-left">
+									<v-row no-gutters class="axes-movements-row-wrapper">
 										<v-col v-for="index in numMoveSteps" :key="index" :class="getMoveCellClass(numMoveSteps)">
 											<code-btn :code="getMoveCode(axis, numMoveSteps - index, false)" :disabled="!canMove(axis)" no-wait @contextmenu.prevent="showMoveStepDialog(axis.letter, numMoveSteps - index)" block tile class="move-btn">
 												{{ moveSteps(axis.letter)[numMoveSteps - index] }}
@@ -130,7 +141,7 @@
 						</v-col>
 
 					</v-row>
-					<v-row>
+					<v-row class="mt-0">
             <v-col class="d-flex flex-column justify-center" offset="2" cols="3">
               <span class="pollen-attr-header">{{ $t('panel.speedFactor.caption') }}</span>
             </v-col>
@@ -140,51 +151,36 @@
 					</v-row>
 				</v-col>
 				<v-col cols="3">
-					<v-col>
-						<v-row class="mb-2">
+          <v-row>
+            <v-col>
 							<span class="pollen-attr-header">{{ $t('panel.buildSurfacePollen.level') }}</span>
-						</v-row>
-						<v-row class="mb-1">
-							<code-btn :code="`M290 R1 Z${-babystepAmount}`" no-wait block>
+							<code-btn :code="`M290 R1 Z${-babystepAmount}`" no-wait block class="mt-3">
 								<v-icon>mdi-arrow-collapse-vertical</v-icon> {{ $displayZ(-babystepAmount) }}
 							</code-btn>
-						</v-row>
-						<v-row class="mb-1">
-							<code-btn :code="`M290 R1 Z${babystepAmount}`" no-wait block>
+							<code-btn :code="`M290 R1 Z${babystepAmount}`" no-wait block class="mt-2">
 								<v-icon>mdi-arrow-split-horizontal</v-icon> +{{ $displayZ(babystepAmount) }}
 							</code-btn>
-						</v-row>
-						<v-row class="align-center">
-							<v-col>
-								<v-row class="align-center">
-									<span class="pollen-attr-header">{{ $t('panel.buildSurfacePollen.zLimits') }}</span>
-									<v-switch hide-details="auto" class="ml-2 mt-0" :disabled="uiFrozen">
-									</v-switch>
-								</v-row>
-							</v-col>
-							<v-col>
-							<code-btn code="M290 R0 S0" no-wait block>
-								{{ $t('panel.buildSurfacePollen.setZero') }}
-							</code-btn>
-							</v-col>
-						</v-row>
-					</v-col>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col class="d-flex flex-wrap align-center pb-0">
+              <span class="pollen-attr-header mb-2">{{ $t('panel.buildSurfacePollen.zLimits') }}</span>
+              <v-switch hide-details="auto" class="ms-1 mt-0 mb-2" :disabled="uiFrozen"></v-switch>
+              <v-spacer></v-spacer>
+              <code-btn code="M290 R0 S0" no-wait class="mb-2">
+                {{ $t('panel.buildSurfacePollen.setZero') }}
+              </code-btn>
+            </v-col>
+          </v-row>
 				</v-col>
 				<v-col cols="2">
-						<v-row>
-							<v-col>
-								<template v-for="(bedHeater, bedIndex) in bedHeaters">
-										<template v-if="bedHeater">
-											<v-row :key="`bed-title-${bedIndex}-0`">
-                        <v-col class="d-flex flex-column">
-                          <span class="pollen-attr-header">{{ $t('panel.buildSurfacePollen.bed') }}</span>
-                          <temperature-tool-input :bed="bedHeater" :bed-index="bedIndex" active></temperature-tool-input>
-                        </v-col>
-											</v-row>
-										</template>
-								</template>
-							</v-col>
-						</v-row>
+            <v-row :key="`bed-title-${firstBedIndex}-0`">
+              <v-col class="d-flex flex-column">
+                <span class="pollen-attr-header">{{ $t('panel.buildSurfacePollen.bed') }}</span>
+                <temperature-tool-input :bed="firstBedHeater" :bed-index="firstBedIndex" active class="mt-3 mb-0"></temperature-tool-input>
+              </v-col>
+            </v-row>
+            <hr class="hr--separated-rows" />
 						<v-row>
               <v-col class="d-flex flex-column">
                 <span class="pollen-attr-header">{{ $t('panel.buildSurfacePollen.fan') }}</span>
@@ -275,7 +271,13 @@ export default {
 					}
 					return null;
 				});
-		}
+		},
+    firstBedIndex() {
+      return this.heat.bedHeaters.first;
+    },
+    firstBedHeater() {
+      return this.heat.heaters[this.firstBedIndex];
+    }
 	},
 	data() {
 		return {
