@@ -27,7 +27,7 @@ th:last-child {
 			:headers="headers" :items="events" item-key="date"
 			disable-pagination hide-default-footer :mobile-breakpoint="0"
 			:custom-sort="sort" :sort-by.sync="sortBy" :sort-desc.sync="sortDesc" must-sort
-			class="elevation-3" :class="{ 'empty-table-fix' : !events.length }">
+			class="elevation-0" :class="{ 'empty-table-fix' : !events.length }">
 
 			<template #no-data>
 				<v-alert :value="true" type="info" class="text-left ma-0">

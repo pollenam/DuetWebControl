@@ -5,7 +5,7 @@
 </style>
 
 <template>
-	<v-row class="component flex-shrink-1" :class="{ 'mt-2' : solo, 'grow' : grow }" no-gutters align="center">
+	<v-row class="component align-stretch flex-shrink-1" :class="{ 'mt-2' : solo, 'grow' : grow }" no-gutters align="center">
 		<v-col>
 			<v-combobox ref="input" :solo="solo" hide-details :disabled="uiFrozen" :placeholder="$t('input.code.placeholder')"
 						:search-input.sync="code" :loading="doingCode" @keyup.enter="send" @change="change" @blur="wasFocused = showItems = false"
@@ -21,8 +21,8 @@
 		</v-col>
 
 		<v-col class="ml-2 flex-shrink-1" cols="auto">
-			<v-btn color="info" :disabled="uiFrozen" :loading="doingCode" @click="send">
-				<v-icon class="mr-2">mdi-send</v-icon> {{ $t('input.code.send') }} 
+			<v-btn color="primary" style="height: 100%;" :disabled="uiFrozen" :loading="doingCode" @click="send">
+				<v-icon class="mr-2">mdi-send</v-icon> {{ $t('input.code.send') }}
 			</v-btn>
 		</v-col>
 	</v-row>

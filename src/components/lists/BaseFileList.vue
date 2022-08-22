@@ -24,7 +24,7 @@ td {
 			:loading="loading || innerLoading"
 			:custom-sort="sort" :sort-by.sync="internalSortBy" :sort-desc.sync="internalSortDesc" must-sort
 			disable-pagination hide-default-footer :mobile-breakpoint="0"
-			class="base-file-list elevation-3" :class="{ 'empty-table-fix' : !innerFilelist.length, 'loading-cursor' : isLoading }">
+			class="base-file-list elevation-0" :class="{ 'empty-table-fix' : !innerFilelist.length, 'loading-cursor' : isLoading }">
 
 			<template #progress>
 				<slot name="progress">
