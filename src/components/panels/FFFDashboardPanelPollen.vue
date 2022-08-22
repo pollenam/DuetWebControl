@@ -1,15 +1,15 @@
 <template>
 	<v-row :dense="$vuetify.breakpoint.mobile">
 		<v-col cols="12">
-			<v-row>
-				<v-col cols="12" lg="6">
-					<job-control-panel-pollen  class="mb-2"></job-control-panel-pollen>
+			<v-row align="stretch">
+				<v-col cols="12" lg="6" class="d-flex">
+					<job-control-panel-pollen  class="w-100 mb-2"></job-control-panel-pollen>
 				</v-col>
-				<v-col cols="12" md="6" lg="4">
-					<high-temperature-panel-pollen  class="mb-2"></high-temperature-panel-pollen>
+				<v-col cols="12" md="6" lg="4" class="d-flex">
+					<high-temperature-panel-pollen  class="w-100 mb-2"></high-temperature-panel-pollen>
 				</v-col>
-				<v-col cols="12" md="6" lg="2">
-					<light-factor-pollen-panel  class="mb-2"></light-factor-pollen-panel>
+				<v-col cols="12" md="6" lg="2" class="d-flex">
+					<light-factor-pollen-panel  class="w-100 mb-2"></light-factor-pollen-panel>
 				</v-col>
 			</v-row>
 			<v-row>

@@ -30,7 +30,7 @@
 		</v-card-title>
 
 		<v-card-text>
-			<v-row dense class="row--separated-cols row--dashboard-first-row">
+			<v-row dense class="row--separated-cols">
 				<v-col class="d-flex flex-column justify-center text-center">
 					<span class="pollen-attr-header">
 						{{ $t('panel.jobData.jobDuration') }}

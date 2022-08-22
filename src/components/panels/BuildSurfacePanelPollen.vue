@@ -132,17 +132,17 @@
 					</v-row>
 					<v-row>
             <v-col class="d-flex flex-column justify-center" offset="2" cols="3">
-              <span class="pollen-attr-header">Speed Factor</span>
+              <span class="pollen-attr-header">{{ $t('panel.speedFactor.caption') }}</span>
             </v-col>
             <v-col class="d-flex flex-column justify-center" cols="7">
-              <percentage-input v-model="speedFactor" :min="speedFactorMin" :max="speedFactorMax" :disabled="uiFrozen"></percentage-input>
+              <percentage-input-pollen v-model="speedFactor" :min="speedFactorMin" :max="speedFactorMax" :disabled="uiFrozen"></percentage-input-pollen>
             </v-col>
 					</v-row>
 				</v-col>
 				<v-col cols="3">
 					<v-col>
 						<v-row class="mb-2">
-							<span class="pollen-attr-header">Level {{ $t('panel.babystepping.current', [$displayZ(babystepping)]) }}</span>
+							<span class="pollen-attr-header">{{ $t('panel.buildSurfacePollen.level') }}</span>
 						</v-row>
 						<v-row class="mb-1">
 							<code-btn :code="`M290 R1 Z${-babystepAmount}`" no-wait block>
@@ -157,14 +157,14 @@
 						<v-row class="align-center">
 							<v-col>
 								<v-row class="align-center">
-									<span>Z Limits</span>
+									<span class="pollen-attr-header">{{ $t('panel.buildSurfacePollen.zLimits') }}</span>
 									<v-switch hide-details="auto" class="ml-2 mt-0" :disabled="uiFrozen">
 									</v-switch>
 								</v-row>
 							</v-col>
 							<v-col>
 							<code-btn code="M290 R0 S0" no-wait block>
-								Set 0
+								{{ $t('panel.buildSurfacePollen.setZero') }}
 							</code-btn>
 							</v-col>
 						</v-row>
@@ -177,7 +177,7 @@
 										<template v-if="bedHeater">
 											<v-row :key="`bed-title-${bedIndex}-0`">
                         <v-col class="d-flex flex-column">
-                          <span class="pollen-attr-header">Bed</span>
+                          <span class="pollen-attr-header">{{ $t('panel.buildSurfacePollen.bed') }}</span>
                           <temperature-tool-input :bed="bedHeater" :bed-index="bedIndex" active></temperature-tool-input>
                         </v-col>
 											</v-row>
@@ -187,8 +187,8 @@
 						</v-row>
 						<v-row>
               <v-col class="d-flex flex-column">
-                <span class="pollen-attr-header">Fan</span>
-                <percentage-input v-model="fanValue" :disabled="uiFrozen"></percentage-input>
+                <span class="pollen-attr-header">{{ $t('panel.buildSurfacePollen.fan') }}</span>
+                <percentage-input-pollen v-model="fanValue" :disabled="uiFrozen"></percentage-input-pollen>
               </v-col>
 						</v-row>
 				</v-col>

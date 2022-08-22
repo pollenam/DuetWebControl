@@ -315,7 +315,7 @@ export default {
 			idle: 'Au repos',
 			unknown: 'Inconnu'
 		},
-		rpm: 'TPM',
+		rpm: 'tr/min',
 		sdCard: 'Carte SD {0}',
 		mounted: 'monté',
 		notMounted: 'non monté',
@@ -486,7 +486,14 @@ export default {
 	},
 	panel: {
     extruderPollen: {
-      title: 'Ext.'
+      title: 'Ext.',
+      mixer: 'Mixeur',
+      feeder: 'Point Froid',
+      screw: 'Vis',
+      nozzle: 'Nozzle',
+      extrusionFactor: 'Facteur d\'extrusion',
+      pidSet: 'PID',
+      selectPidPreset: 'Selectionnez le preset PID'
     },
 		atx: {
 			caption: 'VPower',
@@ -533,6 +540,13 @@ export default {
     },
     highTemperaturePollen: {
       title: 'Haute Temperature'
+    },
+    buildSurfacePollen: {
+      level: 'Niveau',
+      setZero: 'Mettre à zero',
+      zLimits: 'Limites en Z',
+      bed: 'Chauffage Lit',
+      fan: 'Ventilation'
     },
 		jobControl: {
 			caption: 'Contrôle du Travail',

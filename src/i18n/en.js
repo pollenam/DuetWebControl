@@ -573,7 +573,14 @@ export default {
 	},
 	panel: {
     extruderPollen: {
-      title: 'Ext.'
+      title: 'Ext.',
+      mixer: 'Mixer',
+      feeder: 'Feeder',
+      screw: 'Screw',
+      nozzle: 'Nozzle',
+      extrusionFactor: 'Extrusion Factor',
+      pidSet: 'PID Set',
+      selectPidPreset: 'Select PID Set'
     },
 		atx: {
 			caption: 'VPower',
@@ -620,6 +627,13 @@ export default {
     },
     highTemperaturePollen: {
       title: 'High Temperature'
+    },
+    buildSurfacePollen: {
+      level: 'Level',
+      setZero: 'Set Zero',
+      zLimits: 'Z Limits',
+      bed: 'Bed Heating',
+      fan: 'Fan'
     },
 		jobControl: {
 			caption: 'Job Control',
@@ -746,7 +760,7 @@ export default {
             caption: 'Machine-Specific',
             babystepAmount: 'Babystep amount ({0})',
             moveFeedrate: 'Feedrate for move buttons ({0})',
-			toolChangeMacros: 'Tool change macros'
+            toolChangeMacros: 'Tool change macros'
         },
         settingsNotifications: {
             caption: 'Notifications',
