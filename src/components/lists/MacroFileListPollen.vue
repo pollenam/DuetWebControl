@@ -1,20 +1,20 @@
 <template>
 	<div class="component">
-		<v-toolbar>
+		<v-toolbar elevation="0">
 			<directory-breadcrumbs v-model="directory" isPublicOnly="true"></directory-breadcrumbs>
 
 			<v-spacer></v-spacer>
 
-			<v-btn class="hidden-sm-and-down mr-3" :disabled="uiFrozen" :elevation="1" @click="showNewFile = true">
+			<v-btn class="hidden-sm-and-down mr-3" :disabled="uiFrozen" :elevation="0" @click="showNewFile = true">
 				<v-icon class="mr-1">mdi-file-plus</v-icon> {{ $t('button.newFile.caption') }}
 			</v-btn>
-			<v-btn class="hidden-sm-and-down mr-3" :disabled="uiFrozen" :elevation="1" @click="showNewDirectory = true">
+			<v-btn class="hidden-sm-and-down mr-3" :disabled="uiFrozen" :elevation="0" @click="showNewDirectory = true">
 				<v-icon class="mr-1">mdi-folder-plus</v-icon> {{ $t('button.newDirectory.caption') }}
 			</v-btn>
-			<v-btn class="hidden-sm-and-down mr-3" color="info" :loading="loading" :disabled="uiFrozen" :elevation="1" @click="refresh">
+			<v-btn class="hidden-sm-and-down mr-3" color="primary" :loading="loading" :disabled="uiFrozen" :elevation="0" @click="refresh">
 				<v-icon class="mr-1">mdi-refresh</v-icon> {{ $t('button.refresh.caption') }}
 			</v-btn>
-			<upload-btn class="hidden-sm-and-down" :elevation="1" :directory="directory" target="macros" color="primary"></upload-btn>
+			<upload-btn class="hidden-sm-and-down" :elevation="0" :directory="directory" target="macros" color="primary"></upload-btn>
 		</v-toolbar>
 
 		<base-file-list ref="filelist" v-model="selection" :directory.sync="directory" :loading.sync="loading" sort-table="macros" @fileClicked="fileClicked" no-files-text="list.macro.noMacros">
@@ -33,19 +33,19 @@
 				</v-btn>
 			</template>
 
-			<v-btn fab :disabled="uiFrozen" @click="showNewFile = true">
+			<v-btn :elevation="0" fab :disabled="uiFrozen" @click="showNewFile = true">
 				<v-icon class="mr-1">mdi-file-plus</v-icon>
 			</v-btn>
 
-			<v-btn fab :disabled="uiFrozen" @click="showNewDirectory = true">
+			<v-btn :elevation="0" fab :disabled="uiFrozen" @click="showNewDirectory = true">
 				<v-icon>mdi-folder-plus</v-icon>
 			</v-btn>
 
-			<v-btn fab color="info" :loading="loading" :disabled="uiFrozen" @click="refresh">
+			<v-btn :elevation="0" fab color="info" :loading="loading" :disabled="uiFrozen" @click="refresh">
 				<v-icon>mdi-refresh</v-icon>
 			</v-btn>
 
-			<upload-btn fab dark :directory="directory" target="macros" color="primary">
+			<upload-btn :elevation="0" fab dark :directory="directory" target="macros" color="primary">
 				<v-icon>mdi-cloud-upload</v-icon>
 			</upload-btn>
 		</v-speed-dial>

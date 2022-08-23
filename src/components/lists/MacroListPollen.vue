@@ -1,5 +1,5 @@
 <template>
-	<v-card>
+	<v-card elevation="0">
 		<v-card-title class="v-card__title--dense">
 			<v-icon small class="mr-1">mdi-polymer</v-icon> {{ $t('list.macro.pollenTitle') }}
 			<v-spacer></v-spacer>
