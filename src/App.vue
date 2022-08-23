@@ -158,6 +158,8 @@ textarea {
 		<plugin-install-dialog/>
 
 		<component v-for="component in injectedComponentNames" :is="component" :key="component"/>
+
+    <console-drawer-pollen-dialog></console-drawer-pollen-dialog>
 	</v-app>
 </template>
 
