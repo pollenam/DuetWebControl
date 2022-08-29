@@ -177,7 +177,7 @@
             <v-row :key="`bed-title-${firstBedIndex}-0`">
               <v-col class="d-flex flex-column">
                 <span class="pollen-attr-header">{{ $t('panel.buildSurfacePollen.bed') }}</span>
-                <temperature-tool-input :bed="firstBedHeater" :bed-index="firstBedIndex" active class="mt-3 mb-0"></temperature-tool-input>
+                <temperature-tool-input :bedHeater="firstBedHeater" :bedHeaterIndex="firstBedIndex" active class="mt-3 mb-0"></temperature-tool-input>
               </v-col>
             </v-row>
             <hr class="hr--separated-rows" />

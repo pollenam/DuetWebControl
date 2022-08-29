@@ -21,18 +21,9 @@
 				</v-col>
 			</v-row>
 			<v-row>
-        <v-col cols="12" md="6" lg="3">
-          <extruder-panel-pollen :extruderNumber="1"></extruder-panel-pollen>
+        <v-col cols="12" md="6" lg="3" v-for="tool in extruderTools" :key=tool.number>
+          <extruder-panel-pollen :tool="tool"></extruder-panel-pollen>
         </v-col>
-        <v-col cols="12" md="6" lg="3">
-          <extruder-panel-pollen :extruderNumber="2"></extruder-panel-pollen>
-        </v-col>
-        <v-col cols="12" md="6" lg="3">
-          <extruder-panel-pollen :extruderNumber="3"></extruder-panel-pollen>
-        </v-col>
-        <v-col cols="12" md="6" lg="3">
-					<extruder-panel-pollen :extruderNumber="4"></extruder-panel-pollen>
-				</v-col>
 			</v-row>
 		</v-col>
 	</v-row>
@@ -48,7 +39,8 @@ export default {
 		...mapState('machine/model', {
 			fans: state => state.fans,
 			atxPower: state => state.state.atxPower,
-			machineMode: state => state.state.machineMode
+			machineMode: state => state.state.machineMode,
+      tools: state => state.tools
 		}),
 		...mapGetters(['uiFrozen']),
 		...mapGetters('machine/model', ['currentTool']),
@@ -57,7 +49,11 @@ export default {
 		},
 		showFansPanel() {
 			return (this.currentTool && this.currentTool.fans.length > 0) || this.fans.some(fan => fan && !fan.thermostatic.control);
-		}
+		},
+    extruderTools() {
+    console.log('extruderTools', this.tools);
+      return this.tools;
+    }
 	}
 }
 </script>

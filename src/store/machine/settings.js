@@ -46,7 +46,6 @@ export default function(connector, pluginSettingFields) {
 			toolChangeMacros: [ToolChangeMacro.free, ToolChangeMacro.pre, ToolChangeMacro.post],
 			extruderAmounts: [100, 50, 20, 10, 5, 1],	// mm
 			extruderFeedrates: [50, 10, 5, 2, 1],		// mm/s
-			selectedExtruder: 1,                    // 1-4
 			temperatures: {
 				tool: {
 					active: [250, 235, 220, 205, 195, 160, 120, 100, 0],
@@ -249,10 +248,6 @@ export default function(connector, pluginSettingFields) {
 					state.displayedExtraTemperatures = state.displayedExtraTemperatures.filter(heater => heater !== extraHeater);
 				}
 			},
-      selectExtruder(state, extruderNumber) {
-        state.selectedExtruder = extruderNumber;
-        // FIXME Send command to actually select the extruder
-      },
 			toggleExtruderVisibility(state, extruder) {
 				if (state.displayedExtruders.indexOf(extruder) === -1) {
 					state.displayedExtruders.push(extruder);

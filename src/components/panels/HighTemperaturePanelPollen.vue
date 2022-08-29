@@ -12,7 +12,7 @@
 						Room
 					</span>
 					<span>
-						<temperature-tool-input :bed="bedHeaters[0]" :bed-index="0" active></temperature-tool-input>
+						<temperature-tool-input :chamberHeater="chamberHeaters[0]" :chamberHeaterIndex="0" active></temperature-tool-input>
 					</span>
 				</v-col>
 
@@ -21,7 +21,7 @@
 						Radiant
 					</span>
 					<span>
-						<temperature-tool-input :bed="bedHeaters[0]" :bed-index="0" active></temperature-tool-input>
+						<temperature-tool-input :chamberHeater="chamberHeaters[1]" :chamberHeaterIndex="1" active></temperature-tool-input>
 					</span>
 				</v-col>
 			</v-row>
@@ -37,8 +37,8 @@ import { mapState } from 'vuex'
 export default {
 	computed: {
 		...mapState('machine/model', ['heat']),
-		bedHeaters() {
-			return this.heat.bedHeaters
+		chamberHeaters() {
+			return this.heat.chamberHeaters
 				.map(heaterIndex => {
 					if (heaterIndex >= 0 && heaterIndex < this.heat.heaters.length && this.heat.heaters[heaterIndex]) {
 						return this.heat.heaters[heaterIndex];
