@@ -12,6 +12,7 @@ import SystemFileList from './SystemFileList.vue'
 
 import MacroListPollen from './MacroListPollen.vue'
 import MacroFileListPollen from './MacroFileListPollen.vue'
+import BaseFileListPollen from './BaseFileListPollen.vue'
 
 Vue.component('base-file-list', BaseFileList)
 Vue.component('event-list', EventList)
@@ -23,3 +24,4 @@ Vue.component('system-file-list', SystemFileList)
 
 Vue.component('macro-list-pollen', MacroListPollen)
 Vue.component('macro-file-list-pollen', MacroFileListPollen)
+Vue.component('base-file-list-pollen', BaseFileListPollen)

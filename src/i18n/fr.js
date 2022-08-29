@@ -356,7 +356,8 @@ export default {
 			downloadZIP: 'Télécharger en ZIP',
 			noFiles: 'Aucun Fichiers ou Répertoires',
 			driveUnmounted: 'Le variateur n\'est pas monté',
-			goUp: 'Remonter'
+			goUp: 'Remonter',
+			showInDashboard: 'Montrer le fichier dans le tableau de bord'
 		},
 		menu: {
 			noFiles: 'Aucun Fichier d\'Affichage'

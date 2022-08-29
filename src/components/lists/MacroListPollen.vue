@@ -61,6 +61,9 @@ export default {
 			macrosDirectory: state => state.directories.macrosPublic,
 			volumes: state => state.volumes
 		}),
+		...mapState('machine/honeyprint_cache', {
+			showed_macros: state => state.showed_macros,
+		}),
 		currentDirectory() {
 			if (Path.startsWith(this.directory, this.macrosDirectory)) {
 				let subDirectory = this.directory.substring(this.macrosDirectory.length);
@@ -90,7 +93,9 @@ export default {
 
 			this.loading = true;
 			try {
-				const files = await this.getFileList(directory);
+				var files = await this.getFileList(directory);
+				const showInDashboardList = this.showed_macros;
+				files = files.filter(item => showInDashboardList.indexOf(item.name) !== -1 || item.isDirectory)
 				files.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensivity: 'base' }));
 				files.sort((a, b) => (a.isDirectory === b.isDirectory) ? 0 : (a.isDirectory ? -1 : 1));
 				files.forEach(function(item) {
@@ -181,6 +186,9 @@ export default {
 				this.directory = Path.macrosPublic;
 				this.filelist = [];
 			}
+		},
+		showed_macros(){
+			this.refresh();
 		},
 		volumes: {
 			deep: true,

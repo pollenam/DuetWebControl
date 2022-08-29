@@ -428,7 +428,8 @@ export default {
 			downloadZIP: 'Download as ZIP',
 			noFiles: 'No Files or Directories',
 			driveUnmounted: 'Drive is unmounted',
-			goUp: 'Go up'
+			goUp: 'Go up',
+			showInDashboard: 'Show file in dashboard'
 		},
 		menu: {
 			noFiles: 'No Display Files'

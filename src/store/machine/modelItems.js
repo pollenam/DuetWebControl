@@ -616,8 +616,6 @@ export function overloadProperty(object, property, presetFn) {
 }
 
 export function overloadModelPush(model) {
-	console.log(model);
-
 	overloadPushMethod(model.boards, value => new Board(value));
 	overloadPushMethod(model.fans, value => new Fan(value));
 	overloadPushMethod(model.heat.heaters, value => new Heater(value));

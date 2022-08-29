@@ -8,6 +8,7 @@ import i18n from '../i18n'
 import Root from '../main.js'
 import observer from './observer.js'
 import settings from './settings.js'
+
 import Plugins, { checkVersion, loadDwcResources } from '../plugins'
 import { InvalidPasswordError } from '@/utils/errors'
 import Events from '../utils/events.js'
@@ -71,11 +72,25 @@ const store = new Vuex.Store({
 				} catch (e) {
 					console.warn('Failed to load settings: ' + e);
 				}
+
 				try {
 					await dispatch('machine/cache/load');
 				} catch (e) {
 					console.warn('Failed to load cache: ' + e);
 				}
+
+				try {
+					await dispatch('machine/honeyprint_cache/load');
+				} catch (e) {
+					console.warn('Failed to load honeyprint cache: ' + e);
+				}
+				setInterval(() => {
+					try {
+						dispatch('machine/honeyprint_cache/load');
+					} catch (e) {
+						console.warn('Failed to load honeyprint cache: ' + e);
+					}
+				}, 5000);
 
 				if (state.settings.lastHostname !== location.host || hostname !== location.host) {
 					commit('settings/setLastHostname', hostname);

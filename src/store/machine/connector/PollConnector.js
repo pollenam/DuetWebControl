@@ -753,7 +753,8 @@ export default class PollConnector extends BaseConnector {
 			isDirectory: item.type === 'd',
 			name: item.name,
 			size: (item.type === 'd') ? null : item.size,
-			lastModified: strToTime(item.date)
+			lastModified: strToTime(item.date),
+			directory: directory
 		}));
 	}
 

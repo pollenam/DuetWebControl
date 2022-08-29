@@ -5,6 +5,8 @@ import Vue from 'vue'
 import { mapConnectorActions } from './connector'
 
 import cache from './cache.js'
+import honeyprint_cache from './honeyprint_cache.js'
+
 import model from './model.js'
 import { MessageType, StatusType } from './modelEnums.js'
 import { Plugin } from './modelItems.js'
@@ -479,7 +481,7 @@ export default function(connector, pluginCacheFields = {}, pluginSettingFields =
 				// Merge updates into the object model
 				commit('model/update', payload);
 				Root.$emit(Events.machineModelUpdated, connector.hostname);
-				
+
 				// Is a new beep requested?
 				if (state.model.state.beep &&
 					lastBeepDuration !== state.model.state.beep.duration &&
@@ -646,6 +648,7 @@ export default function(connector, pluginCacheFields = {}, pluginSettingFields =
 		},
 		modules: {
 			cache: cache(connector, pluginCacheFields),
+			honeyprint_cache: honeyprint_cache(connector),
 			model: model(connector),
 			settings: settings(connector, pluginSettingFields)
 		}

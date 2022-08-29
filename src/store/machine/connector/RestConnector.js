@@ -343,7 +343,7 @@ export default class RestConnector extends BaseConnector {
 		formData.set('from', from);
 		formData.set('to', to);
 		formData.set('force', Boolean(force));
-		
+
 		try {
 			await this.request('POST', 'machine/file/move', null, '', formData, null, null, from);
 		} catch (e) {
@@ -372,7 +372,8 @@ export default class RestConnector extends BaseConnector {
 				isDirectory: item.type === 'd',
 				name: item.name,
 				size: (item.type === 'd') ? null : item.size,
-				lastModified: strToTime(item.date)
+				lastModified: strToTime(item.date),
+				directory: directory
 			}));
 		} catch (e) {
 			if (e instanceof FileNotFoundError) {
