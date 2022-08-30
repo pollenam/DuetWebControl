@@ -30,7 +30,7 @@ import { AnalogSensorType } from '@/store/machine/modelEnums'
 export default {
 	computed: {
 		...mapGetters(['uiFrozen']),
-		...mapState('machine/model', ['heat', 'state', 'tools']),
+		...mapState('machine/model', ['heat', 'sensors', 'state', 'tools']),
 		...mapState('machine/settings', ['temperatures']),
 		...mapState('settings', ['disableAutoComplete']),
 		...mapState('machine/model', { //TODO REMOVE HERE FOR EXAMPLES
@@ -41,16 +41,16 @@ export default {
 				return [];
 			}
 
-      console.log('this.temperature', this.temperatures);
+      console.log('TemperatureToolInput items this.temperature', this.temperatures);
 
 			const key = this.active ? 'active' : 'standby';
-			if (this.toolHeater) {
+			if (this.tool) {
 				return this.temperatures.tool[key];
 			}
-			if (this.bedHeater) {
+			if (this.bed) {
 				return this.temperatures.bed[key];
 			}
-			if (this.chamberHeater) {
+			if (this.chamber) {
 				return this.temperatures.chamber;
 			}
 
@@ -58,14 +58,19 @@ export default {
 			return [];
 		},
 		isValid() {
-			if (this.toolHeater) {
-				if (this.toolHeaterIndex >= 0 && this.toolHeaterIndex < this.toolHeater.heaters.length) {
-					const heater = this.toolHeater.heaters[this.toolHeaterIndex];
+			if (this.tool) {
+        console.log('ToolInput isValid this.tool', this.tool);
+        console.log('ToolInput isValid this.tool.heaters', this.tool.heaters);
+        console.log('ToolInput isValid this.heat.heaters', this.heat.heaters);
+				if (this.toolHeaterIndex >= 0 && this.toolHeaterIndex < this.tool.heaters.length) {
+					const heater = this.tool.heaters[this.toolHeaterIndex];
 					return (heater >= 0 && heater < this.heat.heaters.length && this.heat.heaters[heater] !== null);
 				}
-			} else if (this.bedHeater) {
+			} else if (this.bed) {
+        console.log('ToolInput isValid this.heat.bedHeaters', this.heat.bedHeaters);
 				return (this.bedHeaterIndex >= 0 && this.bedHeaterIndex < this.heat.bedHeaters.length);
-			} else if (this.chamberHeater) {
+			} else if (this.chamber) {
+        console.log('ToolInput isValid this.heat.chamberHeaters', this.heat.chamberHeaters);
 				return (this.chamberHeaterIndex >= 0 && this.chamberHeaterIndex < this.heat.chamberHeaters.length);
 			}
 			return false;
@@ -90,13 +95,13 @@ export default {
 		active: Boolean,
 		standby: Boolean,
 
-		toolHeater: Object,
+		tool: Object,
 		toolHeaterIndex: Number,
 
-		bedHeater: Object,
+		bed: Object,
 		bedHeaterIndex: Number,
 
-		chamberHeater: Object,
+		chamber: Object,
 		chamberHeaterIndex: Number
 	},
 	methods: {
@@ -114,16 +119,16 @@ export default {
 				this.applying = true;
 				try {
 					if (this.inputValue >= -273.15 && this.inputValue <= 1999) {
-						if (this.toolHeater) {
+						if (this.tool) {
 							// Set tool temps
-							const currentTemps = this.toolHeater[this.active ? 'active' : 'standby'];
+							const currentTemps = this.tool[this.active ? 'active' : 'standby'];
 							const newTemps = currentTemps.map((temp, i) => (i === this.toolHeaterIndex) ? this.inputValue : temp, this).join(':');
-							await this.sendCode(`M568 P${this.toolHeater.number} ${this.active ? 'S' : 'R'}${newTemps}`);
-						} else if (this.bedHeater) {
-							// Set bedHeater temp
+							await this.sendCode(`M568 P${this.tool.number} ${this.active ? 'S' : 'R'}${newTemps}`);
+						} else if (this.bed) {
+							// Set bed temp
 							await this.sendCode(`M140 P${this.bedHeaterIndex} ${this.active ? 'S' : 'R'}${this.inputValue}`);
-						} else if (this.chamberHeater) {
-							// Set chamberHeater temp
+						} else if (this.chamber) {
+							// Set chamber temp
 							await this.sendCode(`M141 P${this.chamberHeaterIndex} ${this.active ? 'S' : 'R'}${this.inputValue}`);
 						} else {
 							console.warn('[tool-input] Invalid target for tool-input');
@@ -162,12 +167,12 @@ export default {
 		},
 		getHeaterValue() {
 			var heater = null;
-			if (this.toolHeater){
-				heater = this.toolHeater;
-			} else if (this.bedHeater){
-				heater = this.bedHeater;
-			} else if (this.chamberHeater) {
-				heater = this.chamberHeater;
+			if (this.tool) {
+				heater = this.tool.heaters[this.toolHeaterIndex];
+			} else if (this.bed) {
+				heater = this.bed.heaters[this.bedHeaterIndex];
+			} else if (this.chamber) {
+				heater = this.chamber.heaters[this.chamberHeaterIndex];
 			}
 
       console.log('heater', heater);
@@ -198,21 +203,29 @@ export default {
 	},
 	mounted() {
 		this.inputElement = this.$el.querySelector('input');
-		if (this.toolHeater) {
-			if (this.toolHeater[this.active ? 'active' : 'standby'].length > 0) {
-				this.actualValue = this.toolHeater[this.active ? 'active' : 'standby'][this.toolHeaterIndex];
-				this.inputValue = this.toolHeater[this.active ? 'active' : 'standby'][this.toolHeaterIndex].toString();
+		if (this.tool) {
+			if (this.tool[this.active ? 'active' : 'standby'].length > 0) {
+				this.actualValue = this.tool[this.active ? 'active' : 'standby'][this.toolHeaterIndex];
+        console.log('TemperatureToolInput mounted this.tool', this.tool);
+        console.log(`TemperatureToolInput mounted this.tool[${this.active ? 'active' : 'standby'}]`, this.tool[this.active ? 'active' : 'standby']);
+        console.log(`TemperatureToolInput mounted this.tool[${this.active ? 'active' : 'standby'}][${this.toolHeaterIndex}]`, this.tool[this.active ? 'active' : 'standby'][this.toolHeaterIndex]);
 			}
-		} else if (this.bedHeater) {
-			this.actualValue = this.bedHeater[this.active ? 'active' : 'standby'];
-			this.inputValue = this.bedHeater[this.active ? 'active' : 'standby'].toString();
-		} else if (this.chamberHeater) {
-			this.actualValue = this.chamberHeater[this.active ? 'active' : 'standby'];
-			this.inputValue = this.chamberHeater[this.active ? 'active' : 'standby'].toString();
+		} else if (this.bed) {
+			this.actualValue = this.bed[this.active ? 'active' : 'standby'];
+		} else if (this.chamber) {
+			this.actualValue = this.chamber[this.active ? 'active' : 'standby'];
 		}
+    if (this.actualValue == undefined || this.actualValue == null)
+    {
+      this.inputValue = null;
+    }
+    else
+    {
+      this.inputValue = this.actualValue.toString();
+    }
 	},
 	watch: {
-		'toolHeater.active'(to) {
+		'tool.active'(to) {
 			const val = (to instanceof Array && this.toolHeaterIndex >= 0 && this.toolHeaterIndex < to.length) ? to[this.toolHeaterIndex] : to;
 			if (this.active && this.isNumber(val) && this.actualValue !== val) {
 				this.actualValue = val;
@@ -221,7 +234,7 @@ export default {
 				}
 			}
 		},
-		'toolHeater.standby'(to) {
+		'tool.standby'(to) {
 			const val = (to instanceof Array && this.toolHeaterIndex >= 0 && this.toolHeaterIndex < to.length) ? to[this.toolHeaterIndex] : to;
 			if (this.standby && this.isNumber(val) && this.actualValue !== val) {
 				this.actualValue = val;
@@ -230,7 +243,7 @@ export default {
 				}
 			}
 		},
-		'bedHeater.active'(to) {
+		'bed.active'(to) {
 			if (this.active && this.isNumber(to) && this.actualValue !== to) {
 				this.actualValue = to;
 				if (document.activeElement !== this.inputElement) {
@@ -238,7 +251,7 @@ export default {
 				}
 			}
 		},
-		'bedHeater.standby'(to) {
+		'bed.standby'(to) {
 			if (this.standby && this.isNumber(to) && this.actualValue !== to) {
 				this.actualValue = to;
 				if (document.activeElement !== this.inputElement) {
@@ -246,7 +259,7 @@ export default {
 				}
 			}
 		},
-		'chamberHeater.active'(to) {
+		'chamber.active'(to) {
 			if (this.active && this.isNumber(to) && this.actualValue !== to) {
 				this.actualValue = to;
 				if (document.activeElement !== this.inputElement) {
@@ -254,7 +267,7 @@ export default {
 				}
 			}
 		},
-		'chamberHeater.standby'(to) {
+		'chamber.standby'(to) {
 			if (this.standby && this.isNumber(to) && this.actualValue != to) {
 				this.actualValue = to;
 				if (document.activeElement !== this.inputElement) {

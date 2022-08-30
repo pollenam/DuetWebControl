@@ -51,8 +51,7 @@ export default {
 			return (this.currentTool && this.currentTool.fans.length > 0) || this.fans.some(fan => fan && !fan.thermostatic.control);
 		},
     extruderTools() {
-    console.log('extruderTools', this.tools);
-      return this.tools;
+      return this.tools.filter(tool => tool !== null);
     }
 	}
 }

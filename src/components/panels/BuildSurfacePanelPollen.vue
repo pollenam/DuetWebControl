@@ -174,19 +174,19 @@
           </v-row>
 				</v-col>
 				<v-col cols="2">
-            <v-row :key="`bed-title-${firstBedIndex}-0`">
-              <v-col class="d-flex flex-column">
-                <span class="pollen-attr-header">{{ $t('panel.buildSurfacePollen.bed') }}</span>
-                <temperature-tool-input :bedHeater="firstBedHeater" :bedHeaterIndex="firstBedIndex" active class="mt-3 mb-0"></temperature-tool-input>
-              </v-col>
-            </v-row>
-            <hr class="hr--separated-rows" />
-						<v-row>
-              <v-col class="d-flex flex-column">
-                <span class="pollen-attr-header">{{ $t('panel.buildSurfacePollen.fan') }}</span>
-                <percentage-input-pollen v-model="fanValue" :disabled="uiFrozen"></percentage-input-pollen>
-              </v-col>
-						</v-row>
+          <v-row :key="`bed-title-${firstBedIndex}-0`">
+            <v-col class="d-flex flex-column">
+              <span class="pollen-attr-header">{{ $t('panel.buildSurfacePollen.bed') }}</span>
+              <temperature-tool-input :bed="firstBedHeater" :bedHeaterIndex="firstBedIndex" active class="mt-3 mb-0"></temperature-tool-input>
+            </v-col>
+          </v-row>
+          <hr class="hr--separated-rows" />
+          <v-row>
+            <v-col class="d-flex flex-column">
+              <span class="pollen-attr-header">{{ $t('panel.buildSurfacePollen.fan') }}</span>
+              <percentage-input-pollen v-model="fanValue" :disabled="uiFrozen"></percentage-input-pollen>
+            </v-col>
+          </v-row>
 				</v-col>
 			</v-row>
 		</v-card-text>

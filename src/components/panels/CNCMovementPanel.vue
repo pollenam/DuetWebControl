@@ -223,7 +223,6 @@ export default {
 		async setWorkspaceZero() {
 			let code = `G10 L20 P${this.currentWorkspace}`;
 			this.visibleAxes.forEach(axis => (code += ` ${axis.letter}0`));
-			console.log(code);
 			await this.sendCode(code);
 			await this.sendCode(`G10 L20 P${this.currentWorkspace}`);
 		},
@@ -239,7 +238,6 @@ export default {
 				code = `G59.${this.currentWorkspace - 6}`;
 			}
 			if (code) {
-				console.log(code);
 				await this.sendCode(code);
 				this.sendCode(`G10 L20 P${this.currentWorkspace}`);
 			}

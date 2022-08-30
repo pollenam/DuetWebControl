@@ -179,9 +179,7 @@ export function registerSettingTab(general, name, component, caption, translated
 
 	Vue.component(name, component);
 	if (general) {
-		console.log(name);
 		if (name.includes("pollen")){
-			console.log("addeeeed");
 			GeneralSettingTabsPollen.push(tab);
 		} else {
 			GeneralSettingTabs.push(tab);

@@ -26,7 +26,7 @@ export default function(connector) {
 						showError: false
 					}, { root: true });
 				} catch (e) {
-					console.log("error downloading");
+          console.log("HoneyprintCache load: error downloading");
 					if (!(e instanceof FileNotFoundError)) {
 						throw e;
 					}
@@ -55,8 +55,8 @@ export default function(connector) {
 				}
 
 				// setTimeout(() => {
-				// 	console.log("reloading");
-				// 	load(commit, dispatch);
+				//   console.log("reloading");
+				//   load(commit, dispatch);
 				// }, 5000)
 			},
 			save({ state, dispatch }) {

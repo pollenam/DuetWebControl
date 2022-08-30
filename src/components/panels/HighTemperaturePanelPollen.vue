@@ -12,7 +12,7 @@
 						Room
 					</span>
 					<span>
-						<temperature-tool-input :chamberHeater="chamberHeaters[0]" :chamberHeaterIndex="0" active></temperature-tool-input>
+						<temperature-tool-input :chamber="chamberHeaters[0]" :chamberHeaterIndex="0" active></temperature-tool-input>
 					</span>
 				</v-col>
 
@@ -21,7 +21,7 @@
 						Radiant
 					</span>
 					<span>
-						<temperature-tool-input :chamberHeater="chamberHeaters[1]" :chamberHeaterIndex="1" active></temperature-tool-input>
+						<temperature-tool-input :chamber="chamberHeaters[1]" :chamberHeaterIndex="1" active></temperature-tool-input>
 					</span>
 				</v-col>
 			</v-row>

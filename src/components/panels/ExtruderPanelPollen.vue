@@ -46,7 +46,7 @@
           <span class="pollen-attr-header">{{ $t('panel.extruderPollen.feeder') }}</span>
         </v-col>
         <v-col cols="9 d-flex align-center">
-          <temperature-tool-input :toolHeater="feederHeater" :toolHeaterIndex="0" active></temperature-tool-input>
+          <temperature-tool-input :tool="tool" :toolHeaterIndex="0" active></temperature-tool-input>
         </v-col>
 			</v-row>
 			<v-row class="row--highlighted justify-space-between align-center">
@@ -54,7 +54,7 @@
           <span class="pollen-attr-header">{{ $t('panel.extruderPollen.screw') }}</span>
         </v-col>
         <v-col cols="9 d-flex align-center">
-          <temperature-tool-input :toolHeater="screwHeater" :toolHeaterIndex="1" active></temperature-tool-input>
+          <temperature-tool-input :tool="tool" :toolHeaterIndex="1" active></temperature-tool-input>
         </v-col>
 			</v-row>
 			<v-row class="justify-space-between align-center">
@@ -62,7 +62,7 @@
           <span class="pollen-attr-header">{{ $t('panel.extruderPollen.nozzle') }}</span>
         </v-col>
         <v-col cols="9 d-flex align-center">
-          <temperature-tool-input :toolHeater="nozzleHeater" :toolHeaterIndex="2" active></temperature-tool-input>
+          <temperature-tool-input :tool="tool" :toolHeaterIndex="2" active></temperature-tool-input>
         </v-col>
 			</v-row>
 			<v-row class="row--highlighted">
@@ -103,7 +103,7 @@ export default {
 		...mapGetters(['uiFrozen']),
 		...mapState('machine/model', ['move']),
 		...mapState('machine/settings', ['displayedExtruders']),
-    ...mapState('machine/model', ['heat']),
+    ...mapState('machine/model', ['heat', 'tools']),
     isSelected() {
       return this.tool.state == 'active';
     },
@@ -111,7 +111,7 @@ export default {
       return this.move.extruders[this.tool.extruders[0]];
     },
     extruderNumber() {
-      return this.tool.number + 1;
+      return this.tool.number;
     },
     extruderHeaters() {
 			const toolHeaters = this.tool.heaters
@@ -120,6 +120,8 @@ export default {
 			return toolHeaters.length ? toolHeaters : [null];
 		},
     feederHeater() {
+      console.log('ExtruderPanelPollen feederHeater visibleTools', this.visibleTools);
+      console.log('ExtruderPanelPollen feederHeater this.extruderHeaters[0]', this.extruderHeaters[0]);
       return this.extruderHeaters[0];
     },
     screwHeater() {
@@ -127,7 +129,11 @@ export default {
     },
     nozzleHeater() {
       return this.extruderHeaters[2];
-    }
+    },
+
+		visibleTools() {
+			return this.tools.filter(tool => tool !== null);
+		}
 	},
 	data() {
 		return {
@@ -149,21 +155,25 @@ export default {
 		...mapActions('machine', ['sendCode']),
 		...mapMutations('machine/settings', ['toggleExtruderVisibility']),
 		getExtrusionFactor() {
-      console.log('getExtrusionFactor', this.toolExtruder);
+      console.log('ExtruderPanelPollen getExtrusionFactor this.toolExtruder', this.toolExtruder);
 			return Math.round(this.toolExtruder.factor * 100);
 		},
 		setExtrusionFactor(value) {
 			this.sendCode(`M221 D${this.tool.number} S${value}`);
 		},
-		getMaxExtrusionFactor() { return Math.max(150, this.toolExtruder.factor * 100 + 50); },
+		getMaxExtrusionFactor() {
+      return Math.max(150, this.toolExtruder.factor * 100 + 50);
+    },
     getMixerExtrusionFactor() {
-    // FIXME
+      // FIXME
       return this.getExtrusionFactor();
     },
     setMixerExtrusionFactor(value) {
+      // FIXME
       return this.setExtrusionFactor(value);
     },
     getMixerMaxExtrusionFactor() {
+      // FIXME
       return this.getMaxExtrusionFactor();
     },
     selectExtruder() {
