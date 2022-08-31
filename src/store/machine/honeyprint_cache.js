@@ -8,9 +8,10 @@ export default function(connector) {
 	return {
 		namespaced: true,
 		state: {
-			showed_macros: []
-			}
-		,
+			showed_macros: [],
+      extrudersAvailableMaterials: ['ABS', 'PLA', 'TPU'],
+      extrudersSelectedMaterials: ['ABS', 'ABS', 'ABS', 'ABS']
+    },
 		actions: {
 			async load({ commit, dispatch }) {
 				if (!connector) {
@@ -86,7 +87,17 @@ export default function(connector) {
 			},
 			removeFileToShowedMacro(state, filename) {
 				state.showed_macros = state.showed_macros.filter(item => item !== filename);
-			}
+			},
+      selectedExtruderMaterial(state, data) {
+        if (state.extrudersAvailableMaterials.indexOf(data.newValue) == -1)
+        {
+          state.extrudersAvailableMaterials.push(data.newValue);
+        }
+
+        // We have to manually do that and not use v-model on the combobox to avoid errors
+        // https://stackoverflow.com/questions/46044276/vuex-do-not-mutate-vuex-store-state-outside-mutation-handlers
+        state.extrudersSelectedMaterials[data.extruderNumber] = data.newValue;
+      }
 		}
 	}
 }

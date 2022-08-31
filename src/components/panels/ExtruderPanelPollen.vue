@@ -11,6 +11,13 @@
       <v-icon class="mr-1">mdi-water-outline</v-icon>
 			{{ $t('panel.extruderPollen.title') }} {{ extruderNumber }}
 			<v-spacer></v-spacer>
+      <v-combobox
+          :value="extrudersSelectedMaterials[extruderNumber]"
+          :items="extrudersAvailableMaterials"
+          @change="materialComboboxChange"
+          label="Select material"
+        ></v-combobox>
+			<v-spacer></v-spacer>
 			<v-checkbox class="v-input--checkbox--extruder-selection" hide-details="auto" color="success" :input-value="isSelected" @change="selectExtruder()" :disabled="uiFrozen"></v-checkbox>
 		</v-card-title>
 
@@ -104,6 +111,7 @@ export default {
 		...mapState('machine/model', ['move']),
 		...mapState('machine/settings', ['displayedExtruders']),
     ...mapState('machine/model', ['heat', 'tools']),
+    ...mapState('machine/honeyprint_cache', ['extrudersAvailableMaterials', 'extrudersSelectedMaterials']),
     isSelected() {
       return this.tool.state == 'active';
     },
@@ -154,6 +162,7 @@ export default {
 	methods: {
 		...mapActions('machine', ['sendCode']),
 		...mapMutations('machine/settings', ['toggleExtruderVisibility']),
+		...mapMutations('machine/honeyprint_cache', ['selectedExtruderMaterial']),
 		getExtrusionFactor() {
       console.log('ExtruderPanelPollen getExtrusionFactor this.toolExtruder', this.toolExtruder);
 			return Math.round(this.toolExtruder.factor * 100);
@@ -181,6 +190,12 @@ export default {
       // See src/components/panels/ToolsPanel.vue toolHeaterClick
       // this.sendCode(`M568 P${tool.number} A0`);
       this.sendCode(`T${this.tool.number}`);
+    },
+    materialComboboxChange(newValue) {
+      this.selectedExtruderMaterial({
+        extruderNumber: this.tool.number,
+        newValue: newValue
+      });
     }
 	}
 }
