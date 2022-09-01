@@ -21,8 +21,8 @@
 				</v-col>
 			</v-row>
 			<v-row>
-        <v-col cols="12" md="6" lg="3" v-for="tool in extruderTools" :key=tool.number>
-          <extruder-panel-pollen :tool="tool"></extruder-panel-pollen>
+        <v-col cols="12" md="6" lg="3" v-for="(tool, toolIndex) in extruderTools" :key=toolIndex>
+          <extruder-panel-pollen :tool="tool" :toolIndex="toolIndex"></extruder-panel-pollen>
         </v-col>
 			</v-row>
 		</v-col>
@@ -51,7 +51,7 @@ export default {
 			return (this.currentTool && this.currentTool.fans.length > 0) || this.fans.some(fan => fan && !fan.thermostatic.control);
 		},
     extruderTools() {
-      return this.tools.filter(tool => tool !== null);
+      return this.tools.filter(tool => tool !== null).filter(tool => tool.extruders.length > 0);
     }
 	}
 }

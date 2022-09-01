@@ -12,7 +12,7 @@
 			{{ $t('panel.extruderPollen.title') }} {{ extruderNumber }}
 			<v-spacer></v-spacer>
       <v-combobox
-          :value="extrudersSelectedMaterials[extruderNumber]"
+          :value="extrudersSelectedMaterials[toolIndex]"
           :items="extrudersAvailableMaterials"
           @change="materialComboboxChange"
           label="Select material"
@@ -120,28 +120,7 @@ export default {
     },
     extruderNumber() {
       return this.tool.number;
-    },
-    extruderHeaters() {
-			const toolHeaters = this.tool.heaters
-				.filter(heaterIndex => heaterIndex >= 0 && heaterIndex < this.heat.heaters.length && this.heat.heaters[heaterIndex], this)
-				.map(heaterIndex => this.heat.heaters[heaterIndex], this);
-			return toolHeaters.length ? toolHeaters : [null];
-		},
-    feederHeater() {
-      console.log('ExtruderPanelPollen feederHeater visibleTools', this.visibleTools);
-      console.log('ExtruderPanelPollen feederHeater this.extruderHeaters[0]', this.extruderHeaters[0]);
-      return this.extruderHeaters[0];
-    },
-    screwHeater() {
-      return this.extruderHeaters[1];
-    },
-    nozzleHeater() {
-      return this.extruderHeaters[2];
-    },
-
-		visibleTools() {
-			return this.tools.filter(tool => tool !== null);
-		}
+    }
 	},
 	data() {
 		return {
@@ -157,6 +136,10 @@ export default {
     tool: {
       type: Object,
       required: true
+    },
+    toolIndex: {
+      type: Number,
+      required: true
     }
   },
 	methods: {
@@ -164,7 +147,6 @@ export default {
 		...mapMutations('machine/settings', ['toggleExtruderVisibility']),
 		...mapMutations('machine/honeyprint_cache', ['selectedExtruderMaterial']),
 		getExtrusionFactor() {
-      console.log('ExtruderPanelPollen getExtrusionFactor this.toolExtruder', this.toolExtruder);
 			return Math.round(this.toolExtruder.factor * 100);
 		},
 		setExtrusionFactor(value) {
@@ -189,11 +171,18 @@ export default {
       // FIXME Check if we might need M568 instead of TX.
       // See src/components/panels/ToolsPanel.vue toolHeaterClick
       // this.sendCode(`M568 P${tool.number} A0`);
-      this.sendCode(`T${this.tool.number}`);
+      if (this.isSelected)
+      {
+        this.sendCode('T-1');
+      }
+      else
+      {
+        this.sendCode(`T${this.tool.number}`);
+      }
     },
     materialComboboxChange(newValue) {
       this.selectedExtruderMaterial({
-        extruderNumber: this.tool.number,
+        extruderIndex: this.toolIndex,
         newValue: newValue
       });
     }

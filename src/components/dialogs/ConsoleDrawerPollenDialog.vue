@@ -11,6 +11,11 @@
   &.v-card--console-drawer-pollen--expanded {
     width: 60%;
   }
+
+  .v-data-table__wrapper {
+    max-height: calc(80vh - 180px);
+    overflow-y: scroll;
+  }
 }
 </style>
 <template>

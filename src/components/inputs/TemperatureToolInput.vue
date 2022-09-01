@@ -41,8 +41,6 @@ export default {
 				return [];
 			}
 
-      console.log('TemperatureToolInput items this.temperature', this.temperatures);
-
 			const key = this.active ? 'active' : 'standby';
 			if (this.tool) {
 				return this.temperatures.tool[key];
@@ -59,18 +57,13 @@ export default {
 		},
 		isValid() {
 			if (this.tool) {
-        console.log('ToolInput isValid this.tool', this.tool);
-        console.log('ToolInput isValid this.tool.heaters', this.tool.heaters);
-        console.log('ToolInput isValid this.heat.heaters', this.heat.heaters);
 				if (this.toolHeaterIndex >= 0 && this.toolHeaterIndex < this.tool.heaters.length) {
 					const heater = this.tool.heaters[this.toolHeaterIndex];
 					return (heater >= 0 && heater < this.heat.heaters.length && this.heat.heaters[heater] !== null);
 				}
 			} else if (this.bed) {
-        console.log('ToolInput isValid this.heat.bedHeaters', this.heat.bedHeaters);
 				return (this.bedHeaterIndex >= 0 && this.bedHeaterIndex < this.heat.bedHeaters.length);
 			} else if (this.chamber) {
-        console.log('ToolInput isValid this.heat.chamberHeaters', this.heat.chamberHeaters);
 				return (this.chamberHeaterIndex >= 0 && this.chamberHeaterIndex < this.heat.chamberHeaters.length);
 			}
 			return false;
@@ -170,12 +163,10 @@ export default {
 			if (this.tool) {
 				heater = this.tool.heaters[this.toolHeaterIndex];
 			} else if (this.bed) {
-				heater = this.bed.heaters[this.bedHeaterIndex];
+				heater = this.bed;
 			} else if (this.chamber) {
-				heater = this.chamber.heaters[this.chamberHeaterIndex];
+				heater = this.chamber;
 			}
-
-      console.log('heater', heater);
 
 			if (heater && heater.sensor >= 0 && heater.sensor < this.sensors.analog.length) {
 				const sensor = this.sensors.analog[heater.sensor];
@@ -206,9 +197,6 @@ export default {
 		if (this.tool) {
 			if (this.tool[this.active ? 'active' : 'standby'].length > 0) {
 				this.actualValue = this.tool[this.active ? 'active' : 'standby'][this.toolHeaterIndex];
-        console.log('TemperatureToolInput mounted this.tool', this.tool);
-        console.log(`TemperatureToolInput mounted this.tool[${this.active ? 'active' : 'standby'}]`, this.tool[this.active ? 'active' : 'standby']);
-        console.log(`TemperatureToolInput mounted this.tool[${this.active ? 'active' : 'standby'}][${this.toolHeaterIndex}]`, this.tool[this.active ? 'active' : 'standby'][this.toolHeaterIndex]);
 			}
 		} else if (this.bed) {
 			this.actualValue = this.bed[this.active ? 'active' : 'standby'];

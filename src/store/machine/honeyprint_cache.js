@@ -96,7 +96,7 @@ export default function(connector) {
 
         // We have to manually do that and not use v-model on the combobox to avoid errors
         // https://stackoverflow.com/questions/46044276/vuex-do-not-mutate-vuex-store-state-outside-mutation-handlers
-        state.extrudersSelectedMaterials[data.extruderNumber] = data.newValue;
+        state.extrudersSelectedMaterials[data.extruderIndex] = data.newValue;
       }
 		}
 	}
