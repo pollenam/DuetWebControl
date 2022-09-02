@@ -22,6 +22,7 @@ import Plugins from './Settings/Plugins.vue'
 
 import MacrosPollen from './Settings/MacrosPollen.vue'
 import GeneralPollen from './Settings/GeneralPollen.vue'
+import HeightMapPollen from './Settings/HeightMapPollen.vue'
 
 import Page404 from './Page404.vue'
 
@@ -211,6 +212,7 @@ Vue.use(Machine)
 Vue.use(Plugins)
 Vue.use(MacrosPollen)
 Vue.use(GeneralPollen)
+Vue.use(HeightMapPollen)
 
 
 // 404 page

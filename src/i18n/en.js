@@ -429,7 +429,8 @@ export default {
 			noFiles: 'No Files or Directories',
 			driveUnmounted: 'Drive is unmounted',
 			goUp: 'Go up',
-			showInDashboard: 'Show file in dashboard'
+			showInDashboard: 'Show file in dashboard',
+			assign: "Assign"
 		},
 		menu: {
 			noFiles: 'No Display Files'
@@ -997,7 +998,8 @@ export default {
 			g1AsExtrusion: 'Render G1 (CNC)',
         },
         heightmap: {
-            menuCaption: 'Height Map',
+            menuCaptionLegacy: 'Height Map (Legacy)',
+						menuCaption: 'Height Map',
             listTitle: 'Height Maps',
             none: 'None',
             scale: 'Scale:',
@@ -1021,7 +1023,12 @@ export default {
             range: 'Range',
             fixed: 'Fixed',
             deviation: 'Deviation',
-            resetView: 'Reset View'
+            resetView: 'Reset View',
+						apply: "Apply",
+						delete: "Delete",
+						selected: "Selected",
+						create: "Create new",
+						open: "Open"
         },
         objectModelBrowser: {
             menuCaption: 'Object Model'

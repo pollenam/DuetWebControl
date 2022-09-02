@@ -10,8 +10,8 @@ registerRoute(HeightMap, {
 	Control: {
 		HeightMap: {
 			icon: 'mdi-grid',
-			caption: 'plugins.heightmap.menuCaption',
-			path: '/HeightMap'
+			caption: 'plugins.heightmap.menuCaptionLegacy',
+			path: 'legacy/HeightMap'
 		}
 	}
 });

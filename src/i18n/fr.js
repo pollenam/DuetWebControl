@@ -357,7 +357,8 @@ export default {
 			noFiles: 'Aucun Fichiers ou Répertoires',
 			driveUnmounted: 'Le variateur n\'est pas monté',
 			goUp: 'Remonter',
-			showInDashboard: 'Montrer le fichier dans le tableau de bord'
+			showInDashboard: 'Montrer le fichier dans le tableau de bord',
+			assign: "Assigner"
 		},
 		menu: {
 			noFiles: 'Aucun Fichier d\'Affichage'
@@ -753,7 +754,12 @@ export default {
 			colorScheme: 'Schéma couleur:',
 			terrain: 'Terrain',
 			heat: 'Chaleur',
-			reload: 'Recharger Carte de Hauteur'
+			reload: 'Recharger Carte de Hauteur',
+			apply: "Appliquer",
+			delete: "Supprimer",
+			selected: "Séléctionné",
+			create: "Créer une nouvelle",
+			open: "Ouvrir"
 		}
 	}
 }
