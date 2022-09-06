@@ -611,7 +611,8 @@ export default {
 			caption: 'À propos',
 			developedBy: 'Interface web dévelopée par',
 			for: 'pour',
-			licensedUnder: 'Sous licence selon les termes de la'
+			licensedUnder: 'Sous licence selon les termes de la',
+			support: 'Support'
 		},
 		settingsAppearance: {
 			caption: 'Apparence',

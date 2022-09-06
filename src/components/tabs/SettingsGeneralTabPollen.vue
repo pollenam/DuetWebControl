@@ -3,7 +3,7 @@
 		<v-col cols="12" md="4" lg="4">
 			<v-row :dense="$vuetify.breakpoint.mobile">
 				<v-col cols="12" sm="12">
-					<settings-electronics-panel></settings-electronics-panel>
+					<settings-electronics-pollen-panel></settings-electronics-pollen-panel>
 				</v-col>
 			</v-row>
 			<v-row :dense="$vuetify.breakpoint.mobile">

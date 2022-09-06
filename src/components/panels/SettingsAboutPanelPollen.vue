@@ -1,13 +1,15 @@
 <template>
 	<v-card outlined>
 		<v-card-title>
-			<span>Duet Web Control {{ version }}</span>
+			<span>Pollen Web Control {{ version }}-{{ pollenVersion }}</span>
 		</v-card-title>
 
 		<v-card-text class="pt-0">
-			{{ $t('panel.settingsAbout.developedBy') }} <a href="mailto:christian@duet3d.com">Christian Hammacher</a> {{ $t('panel.settingsAbout.for') }} <a href="https://www.duet3d.com" target="_blank">Duet3D</a>.
+			{{ $t('panel.settingsAbout.developedBy') }} <a href="https://www.pollen.am" target="_blank">Pollen AM</a>.
 			<br>
 			{{ $t('panel.settingsAbout.licensedUnder') }} <a href="https://www.gnu.org/licenses/gpl-3.0.en.html" target="_blank">GNU General Public License v3</a>
+			<br>
+			<a href="https://pollenam.zendesk.com" target="_blank">{{ $t('panel.settingsAbout.support') }}</a>
 		</v-card-text>
 	</v-card>
 </template>
@@ -15,12 +17,13 @@
 <script>
 'use strict'
 
-import { version } from '../../../package.json'
+import { version, pollenVersion } from '../../../package.json'
 
 export default {
 	data() {
 		return {
-			version
+			version,
+			pollenVersion
 		}
 	}
 }

@@ -704,7 +704,8 @@ export default {
             caption: 'About',
             developedBy: 'Web Interface developed by',
             for: 'for',
-            licensedUnder: 'Licensed under the terms of the'
+						licensedUnder: 'Licensed under the terms of the',
+						support: 'Support'
         },
         settingsAppearance: {
             caption: 'Appearance',

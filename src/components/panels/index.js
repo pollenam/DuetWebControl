@@ -43,6 +43,7 @@ import ExtruderPanelPollen from './ExtruderPanelPollen.vue'
 import SettingsGeneralPanelPollen from './SettingsGeneralPanelPollen.vue'
 import SettingsAboutPanelPollen from './SettingsAboutPanelPollen.vue'
 import SettingsAppearancePanelPollen from './SettingsAppearancePanelPollen.vue'
+import SettingsElectronicsPanelPollen from './SettingsElectronicsPanelPollen.vue'
 
 Vue.component('atx-panel', ATXPanel)
 Vue.component('extrude-panel', ExtrudePanel)
@@ -85,3 +86,4 @@ Vue.component('extruder-panel-pollen', ExtruderPanelPollen)
 Vue.component('settings-general-pollen-panel', SettingsGeneralPanelPollen)
 Vue.component('settings-about-pollen-panel', SettingsAboutPanelPollen)
 Vue.component('settings-apperance-pollen-panel', SettingsAppearancePanelPollen)
+Vue.component('settings-electronics-pollen-panel', SettingsElectronicsPanelPollen)
