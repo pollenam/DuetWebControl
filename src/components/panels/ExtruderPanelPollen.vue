@@ -25,7 +25,7 @@
 			<v-row class="row--highlighted">
         <v-col cols="12 d-flex flex-column">
           <div class="center-label">{{ extrusionSpeed }} {{ $t('generic.rpm') }}</div>
-          <percentage-input-pollen :disabled="uiFrozen" :value="extrusionSpeed" :min="0.2" :max="12" :step="0.1"></percentage-input-pollen>
+          <percentage-input-pollen :value="extrusionSpeed" :min="0.2" :max="12" :step="0.1" @change="extrusionSpeedChanged"></percentage-input-pollen>
         </v-col>
       </v-row>
       <v-row class="row--highlighted" dense>
@@ -150,7 +150,7 @@ export default {
 			return Math.round(this.toolExtruder.factor * 100);
 		},
 		setExtrusionFactor(value) {
-			this.sendCode(`M221 D${this.tool.number} S${value}`);
+			this.sendCode(`M221 D${this.toolIndex} S${value}`);
 		},
 		getMaxExtrusionFactor() {
       return Math.max(150, this.toolExtruder.factor * 100 + 50);
@@ -181,10 +181,14 @@ export default {
       }
     },
     materialComboboxChange(newValue) {
+      console.log('ExtruderPanelPollen getMaxExtrusionFactor extrusionSpeed', this.extrusionSpeed);
       this.selectedExtruderMaterial({
         extruderIndex: this.toolIndex,
         newValue: newValue
       });
+    },
+    extrusionSpeedChanged(newValue) {
+      console.log('ExtruderPanelPollen extrusionSpeedChanged', newValue);
     }
 	}
 }

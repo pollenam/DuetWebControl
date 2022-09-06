@@ -159,8 +159,6 @@ export default {
 			return (this.job.file.fileName !== null) ? extractFileName(this.job.file.fileName) : null;
 		},
     nozzleSize() {
-      console.log('JobControlPanelPollen nozzleSize this.job', this.job);
-      console.log('JobControlPanelPollen nozzleSize this.job.file', this.job.file);
       return 'n/a';
     },
     jobSpeed() {
