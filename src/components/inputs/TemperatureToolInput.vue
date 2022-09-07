@@ -175,11 +175,7 @@ export default {
 				}
 			}
 
-			if(this.boards[0].mcuTemp) {
-				return this.$display(this.boards[0].mcuTemp.current, 1, '°C') //TODO to remove here for tests purposes
-			} else {
-				return this.$t('generic.noValue');
-			}
+			return this.$t('generic.noValue');
 		},
 		formatSensorValue(sensor) {
 			if (sensor.name) {
