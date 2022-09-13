@@ -760,7 +760,11 @@ export default {
 			delete: "Supprimer",
 			selected: "Séléctionné",
 			create: "Créer une nouvelle",
-			open: "Ouvrir"
+			open: "Ouvrir",
+			parameters: "Paramètres",
+			offset: "Offset",
+			default: "Restaurer les valeurs par défaut",
+			save: "Sauvegarder"
 		}
 	}
 }

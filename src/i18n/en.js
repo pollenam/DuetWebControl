@@ -1029,7 +1029,11 @@ export default {
 						delete: "Delete",
 						selected: "Selected",
 						create: "Create new",
-						open: "Open"
+						open: "Open",
+						parameters: "Parameters",
+						offset: "Offset",
+						default: "Restore default",
+						save: "Save"
         },
         objectModelBrowser: {
             menuCaption: 'Object Model'

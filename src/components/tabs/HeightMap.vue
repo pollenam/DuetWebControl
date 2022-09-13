@@ -4,6 +4,7 @@
 	color: #fff;
 	border-radius: 8px;
 	display: flex;
+	height: 50%;
 }
 
 h1 {
@@ -34,79 +35,28 @@ h1 {
 .no-cursor {
 	pointer-events: none;
 }
+
+input[type='number'] {
+	-moz-appearance: number !important;
+	width:50px;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+	-webkit-appearance: textfield  !important;
+}
+
+input {
+	background-color: #fff8e1!important;
+	padding: 3px;
+	width: 70px !important;
+}
+
 </style>
 
 <template>
+	<v-col cols="12" lg="auto" order="1" order-lg="0" sm="6">
 	<v-row>
-		<v-col cols="12" lg="auto" order="1" order-lg="0" sm="6">
-			<v-card tile>
-				<v-card-title class="pt-2 pb-1">
-					<v-icon class="mr-2">mdi-format-list-bulleted</v-icon>
-					{{ $t('plugins.heightmap.listTitle') }}
-					<v-spacer></v-spacer>
-					<v-icon @click="refresh" class="ml-2">mdi-refresh</v-icon>
-				</v-card-title>
-
-
-				<v-data-table v-model="innerValue" v-bind="$props"
-					:single-select=true :items="files" item-key="name" :headers="defaultHeaders" disable-pagination hide-default-footer :mobile-breakpoint="0"
-					class="base-file-list elevation-0" :class="{ 'empty-table-fix' : !files.length }">
-
-					<template #no-data>
-						<slot name="no-data">
-							<v-alert :value="true" type="info" class="text-left ma-0" @contextmenu.prevent="">
-								{{ $t('list.baseFileList.noFiles') }}
-							</v-alert>
-						</slot>
-					</template>
-
-					<template #item="props">
-						<tr :data-filename="(props.item.isDirectory ? '*' : '') + props.item.name"
-							:class="props.item.name === 'heightmap.csv'?'cyan': props.item.name === selectedFile ? 'blue': ''"
-							@click="onItemClick(props)"
-							tabindex="0">
-							<td v-for="header in defaultHeaders" :key="header.value" :class="header.cellClass">
-								<template v-if="header.value === 'name'">
-									<div class="d-inline-flex align-center">
-										<slot :name="`${props.item.isDirectory ? 'folder' : 'file'}.${props.item.name}`" :item="props.item">
-											<slot :name="props.item.isDirectory ? 'folder' : 'file'" :item="props.item">
-												{{ props.item.name }}
-											</slot>
-										</slot>
-									</div>
-								</template>
-								<template v-else-if="header.unit === 'bytes'">
-									{{ (props.item[header.value] !== null) ? $displaySize(props.item[header.value]) : '' }}
-								</template>
-								<template v-else-if="header.unit === 'date'">
-									{{ props.item.lastModified ? props.item.lastModified.toLocaleString() : $t('generic.noValue') }}
-								</template>
-								<template v-else-if="header.unit === 'time'">
-									{{ displayTimeValue(props.item, header.value) }}
-								</template>
-								<template v-else-if="header.unit === 'boolean'">
-									<template v-if="props.item.name !== 'heightmap.csv'">
-										<v-btn @click.stop.prevent="selectHeightMap(props.item)"> {{ $t('plugins.heightmap.apply') }}</v-btn>
-										<v-btn @click.stop.prevent="removeHeightMap(props.item)">{{ $t('plugins.heightmap.delete') }}</v-btn>
-										<v-btn @click.stop.prevent="openHeightMap(props.item)">{{ $t('plugins.heightmap.open') }}</v-btn>
-									</template>
-									<template v-if="props.item.name === 'heightmap.csv'">
-										{{ $t('plugins.heightmap.selected') }}
-									</template>
-								</template>
-								<template v-else>
-									{{ displayLoadingValue(props.item, header.value, header.precision, header.unit) }}
-								</template>
-							</td>
-						</tr>
-					</template>
-				</v-data-table>
-
-				<v-btn @click="createNewHeightMap()">{{ $t('plugins.heightmap.create') }}</v-btn>
-				<file-edit-dialog :shown.sync="editDialog.shown" :filename="editDialog.filename" v-model="editDialog.content" @editComplete="$emit('fileEdited', $event)"></file-edit-dialog>
-			</v-card>
-		</v-col>
-
 		<v-col :class="{ 'pa-1': $vuetify.breakpoint.xs }" class="flex-grow-1" cols="12" lg="auto" order="0" order-lg="0">
 			<div class="heightmap-container" ref="container" v-resize="resize">
 				<!-- h1 v-show="!ready" class="text-center">
@@ -183,8 +133,170 @@ h1 {
 			</span>
 		</v-tooltip>
 	</v-row>
+	<v-row>
+		<v-col cols="6" lg="auto" order="1" order-lg="0" sm="6">
+			<v-row class="mr-2 pr-0">
+				<v-card width="100%" tile>
+					<v-card-title class="pt-2 pb-1">
+						<v-icon class="mr-2">mdi-format-list-bulleted</v-icon>
+						{{ $t('plugins.heightmap.listTitle') }}
+						<v-spacer></v-spacer>
+						<v-icon @click="refresh" class="ml-2">mdi-refresh</v-icon>
+					</v-card-title>
 
 
+					<v-data-table v-model="innerValue" v-bind="$props"
+						:single-select=true :items="files" item-key="name" :headers="defaultHeaders" disable-pagination hide-default-footer :mobile-breakpoint="0"
+						class="base-file-list elevation-0" :class="{ 'empty-table-fix' : !files.length }"
+						:sort-by.sync="sortBy"
+            :sort-desc.sync="sortDesc"
+						>
+
+						<template #no-data>
+							<slot name="no-data">
+								<v-alert :value="true" type="info" class="text-left ma-0" @contextmenu.prevent="">
+									{{ $t('list.baseFileList.noFiles') }}
+								</v-alert>
+							</slot>
+						</template>
+
+						<template #item="props">
+							<tr :data-filename="(props.item.isDirectory ? '*' : '') + props.item.name"
+								:class="props.item.name === 'heightmap.csv'? 'amber lighten-3': props.item.name === selectedFile ? 'amber lighten-5': ''"
+								@click="onItemClick(props)"
+								tabindex="0">
+								<td v-for="header in defaultHeaders" :key="header.value" :class="header.cellClass">
+									<template v-if="header.value === 'name'">
+										<div class="d-inline-flex align-center">
+											<slot :name="`${props.item.isDirectory ? 'folder' : 'file'}.${props.item.name}`" :item="props.item">
+												<slot :name="props.item.isDirectory ? 'folder' : 'file'" :item="props.item">
+													{{ props.item.name }}
+												</slot>
+											</slot>
+										</div>
+									</template>
+									<template v-else-if="header.unit === 'bytes'">
+										{{ (props.item[header.value] !== null) ? $displaySize(props.item[header.value]) : '' }}
+									</template>
+									<template v-else-if="header.unit === 'date'">
+										{{ props.item.lastModified ? props.item.lastModified.toLocaleString() : $t('generic.noValue') }}
+									</template>
+									<template v-else-if="header.unit === 'time'">
+										{{ displayTimeValue(props.item, header.value) }}
+									</template>
+									<template v-else-if="header.unit === 'boolean'">
+										<template v-if="props.item.name !== 'heightmap.csv'">
+											<v-btn @click.stop.prevent="selectHeightMap(props.item)"> {{ $t('plugins.heightmap.apply') }}</v-btn>
+											<v-btn @click.stop.prevent="removeHeightMap(props.item)">{{ $t('plugins.heightmap.delete') }}</v-btn>
+											<v-btn @click.stop.prevent="openHeightMap(props.item)">{{ $t('plugins.heightmap.open') }}</v-btn>
+										</template>
+										<template v-if="props.item.name === 'heightmap.csv'">
+											{{ $t('plugins.heightmap.selected') }}
+										</template>
+									</template>
+									<template v-else>
+										{{ displayLoadingValue(props.item, header.value, header.precision, header.unit) }}
+									</template>
+								</td>
+							</tr>
+						</template>
+					</v-data-table>
+					<file-edit-dialog :shown.sync="editDialog.shown" :filename="editDialog.filename" v-model="editDialog.content" @editComplete="$emit('fileEdited', $event)"></file-edit-dialog>
+				</v-card>
+			</v-row>
+			<v-row class="d-inline-flex mt-4 pt-0 mr-2 pr-0 align-center" >
+					<v-btn class="mr-1" @click="createNewHeightMap()">{{ $t('plugins.heightmap.create') }}</v-btn>
+					<label for="count">S.Count</label><input name="count" class="ml-1 mr-1" ref="input" step="any" min="0" v-model.number="s_count" type="number" />
+					<label for="repeat">S.Repeat</label><input name="repeat" class="ml-1 mr-1" ref="input" step="any" min="0" v-model.number="s_repeat" type="number" />
+					<label for="radius">S.Radius</label><input name="radius" class="ml-1 mr-1" ref="input" step="any" min="0" v-model.number="s_radius" type="number" />
+			</v-row>
+		</v-col>
+		<v-col cols="6" lg="auto" order="1" order-lg="0" sm="6">
+			<v-row class="ml-2 pl-0">
+				<v-card width="100%" tile>
+					<v-card-title class="pt-2 pb-1">
+						{{ $t('plugins.heightmap.parameters') }}
+					</v-card-title>
+					<v-card-text>
+						<v-col cols="12" lg="auto" order="1" order-lg="0" sm="6">
+							<v-row>
+								<v-col cols="12" lg="12" order="1" order-lg="0" sm="12">
+									<strong>T1 {{ $t('plugins.heightmap.offset') }}</strong>
+									<v-row class="justify-center">
+										<v-col cols="4" lg="auto" order="1" order-lg="0" sm="6">
+											<label for="T1X">X:</label><input name="T1X" class="ml-1 mr-1" ref="input" step="0.01" v-model.number="t1x" type="number" />
+										</v-col>
+										<v-col cols="4" lg="auto" order="1" order-lg="0" sm="6">
+											<label for="T1Y">Y:</label><input name="T1Y" class="ml-1 mr-1" ref="input" step="0.01" v-model.number="t1y" type="number" />
+										</v-col>
+										<v-col cols="4" lg="auto" order="1" order-lg="0" sm="6">
+											<label for="T1Z">Z:</label><input name="T1Z" class="ml-1 mr-1" ref="input" step="0.01" v-model.number="t1z" type="number" />
+										</v-col>
+									</v-row>
+								</v-col>
+							</v-row>
+							<v-divider></v-divider>
+							<v-row>
+								<v-col cols="12" lg="12" order="1" order-lg="0" sm="12">
+									<strong>T2 {{ $t('plugins.heightmap.offset') }}</strong>
+									<v-row class="justify-center">
+										<v-col cols="4" lg="auto" order="1" order-lg="0" sm="6">
+											<label for="T2X">X:</label><input name="T2X" class="ml-1 mr-1" ref="input" step="0.01" v-model.number="t2x" type="number" />
+										</v-col>
+										<v-col cols="4" lg="auto" order="1" order-lg="0" sm="6">
+											<label for="T2Y">Y:</label><input name="T2Y" class="ml-1 mr-1" ref="input" step="0.01" v-model.number="t2y" type="number" />
+										</v-col>
+										<v-col cols="4" lg="auto" order="1" order-lg="0" sm="6">
+											<label for="T2Z">Z:</label><input name="T2Z" class="ml-1 mr-1" ref="input" step="0.01" v-model.number="t2z" type="number" />
+										</v-col>
+									</v-row>
+								</v-col>
+							</v-row>
+							<v-divider></v-divider>
+							<v-row>
+								<v-col cols="12" lg="12" order="1" order-lg="0" sm="12">
+									<strong>T3 {{ $t('plugins.heightmap.offset') }}</strong>
+									<v-row class="justify-center">
+										<v-col cols="4" lg="auto" order="1" order-lg="0" sm="6">
+											<label for="T3X">X:</label><input name="T3X" class="ml-1 mr-1" ref="input" step="0.01" v-model.number="t3x" type="number" />
+										</v-col>
+										<v-col cols="4" lg="auto" order="1" order-lg="0" sm="6">
+											<label for="T3Y">Y:</label><input name="T3Y" class="ml-1 mr-1" ref="input" step="0.01" v-model.number="t3y" type="number" />
+										</v-col>
+										<v-col cols="4" lg="auto" order="1" order-lg="0" sm="6">
+											<label for="T3Z">Z:</label><input name="T3Z" class="ml-1 mr-1" ref="input" step="0.01" v-model.number="t3z" type="number" />
+										</v-col>
+									</v-row>
+								</v-col>
+							</v-row>
+							<v-divider></v-divider>
+							<v-row>
+								<v-col cols="12" lg="12" order="1" order-lg="0" sm="12">
+									<strong>T4 {{ $t('plugins.heightmap.offset') }}</strong>
+									<v-row class="justify-center">
+										<v-col cols="4" lg="auto" order="1" order-lg="0" sm="6">
+											<label for="T4X">X:</label><input name="T4X" class="ml-1 mr-1" ref="input" step="0.01" v-model.number="t4x" type="number" />
+										</v-col>
+										<v-col cols="4" lg="auto" order="1" order-lg="0" sm="6">
+											<label for="T4Y">Y:</label><input name="T4Y" class="ml-1 mr-1" ref="input" step="0.01" v-model.number="t4y" type="number" />
+										</v-col>
+										<v-col cols="4" lg="auto" order="1" order-lg="0" sm="6">
+											<label for="T4Z">Z:</label><input name="T4Z" class="ml-1 mr-1" ref="input" step="0.01" v-model.number="t4z" type="number" />
+										</v-col>
+									</v-row>
+								</v-col>
+							</v-row>
+						</v-col>
+					</v-card-text>
+					<v-card-actions>.
+						<v-btn  @click="restoreDefault()">{{ $t('plugins.heightmap.default') }}</v-btn>
+						<v-btn  @click="saveParameters()"> {{ $t('plugins.heightmap.save') }}</v-btn>
+					</v-card-actions>
+				</v-card>
+			</v-row>
+		</v-col>
+	</v-row>
+	</v-col>
 </template>
 
 <script>
@@ -201,6 +313,10 @@ import {KinematicsName} from '../../store/machine/modelEnums';
 import i18n from '../../i18n'
 
 let heightMapViewer;
+const default_x = -13.31
+const	default_y = 8.89
+const default_z = 40
+
 export default {
 	computed: {
 		...mapState(['selectedMachine']),
@@ -306,11 +422,29 @@ export default {
 				shown: false,
 				filename: '',
 				content: ''
-			}
+			},
+			sortBy: 'lastModified',
+			sortDesc: false,
+			s_count: 0,
+			s_repeat: 0,
+			s_radius: 0,
+
+			t1x: default_x,
+			t1y: default_y,
+			t1z: default_z,
+			t2x: default_x,
+			t2y: default_y,
+			t2z: default_z,
+			t3x: default_x,
+			t3y: default_y,
+			t3z: default_z,
+			t4x: default_x,
+			t4y: default_y,
+			t4z: default_z,
 		};
 	},
 	methods: {
-		...mapActions('machine', ['download', 'upload', 'getFileList', 'sendCode', 'delete']),
+		...mapActions('machine', ['download', 'upload', 'getFileList', 'sendCode', 'delete', 'sendCode']),
 		onItemClick(props) {
 			this.selectedFile = props.item.name;
 		},
@@ -319,7 +453,30 @@ export default {
 			this.refresh();
 		},
 		async createNewHeightMap() {
-			console.log("TODO ");
+			console.log("TODO");
+			// this.sendCode(`M98 P"${Path.combine(this.directory, filename)}"`);
+		},
+		async saveParameters(){
+			await this.sendCode(`M98 P"/macros/HONEYPRINT/Tool_Offset_Save" T1 X${this.t1x} Y${this.t1y} Z${this.t1z}`);
+			await this.sendCode(`M98 P"/macros/HONEYPRINT/Tool_Offset_Save" T2 X${this.t2x} Y${this.t2y} Z${this.t2z}`);
+			await this.sendCode(`M98 P"/macros/HONEYPRINT/Tool_Offset_Save" T3 X${this.t3x} Y${this.t3y} Z${this.t3z}`);
+			await this.sendCode(`M98 P"/macros/HONEYPRINT/Tool_Offset_Save" T4 X${this.t4x} Y${this.t4y} Z${this.t4z}`);
+		},
+		restoreDefault() {
+			this.t1x = default_x;
+			this.t2x = default_x;
+			this.t3x = default_x;
+			this.t4x = default_x;
+
+			this.t1y = default_y;
+			this.t2y = default_y;
+			this.t3y = default_y;
+			this.t4y = default_y;
+
+			this.t1z = default_z;
+			this.t2z = default_z;
+			this.t3z = default_z;
+			this.t4z = default_z;
 		},
 		async openHeightMap(item) {
 			const currentHeightmap = await this.download({
@@ -404,10 +561,10 @@ export default {
 					height = width;
 					break;
 				case 'sm':
-					height = (width * 3) / 4;
+					height = (width * 3) / 8;
 					break;
 				case 'xl':
-					height = (width * 10) / 16;
+					height = (width * 10) / 18;
 					break;
 				default:
 					height = (width * 9) / 16;
