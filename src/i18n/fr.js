@@ -742,6 +742,7 @@ export default {
 		heightmap: {
 			scale: 'Échelle:',
 			orMore: 'ou plus',
+			menuCaption: 'Calibration',
 			orLess: 'ou moins',
 			axes: 'Axes:',
 			notAvailable: 'Carte de Hauteur non disponible',

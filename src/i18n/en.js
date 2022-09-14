@@ -1000,7 +1000,7 @@ export default {
         },
         heightmap: {
             menuCaptionLegacy: 'Height Map (Legacy)',
-						menuCaption: 'Height Map',
+						menuCaption: 'Calibration',
             listTitle: 'Height Maps',
             none: 'None',
             scale: 'Scale:',
