@@ -146,7 +146,7 @@
               <span class="pollen-attr-header">{{ $t('panel.speedFactor.caption') }}</span>
             </v-col>
             <v-col class="d-flex flex-column justify-center" cols="7">
-              <percentage-input-pollen v-model="speedFactor" :min="speedFactorMin" :max="speedFactorMax" :disabled="uiFrozen"></percentage-input-pollen>
+              <percentage-input-pollen v-model="speedFactor" :step="1" :min="speedFactorMin" :max="speedFactorMax" :disabled="uiFrozen"></percentage-input-pollen>
             </v-col>
 					</v-row>
 				</v-col>
@@ -184,7 +184,7 @@
           <v-row>
             <v-col class="d-flex flex-column">
               <span class="pollen-attr-header">{{ $t('panel.buildSurfacePollen.fan') }}</span>
-              <percentage-input-pollen v-model="fanValue" :disabled="uiFrozen"></percentage-input-pollen>
+              <percentage-input-pollen v-model="fanValue" :step="1" :disabled="uiFrozen"></percentage-input-pollen>
             </v-col>
           </v-row>
 				</v-col>
@@ -250,7 +250,9 @@ export default {
 			}
 		},
 		isCompensationEnabled() { return this.move.compensation.type.toLowerCase() !== 'none' },
-		visibleAxes() { return this.move.axes.filter(axis => axis.visible); },
+		visibleAxes() {
+			console.log(this.move.axes);
+			return this.move.axes.filter(axis => axis.visible && (axis.letter === "X" || axis.letter === "Y" || axis.letter === "Z")); },
 		isDelta() {
 			return (this.move.kinematics.name === KinematicsName.delta ||
 					this.move.kinematics.name === KinematicsName.rotaryDelta);
@@ -321,15 +323,6 @@ export default {
 		},
 		moveStepDialogConfirmed(value) {
 			this.setMoveStep({ axis: this.moveStepDialog.axis, index: this.moveStepDialog.index, value });
-		},
-		getHeaterValue(heater) {
-			if (heater && heater.sensor >= 0 && heater.sensor < this.sensors.analog.length) {
-				const sensor = this.sensors.analog[heater.sensor];
-				if (sensor) {
-					return this.formatSensorValue(sensor);
-				}
-			}
-			return this.$t('generic.noValue');
 		},
 		displayAxisPosition(axis) {
 			const position = this.displayToolPosition ? axis.userPosition : axis.machinePosition;

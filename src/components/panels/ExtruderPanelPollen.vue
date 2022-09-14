@@ -25,7 +25,7 @@
 			<v-row class="row--highlighted">
         <v-col cols="12 d-flex flex-column">
           <div class="center-label">{{ extrusionSpeed }} {{ $t('generic.rpm') }}</div>
-          <percentage-input-pollen :value="extrusionSpeed" :min="0.2" :max="12" :step="0.1" @change="extrusionSpeedChanged"></percentage-input-pollen>
+          <percentage-input-pollen :value="extrusionSpeed" :min="getExtrusionSpeedMin()" :max="getExtrusionSpeedMax()" :step="0.1" @input="setExtrusionSpeed($event)"></percentage-input-pollen>
         </v-col>
       </v-row>
       <v-row class="row--highlighted" dense>
@@ -116,6 +116,7 @@ export default {
       return this.tool.state == 'active';
     },
     toolExtruder() {
+      console.log(this.move.extruders);
       return this.move.extruders[this.tool.extruders[0]];
     },
     extruderNumber() {
@@ -147,25 +148,44 @@ export default {
 		...mapMutations('machine/settings', ['toggleExtruderVisibility']),
 		...mapMutations('machine/honeyprint_cache', ['selectedExtruderMaterial']),
 		getExtrusionFactor() {
-			return Math.round(this.toolExtruder.factor * 100);
+      if(this.move.extruders[this.toolIndex * 2] != null) {
+        return Math.round(this.move.extruders[this.toolIndex * 2].factor * 100);
+      }
+      return 0;
 		},
 		setExtrusionFactor(value) {
-			this.sendCode(`M221 D${this.toolIndex} S${value}`);
+      if(this.move.extruders[this.toolIndex * 2] != null) {
+        this.sendCode(`M221 D${this.toolIndex * 2} S${value}`);
+      }
 		},
 		getMaxExtrusionFactor() {
-      return Math.max(150, this.toolExtruder.factor * 100 + 50);
+      if(this.move.extruders[this.toolIndex * 2] != null) {
+        return Math.max(150, this.move.extruders[this.toolIndex * 2].factor * 100 + 50);
+      }
+      return 0;
     },
     getMixerExtrusionFactor() {
-      // FIXME
-      return this.getExtrusionFactor();
+      if(this.move.extruders[(this.toolIndex * 2) + 1] != null) {
+        return Math.round(this.move.extruders[(this.toolIndex * 2) + 1].factor * 100);
+      }
+      return 0;
     },
     setMixerExtrusionFactor(value) {
-      // FIXME
-      return this.setExtrusionFactor(value);
+      if(this.move.extruders[(this.toolIndex * 2) + 1] != null) {
+        this.sendCode(`M221 D${(this.toolIndex * 2) + 1} S${value}`);
+      }
     },
     getMixerMaxExtrusionFactor() {
-      // FIXME
-      return this.getMaxExtrusionFactor();
+      if(this.move.extruders[(this.toolIndex * 2) + 1] != null) {
+        return Math.max(150, this.move.extruders[(this.toolIndex * 2) + 1].factor * 100 + 50);
+      }
+      return 0;
+    },
+    getExtrusionSpeedMax() {
+      return this.extrusionSpeed + this.extrusionSpeed * 0.5 ;
+    },
+    getExtrusionSpeedMin() {
+      return this.extrusionSpeed - this.extrusionSpeed * 0.5;
     },
     selectExtruder() {
       // FIXME Check if we might need M568 instead of TX.
@@ -187,8 +207,15 @@ export default {
         newValue: newValue
       });
     },
+    setExtrusionSpeed(value){
+      console.log('ExtruderPanelPollen extrusionSpeedChanged', value);
+      this.extrusionSpeed = value;
+      //TODO call extrudor speed macro ??
+    },
     extrusionSpeedChanged(newValue) {
       console.log('ExtruderPanelPollen extrusionSpeedChanged', newValue);
+      this.extrusionSpeed = newValue;
+      //TODO call extrudor speed macro ??
     }
 	}
 }

@@ -23,7 +23,7 @@
 			</v-btn>
 		</v-col>
 		<v-col class="py-0" v-else>
-			<v-slider :value="innerValue" @change="$emit('input', $event)" :min="min" :max="max" :disabled="disabled" hide-details thumb-label="always" class="slider"></v-slider>
+			<v-slider :value="innerValue" @change="$emit('input', $event)" :min="min" :max="max" :step="step" :disabled="disabled" hide-details thumb-label="always" class="slider"></v-slider>
 		</v-col>
 
 		<v-col cols="auto" class="grey--text text--darken--1 py-0">
@@ -66,7 +66,7 @@ export default {
 	computed: {
 		...mapState('settings', ['numericInputs']),
 		canApply() {
-			if (this.disabled || this.innerValue === Math.round(this.value) || this.debounceTimer || this.decreaseTimer || this.increaseTimer) {
+			if (this.disabled || this.innerValue === this.value || this.debounceTimer || this.decreaseTimer || this.increaseTimer) {
 				return false;
 			}
 			const inputValue = parseFloat(this.innerValue);
@@ -123,7 +123,7 @@ export default {
 			if (this.debounceTimer) {
 				clearTimeout(this.debounceTimer);
 			}
-			this.innerValue = Math.round(Math.min(this.max, Math.max(this.min, this.innerValue + diff)));
+			this.innerValue = Math.min(this.max, Math.max(this.min, Math.round(((this.innerValue + diff) * 10)) / 10));
 			this.debounceTimer = setTimeout(this.debounce, debounceTime);
 		},
 		debounce() {
@@ -158,7 +158,7 @@ export default {
 	},
 	watch: {
 		value(to) {
-			const newValue = Math.round(to);
+			const newValue = Math.round(to * 10) / 10;
 			if (this.innerValue !== newValue) {
 				this.innerValue = newValue;
 			}

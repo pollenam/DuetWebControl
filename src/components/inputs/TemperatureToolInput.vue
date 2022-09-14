@@ -1,6 +1,6 @@
 <style>
 .temperature-tool-component {
-	width: 50px;
+	width: 60px;
   display: inline-block;
 }
 

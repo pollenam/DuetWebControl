@@ -10,7 +10,7 @@
 		</v-card-title>
 
 		<v-card-text>
-			<percentage-input-pollen v-model="speedFactor" :min="speedFactorMin" :max="speedFactorMax" :disabled="uiFrozen"></percentage-input-pollen>
+			<percentage-input-pollen v-model="speedFactor" :min="speedFactorMin" :max="speedFactorMax" :step="1" :disabled="uiFrozen"></percentage-input-pollen>
 		</v-card-text>
 	</v-card>
 </template>
