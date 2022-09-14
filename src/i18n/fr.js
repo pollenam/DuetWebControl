@@ -764,7 +764,9 @@ export default {
 			parameters: "Paramètres",
 			offset: "Offset",
 			default: "Restaurer les valeurs par défaut",
-			save: "Sauvegarder"
+			save: "Sauvegarder",
+			refresh: "Rafraichir",
+			cancel: "Annuler"
 		}
 	}
 }

@@ -1033,7 +1033,9 @@ export default {
 						parameters: "Parameters",
 						offset: "Offset",
 						default: "Restore default",
-						save: "Save"
+						save: "Save",
+						refresh: "Refresh",
+						cancel: "Cancel"
         },
         objectModelBrowser: {
             menuCaption: 'Object Model'

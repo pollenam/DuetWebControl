@@ -235,61 +235,69 @@ input {
 									</v-row>
 								</v-col>
 							</v-row>
-							<v-divider></v-divider>
-							<v-row>
-								<v-col cols="12" lg="12" order="1" order-lg="0" sm="12">
-									<strong>T2 {{ $t('plugins.heightmap.offset') }}</strong>
-									<v-row class="justify-center">
-										<v-col cols="4" lg="auto" order="1" order-lg="0" sm="6">
-											<label for="T2X">X:</label><input name="T2X" class="ml-1 mr-1" ref="input" step="0.01" v-model.number="t2x" type="number" />
-										</v-col>
-										<v-col cols="4" lg="auto" order="1" order-lg="0" sm="6">
-											<label for="T2Y">Y:</label><input name="T2Y" class="ml-1 mr-1" ref="input" step="0.01" v-model.number="t2y" type="number" />
-										</v-col>
-										<v-col cols="4" lg="auto" order="1" order-lg="0" sm="6">
-											<label for="T2Z">Z:</label><input name="T2Z" class="ml-1 mr-1" ref="input" step="0.01" v-model.number="t2z" type="number" />
-										</v-col>
-									</v-row>
-								</v-col>
-							</v-row>
-							<v-divider></v-divider>
-							<v-row>
-								<v-col cols="12" lg="12" order="1" order-lg="0" sm="12">
-									<strong>T3 {{ $t('plugins.heightmap.offset') }}</strong>
-									<v-row class="justify-center">
-										<v-col cols="4" lg="auto" order="1" order-lg="0" sm="6">
-											<label for="T3X">X:</label><input name="T3X" class="ml-1 mr-1" ref="input" step="0.01" v-model.number="t3x" type="number" />
-										</v-col>
-										<v-col cols="4" lg="auto" order="1" order-lg="0" sm="6">
-											<label for="T3Y">Y:</label><input name="T3Y" class="ml-1 mr-1" ref="input" step="0.01" v-model.number="t3y" type="number" />
-										</v-col>
-										<v-col cols="4" lg="auto" order="1" order-lg="0" sm="6">
-											<label for="T3Z">Z:</label><input name="T3Z" class="ml-1 mr-1" ref="input" step="0.01" v-model.number="t3z" type="number" />
-										</v-col>
-									</v-row>
-								</v-col>
-							</v-row>
-							<v-divider></v-divider>
-							<v-row>
-								<v-col cols="12" lg="12" order="1" order-lg="0" sm="12">
-									<strong>T4 {{ $t('plugins.heightmap.offset') }}</strong>
-									<v-row class="justify-center">
-										<v-col cols="4" lg="auto" order="1" order-lg="0" sm="6">
-											<label for="T4X">X:</label><input name="T4X" class="ml-1 mr-1" ref="input" step="0.01" v-model.number="t4x" type="number" />
-										</v-col>
-										<v-col cols="4" lg="auto" order="1" order-lg="0" sm="6">
-											<label for="T4Y">Y:</label><input name="T4Y" class="ml-1 mr-1" ref="input" step="0.01" v-model.number="t4y" type="number" />
-										</v-col>
-										<v-col cols="4" lg="auto" order="1" order-lg="0" sm="6">
-											<label for="T4Z">Z:</label><input name="T4Z" class="ml-1 mr-1" ref="input" step="0.01" v-model.number="t4z" type="number" />
-										</v-col>
-									</v-row>
-								</v-col>
-							</v-row>
+							<template  v-if="tools[2] !== null ">
+								<v-divider></v-divider>
+								<v-row>
+									<v-col cols="12" lg="12" order="1" order-lg="0" sm="12">
+										<strong>T2 {{ $t('plugins.heightmap.offset') }}</strong>
+										<v-row class="justify-center">
+											<v-col cols="4" lg="auto" order="1" order-lg="0" sm="6">
+												<label for="T2X">X:</label><input name="T2X" class="ml-1 mr-1" ref="input" step="0.01" v-model.number="t2x" type="number" />
+											</v-col>
+											<v-col cols="4" lg="auto" order="1" order-lg="0" sm="6">
+												<label for="T2Y">Y:</label><input name="T2Y" class="ml-1 mr-1" ref="input" step="0.01" v-model.number="t2y" type="number" />
+											</v-col>
+											<v-col cols="4" lg="auto" order="1" order-lg="0" sm="6">
+												<label for="T2Z">Z:</label><input name="T2Z" class="ml-1 mr-1" ref="input" step="0.01" v-model.number="t2z" type="number" />
+											</v-col>
+										</v-row>
+									</v-col>
+								</v-row>
+							</template>
+							<template  v-if="this.tools[3] !== null">
+								<v-divider></v-divider>
+								<v-row>
+									<v-col cols="12" lg="12" order="1" order-lg="0" sm="12">
+										<strong>T3 {{ $t('plugins.heightmap.offset') }}</strong>
+										<v-row class="justify-center">
+											<v-col cols="4" lg="auto" order="1" order-lg="0" sm="6">
+												<label for="T3X">X:</label><input name="T3X" class="ml-1 mr-1" ref="input" step="0.01" v-model.number="t3x" type="number" />
+											</v-col>
+											<v-col cols="4" lg="auto" order="1" order-lg="0" sm="6">
+												<label for="T3Y">Y:</label><input name="T3Y" class="ml-1 mr-1" ref="input" step="0.01" v-model.number="t3y" type="number" />
+											</v-col>
+											<v-col cols="4" lg="auto" order="1" order-lg="0" sm="6">
+												<label for="T3Z">Z:</label><input name="T3Z" class="ml-1 mr-1" ref="input" step="0.01" v-model.number="t3z" type="number" />
+											</v-col>
+										</v-row>
+									</v-col>
+								</v-row>
+							</template>
+							<template  v-if="this.tools[4] !== null">
+								<v-divider></v-divider>
+								<v-row>
+									<v-col cols="12" lg="12" order="1" order-lg="0" sm="12">
+										<strong>T4 {{ $t('plugins.heightmap.offset') }}</strong>
+										<v-row class="justify-center">
+											<v-col cols="4" lg="auto" order="1" order-lg="0" sm="6">
+												<label for="T4X">X:</label><input name="T4X" class="ml-1 mr-1" ref="input" step="0.01" v-model.number="t4x" type="number" />
+											</v-col>
+											<v-col cols="4" lg="auto" order="1" order-lg="0" sm="6">
+												<label for="T4Y">Y:</label><input name="T4Y" class="ml-1 mr-1" ref="input" step="0.01" v-model.number="t4y" type="number" />
+											</v-col>
+											<v-col cols="4" lg="auto" order="1" order-lg="0" sm="6">
+												<label for="T4Z">Z:</label><input name="T4Z" class="ml-1 mr-1" ref="input" step="0.01" v-model.number="t4z" type="number" />
+											</v-col>
+										</v-row>
+									</v-col>
+								</v-row>
+							</template>
 						</v-col>
 					</v-card-text>
-					<v-card-actions>.
+					<v-card-actions>
 						<v-btn  @click="restoreDefault()">{{ $t('plugins.heightmap.default') }}</v-btn>
+						<v-btn  @click="refreshOffsets()">{{ $t('plugins.heightmap.cancel') }}</v-btn>
+						<v-btn  @click="refreshOffsets()"> {{ $t('plugins.heightmap.refresh') }}</v-btn>
 						<v-btn  @click="saveParameters()"> {{ $t('plugins.heightmap.save') }}</v-btn>
 					</v-card-actions>
 				</v-card>
@@ -322,13 +330,15 @@ export default {
 		...mapState(['selectedMachine']),
 		...mapGetters(['isConnected', 'uiFrozen']),
 		...mapState('machine/cache', {
-			pluginCache: (state) => state.plugins.HeightMap,
+			pluginCache: (state) => state.plugins.HeightMap
+
 		}),
 		...mapState('machine/model', {
 			heightmapFile: (state) => state.move.compensation.file,
 			systemDirectory: (state) => state.directories.system,
 			axes: (state) => state.move.axes,
 			kinematicsName: (state) => state.move.kinematics.name,
+			tools: state => state.tools
 		}),
 		...mapState('settings', ['language']),
 		defaultHeaders() {
@@ -461,6 +471,7 @@ export default {
 			await this.sendCode(`M98 P"/macros/HONEYPRINT/Tool_Offset_Save" T2 X${this.t2x} Y${this.t2y} Z${this.t2z}`);
 			await this.sendCode(`M98 P"/macros/HONEYPRINT/Tool_Offset_Save" T3 X${this.t3x} Y${this.t3y} Z${this.t3z}`);
 			await this.sendCode(`M98 P"/macros/HONEYPRINT/Tool_Offset_Save" T4 X${this.t4x} Y${this.t4y} Z${this.t4z}`);
+			this.refreshOffsets();
 		},
 		restoreDefault() {
 			this.t1x = default_x;
@@ -690,6 +701,29 @@ export default {
 		resetView(){
 			heightMapViewer.resetCamera();
 		},
+		refreshOffsets() {
+			this.t1x = this.tools[1].offsets[0];
+			this.t1y = this.tools[1].offsets[1];
+			this.t1z = this.tools[1].offsets[2];
+
+			if(this.tools[2] !== null) {
+				this.t2x = this.tools[2].offsets[0];
+				this.t2y = this.tools[2].offsets[1];
+				this.t2z = this.tools[2].offsets[2];
+			}
+
+			if(this.tools[3] !== null) {
+			this.t3x = this.tools[3].offsets[0];
+			this.t3y = this.tools[3].offsets[1];
+			this.t3z = this.tools[3].offsets[2];
+			}
+
+			if(this.tools[4] !== null) {
+				this.t4x = this.tools[4].offsets[0];
+				this.t4y = this.tools[4].offsets[1];
+				this.t4z = this.tools[4].offsets[2];
+			}
+		},
 		async refresh() {
 			if (!this.isConnected) {
 				this.ready = false;
@@ -851,6 +885,7 @@ export default {
 		// Set current heightmap
 		if (this.isConnected) {
 			this.refresh();
+			this.refreshOffsets();
 		}
 
 		// Keep track of file changes
@@ -918,6 +953,7 @@ export default {
 		},
 		isConnected() {
 			this.refresh();
+			this.refreshOffsets();
 		},
 		heightmapFile(to) {
 			if (to) {
