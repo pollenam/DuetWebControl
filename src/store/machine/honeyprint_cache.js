@@ -10,7 +10,8 @@ export default function(connector) {
 		state: {
 			showed_macros: [],
       extrudersAvailableMaterials: ['ABS', 'PLA', 'TPU'],
-      extrudersSelectedMaterials: ['ABS', 'ABS', 'ABS', 'ABS']
+      extrudersSelectedMaterials: ['ABS', 'ABS', 'ABS', 'ABS'],
+			selectedPid: ['','','','']
     },
 		actions: {
 			async load({ commit, dispatch }) {
@@ -97,6 +98,15 @@ export default function(connector) {
         // We have to manually do that and not use v-model on the combobox to avoid errors
         // https://stackoverflow.com/questions/46044276/vuex-do-not-mutate-vuex-store-state-outside-mutation-handlers
         state.extrudersSelectedMaterials[data.extruderIndex] = data.newValue;
+      },
+			selectSelectedPid(state, data) {
+				if (state.extrudersAvailableMaterials.indexOf(data.newValue) == -1)
+        {
+          state.extrudersAvailableMaterials.push(data.newValue);
+        }
+            // We have to manually do that and not use v-model on the combobox to avoid errors
+        // https://stackoverflow.com/questions/46044276/vuex-do-not-mutate-vuex-store-state-outside-mutation-handlers
+        state.selectedPid[data.extruderIndex] = data.newValue;
       }
 		}
 	}

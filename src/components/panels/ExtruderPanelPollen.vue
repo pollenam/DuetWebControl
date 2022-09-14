@@ -86,13 +86,12 @@
         </v-col>
         <v-col cols="9 d-flex align-center">
           <v-select
-            v-model="currentPid"
+            :value="selectedPid[toolIndex]"
             :items="pidItems"
-            item-text="description"
-            item-value="value"
-            label="$t('panel.extruderPollen.selectPidPreset')"
+            :label="$t('panel.extruderPollen.selectPidPreset')"
             return-object
             single-line
+            @change="PIDComboBoxChange"
           ></v-select>
         </v-col>
 			</v-row>
@@ -104,6 +103,7 @@
 'use strict'
 
 import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
+import Path from '@/utils/path.js'
 
 export default {
 	computed: {
@@ -111,7 +111,10 @@ export default {
 		...mapState('machine/model', ['move']),
 		...mapState('machine/settings', ['displayedExtruders']),
     ...mapState('machine/model', ['heat', 'tools']),
-    ...mapState('machine/honeyprint_cache', ['extrudersAvailableMaterials', 'extrudersSelectedMaterials']),
+    ...mapState('machine/honeyprint_cache', ['extrudersAvailableMaterials', 'extrudersSelectedMaterials', 'selectedPid']),
+		...mapState('machine/model', {
+			macrosDirectory: state => state.directories.macros,
+		}),
     isSelected() {
       return this.tool.state == 'active';
     },
@@ -125,12 +128,9 @@ export default {
 	},
 	data() {
 		return {
-        currentPid: { description: 'PID 2', value: 'pid2' },
-        pidItems: [
-          { description: 'PID 1', value: 'pid1' },
-          { description: 'PID 2', value: 'pid2' }
-        ],
-        extrusionSpeed: 1.2
+        currentPid: "",
+        extrusionSpeed: 1.2,
+        pidItems:[]
 		}
 	},
   props: {
@@ -144,9 +144,9 @@ export default {
     }
   },
 	methods: {
-		...mapActions('machine', ['sendCode']),
+		...mapActions('machine', ['sendCode', 'getFileList']),
 		...mapMutations('machine/settings', ['toggleExtruderVisibility']),
-		...mapMutations('machine/honeyprint_cache', ['selectedExtruderMaterial']),
+		...mapMutations('machine/honeyprint_cache', ['selectedExtruderMaterial', 'selectSelectedPid']),
 		getExtrusionFactor() {
       if(this.move.extruders[this.toolIndex * 2] != null) {
         return Math.round(this.move.extruders[this.toolIndex * 2].factor * 100);
@@ -216,7 +216,20 @@ export default {
       console.log('ExtruderPanelPollen extrusionSpeedChanged', newValue);
       this.extrusionSpeed = newValue;
       //TODO call extrudor speed macro ??
+    },
+    async PIDComboBoxChange(newValue) {
+			await this.sendCode(`M98 P"${Path.combine(this.macrosDirectory, "PID", newValue)}"`);
+      this.selectSelectedPid({
+        extruderIndex: this.toolIndex,
+        newValue: newValue
+      });
     }
-	}
+  },
+  async mounted() {
+    this.pidItems = ["files"];
+    var files = await this.getFileList(Path.combine(this.macrosDirectory, "PID"));
+    files = files.map(file => file.name);
+    this.pidItems = files;
+  }
 }
 </script>
