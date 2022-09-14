@@ -251,7 +251,6 @@ export default {
 		},
 		isCompensationEnabled() { return this.move.compensation.type.toLowerCase() !== 'none' },
 		visibleAxes() {
-			console.log(this.move.axes);
 			return this.move.axes.filter(axis => axis.visible && (axis.letter === "X" || axis.letter === "Y" || axis.letter === "Z")); },
 		isDelta() {
 			return (this.move.kinematics.name === KinematicsName.delta ||

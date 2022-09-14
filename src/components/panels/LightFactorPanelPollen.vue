@@ -3,14 +3,10 @@
 		<v-card-title class="v-card__title--dense">
       <v-icon class="mr-2">mdi-weather-sunny</v-icon>
       {{ $t('panel.lightFactorPollen.title') }}
-			<v-spacer></v-spacer>
-			<a v-show="speedFactor !== 100 && !uiFrozen" href="javascript:void(0)" @click.prevent="sendCode('M220 S100')" class="subtitle-2">
-				<v-icon small class="mr-1">mdi-backup-restore</v-icon> {{ $t('generic.reset') }}
-			</a>
 		</v-card-title>
 
 		<v-card-text>
-			<percentage-input-pollen v-model="speedFactor" :min="speedFactorMin" :max="speedFactorMax" :step="1" :disabled="uiFrozen"></percentage-input-pollen>
+			<percentage-input-pollen v-model="speedFactor" :min="0" :max="100" :step="1" :disabled="uiFrozen && fans[4] === null"></percentage-input-pollen>
 		</v-card-text>
 	</v-card>
 </template>
@@ -23,16 +19,19 @@ import { mapState, mapGetters, mapActions } from 'vuex'
 export default {
 	computed: {
 		...mapGetters(['uiFrozen']),
-		...mapState('machine/model', {
-			machineSpeedFactor: state => state.move.speedFactor
-		}),
-		//TODO change to light controls
+		...mapState('machine/model', ['fans']),
 		speedFactor: {
-			get() { return (this.machineSpeedFactor !== null) ? (this.machineSpeedFactor * 100): 100; },
-			set(value) { this.sendCode(`M220 S${value}`); }
-		},
-		speedFactorMin() { return Math.max(1, Math.min(100, this.speedFactor - 50)); },
-		speedFactorMax() { return Math.max(150, this.speedFactor + 50); }
+			get() {
+				console.log(this.fans[4] != null);
+				if(this.fans[4] != null)
+					return this.fans[4].requestedValue * 100;
+				return 0;
+			},
+			set(value) {
+				value = Math.min(100, Math.max(0, value)) / 100;
+				this.sendCode(`M106 P4 S${value.toFixed(2)}`);
+			}
+		}
 	},
 	methods: mapActions('machine', ['sendCode'])
 }
