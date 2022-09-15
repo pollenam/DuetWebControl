@@ -18,6 +18,7 @@
           :value="inputValue" :search-input="inputValue" @update:search-input="change" @keyup.enter="apply" @blur="blur"
           :loading="applying" :disabled="uiFrozen || !isValid" :items="items" hide-selected>
     </v-combobox>
+		<small class="gray--text ml-6">{{ getStatus() }}</small>
   </div>
 </template>
 
@@ -160,8 +161,9 @@ export default {
 		},
 		getHeaterValue() {
 			var heater = null;
-			if (this.tool) {
-				heater = this.tool.heaters[this.toolHeaterIndex];
+
+			if (this.tool && this.heat) {
+				heater =  this.heat.heaters[this.tool.heaters[this.toolHeaterIndex]];
 			} else if (this.bed) {
 				heater = this.bed;
 			} else if (this.chamber) {
@@ -186,6 +188,20 @@ export default {
 			}
 			const unit = (sensor.type === AnalogSensorType.dhtHumidity) ? '%RH' : '°C';
 			return this.$display(sensor.lastReading, 1, unit);
+		},
+		getStatus() {
+			var heater = null;
+			if (this.tool && this.heat) {
+				heater =  this.heat.heaters[this.tool.heaters[this.toolHeaterIndex]];
+			} else if (this.bed) {
+				heater = this.bed;
+			} else if (this.chamber) {
+				heater = this.chamber;
+			}
+
+			if(heater)
+				return heater.state;
+			return this.$t('generic.noValue');
 		}
 	},
 	mounted() {
