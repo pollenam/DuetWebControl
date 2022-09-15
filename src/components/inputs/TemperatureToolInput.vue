@@ -18,19 +18,20 @@
           :value="inputValue" :search-input="inputValue" @update:search-input="change" @keyup.enter="apply" @blur="blur"
           :loading="applying" :disabled="uiFrozen || !isValid" :items="items" hide-selected>
     </v-combobox>
-		<small class="gray--text ml-6">{{ getStatus() }}</small>
-  </div>
+		<a href="javascript:void(0)" class="black--text ml-6" @click="toolHeaterClick()">{{ getStatus() }}</a>
+		<reset-heater-fault-dialog :shown.sync="resetHeaterFault" :heater="faultyHeater"></reset-heater-fault-dialog>
+	</div>
 </template>
 
 <script>
 'use strict'
 
 import { mapState, mapGetters, mapActions } from 'vuex'
-import { AnalogSensorType } from '@/store/machine/modelEnums'
+import { AnalogSensorType, HeaterState } from '@/store/machine/modelEnums'
 
 export default {
 	computed: {
-		...mapGetters(['uiFrozen']),
+		...mapGetters(['uiFrozen', 'isConnected']),
 		...mapState('machine/model', ['heat', 'sensors', 'state', 'tools']),
 		...mapState('machine/settings', ['temperatures']),
 		...mapState('settings', ['disableAutoComplete']),
@@ -76,7 +77,9 @@ export default {
 			blurTimer: null,
 			inputElement: null,
 			actualValue: 0,
-			inputValue: '0'
+			inputValue: '0',
+			resetHeaterFault: false,
+			faultyHeater: -1
 		}
 	},
 	props: {
@@ -202,6 +205,71 @@ export default {
 			if(heater)
 				return heater.state;
 			return this.$t('generic.noValue');
+		},
+		toolHeaterClick() {
+			if (!this.isConnected) {
+				return;
+			}
+
+			console.log("bed", this.bed);
+			console.log("bedIndex", this.bedHeaterIndex);
+
+			var heater = this.getHeater();
+			console.log(heater);
+			switch (heater.state) {
+				case HeaterState.off:		// Off -> Active
+					if(this.tool) {
+						this.sendCode(`M568 P${this.tool.number} A2`);
+					}
+					if(this.chamber) {
+						this.sendCode(`M141 P${this.chamberHeaterIndex} S${heater.active}`);
+					}
+					if(this.bed) {
+						this.sendCode(`M140 P${this.bedHeaterIndex} S${heater.active}`);
+					}
+					break;
+
+				case HeaterState.standby:	// Standby -> Off
+					if(this.tool) {
+					this.sendCode(`M568 P${this.tool.number} A0`);
+					}
+					if(this.chamber) {
+						this.sendCode(`M141 P${this.chamberHeaterIndex} S-273.15`);
+					}
+					if(this.bed) {
+						this.sendCode(`M140 P${this.bedHeaterIndex} S-273.15`);
+					}
+					break;
+
+				case HeaterState.active:	// Active -> Standby
+					if(this.tool) {
+						this.sendCode(`M568 P${this.tool.number} A1`);
+					}
+					if(this.chamber) {
+						this.sendCode(`M141 P${this.chamberHeaterIndex} S-273.15`);
+					}
+					if(this.bed) {
+						this.sendCode(`M144 P${this.bedHeaterIndex}`);
+					}
+					break;
+
+				case HeaterState.fault:		// Fault -> Ask for reset
+					this.faultyHeater = this.heat.heaters.indexOf(heater);
+					this.resetHeaterFault = true;
+					break;
+			}
+		},
+		getHeater(){
+			var heater = null;
+
+			if (this.tool && this.heat) {
+				heater =  this.heat.heaters[this.tool.heaters[this.toolHeaterIndex]];
+			} else if (this.bed) {
+				heater = this.bed;
+			} else if (this.chamber) {
+				heater = this.chamber;
+			}
+			return heater;
 		}
 	},
 	mounted() {

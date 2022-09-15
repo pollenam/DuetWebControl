@@ -174,10 +174,10 @@
           </v-row>
 				</v-col>
 				<v-col cols="2">
-          <v-row :key="`bed-title-${firstBedIndex}-0`">
+          <v-row :key="`bed-title-${firstBedIndex()}-0`">
             <v-col class="d-flex flex-column">
               <span class="pollen-attr-header">{{ $t('panel.buildSurfacePollen.bed') }}</span>
-              <temperature-tool-input :bed="firstBedHeater" :bedHeaterIndex="firstBedIndex" active class="mt-3 mb-0"></temperature-tool-input>
+              <temperature-tool-input :bed="firstBedHeater()" :bedHeaterIndex="firstBedIndex()" active class="mt-3 mb-0"></temperature-tool-input>
             </v-col>
           </v-row>
           <hr class="hr--separated-rows" />
@@ -251,7 +251,8 @@ export default {
 		},
 		isCompensationEnabled() { return this.move.compensation.type.toLowerCase() !== 'none' },
 		visibleAxes() {
-			return this.move.axes.filter(axis => axis.visible && (axis.letter === "X" || axis.letter === "Y" || axis.letter === "Z")); },
+			return this.move.axes.filter(axis => axis.visible && (axis.letter === "X" || axis.letter === "Y" || axis.letter === "Z"));
+		},
 		isDelta() {
 			return (this.move.kinematics.name === KinematicsName.delta ||
 					this.move.kinematics.name === KinematicsName.rotaryDelta);
@@ -263,22 +264,7 @@ export default {
 				this.state.status !== StatusType.resuming
 			);
 		},
-		unhomedAxes() { return this.move.axes.filter(axis => axis.visible && !axis.homed); },
-		bedHeaters() {
-			return this.heat.bedHeaters
-				.map(heaterIndex => {
-					if (heaterIndex >= 0 && heaterIndex < this.heat.heaters.length && this.heat.heaters[heaterIndex]) {
-						return this.heat.heaters[heaterIndex];
-					}
-					return null;
-				});
-		},
-    firstBedIndex() {
-      return this.heat.bedHeaters.first;
-    },
-    firstBedHeater() {
-      return this.heat.heaters[this.firstBedIndex];
-    }
+		unhomedAxes() { return this.move.axes.filter(axis => axis.visible && !axis.homed); }
 	},
 	data() {
 		return {
@@ -328,6 +314,12 @@ export default {
 			const position = this.displayToolPosition ? axis.userPosition : axis.machinePosition;
 			return (axis.letter === 'Z') ? this.$displayZ(position, false) : this.$display(position, 1);
 		},
+		firstBedIndex() {
+      return this.heat.bedHeaters[0];
+    },
+		firstBedHeater() {
+      return this.heat.heaters[this.firstBedIndex()];
+    }
 	},
 	watch: {
 		isConnected() {

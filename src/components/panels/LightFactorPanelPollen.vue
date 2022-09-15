@@ -22,7 +22,6 @@ export default {
 		...mapState('machine/model', ['fans']),
 		speedFactor: {
 			get() {
-				console.log(this.fans[4] != null);
 				if(this.fans[4] != null)
 					return this.fans[4].requestedValue * 100;
 				return 0;
