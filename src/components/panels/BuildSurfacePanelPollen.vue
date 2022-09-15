@@ -288,7 +288,8 @@ export default {
 				axis: 'X',
 				index: 0,
 				preset: 0
-			}
+			},
+			displayToolPosition: true
 		}
 	},
 	methods: {
