@@ -75,16 +75,16 @@ export default [
 			'./Accelerometer/index.js'
 		)
 	}),
-	new DwcPlugin({
-		id: 'HeightMap',
-		name: 'Height Map',
-		author: 'Duet3D Ltd',
-		version,
-		loadDwcResources: () => import(
-			/* webpackChunkName: "HeightMap" */
-			'./HeightMap/index.js'
-		)
-	}),
+	// new DwcPlugin({
+	// 	id: 'HeightMap',
+	// 	name: 'Height Map',
+	// 	author: 'Duet3D Ltd',
+	// 	version,
+	// 	loadDwcResources: () => import(
+	// 		/* webpackChunkName: "HeightMap" */
+	// 		'./HeightMap/index.js'
+	// 	)
+	// }),
 	new DwcPlugin({
 		id: 'GCodeViewer',
 		name: 'G-Code Viewer',

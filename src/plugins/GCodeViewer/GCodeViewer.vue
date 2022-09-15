@@ -624,10 +624,11 @@ export default {
 			}
 			this.resizeDebounce = setTimeout(() => {
 				let contentArea = getComputedStyle(document.getElementsByClassName('v-toolbar__content')[0]);
-				let globalContainer =  getComputedStyle(document.getElementById('global-container'));
+				// let globalContainer =  getComputedStyle(document.getElementById('global-default-container')); // Not present in Pollen view
 				let primaryContainer = getComputedStyle(this.$refs.primarycontainer);
 				let contentAreaHeight = parseInt(contentArea.height) + parseInt(contentArea.paddingTop) + parseInt(contentArea.paddingBottom);
-				let globalContainerHeight = this.$vuetify.breakpoint.smAndDown ? 0 : parseInt(globalContainer.height) + parseInt(globalContainer.paddingTop) + parseInt(globalContainer.paddingBottom);
+				// let globalContainerHeight = this.$vuetify.breakpoint.smAndDown ? 0 : parseInt(globalContainer.height) + parseInt(globalContainer.paddingTop) + parseInt(globalContainer.paddingBottom);
+				let globalContainerHeight = this.$vuetify.breakpoint.smAndDown ? 0 : 0;
 				let viewerHeight = window.innerHeight - contentAreaHeight - globalContainerHeight - parseInt(primaryContainer.marginTop);
 				this.$refs.primarycontainer.style.height = (viewerHeight >= 300 ? viewerHeight : 300) + 'px';
 				if (viewer) {

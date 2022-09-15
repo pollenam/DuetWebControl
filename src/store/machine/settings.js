@@ -226,6 +226,9 @@ export default function(connector, pluginSettingFields) {
 						}
 					}
 				}
+
+				//Load by default Gcode viewer plugin
+				await dispatch('loadDwcPlugin', { id: 'GCodeViewer', saveSettings: false }, { root: true });
 			}
 		},
 		mutations: {

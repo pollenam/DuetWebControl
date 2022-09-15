@@ -226,10 +226,12 @@ export default {
     }
   },
   async mounted() {
-    this.pidItems = ["files"];
+    this.pidItems = [];
     var files = await this.getFileList(Path.combine(this.macrosDirectory, "PID"));
-    files = files.map(file => file.name);
-    this.pidItems = files;
+    if(files) {
+      files = files.map(file => file.name);
+      this.pidItems = files;
+    }
   }
 }
 </script>

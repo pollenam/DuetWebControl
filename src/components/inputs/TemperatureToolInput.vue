@@ -1,6 +1,6 @@
 <style>
 .temperature-tool-component {
-	width: 60px;
+	width: 80px;
   display: inline-block;
 }
 
@@ -35,15 +35,12 @@ export default {
 		...mapState('machine/model', ['heat', 'sensors', 'state', 'tools']),
 		...mapState('machine/settings', ['temperatures']),
 		...mapState('settings', ['disableAutoComplete']),
-		...mapState('machine/model', { //TODO REMOVE HERE FOR EXAMPLES
-			boards: state => state.boards
-		}),
 		items() {
 			if (this.disableAutoComplete) {
 				return [];
 			}
 
-			const key = this.active ? 'active' : 'standby';
+			const key = 'active';
 			if (this.tool) {
 				return this.temperatures.tool[key];
 			}
