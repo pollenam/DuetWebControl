@@ -216,8 +216,8 @@ import { KinematicsName, StatusType } from '@/store/machine/modelEnums'
 
 export default {
 	computed: {
-		...mapGetters(['isConnected', 'uiFrozen'], ['fans']),
-		...mapState('machine/model', ['move', 'state', 'heat']),
+		...mapGetters(['isConnected', 'uiFrozen']),
+		...mapState('machine/model', ['move', 'state', 'heat', 'fans']),
 		...mapState('machine/settings', ['moveFeedrate']),
 		...mapState('machine/settings', ['babystepAmount']),
 		...mapState('machine/model', {
@@ -235,18 +235,14 @@ export default {
 			get() {
 				// Even though RRF allows multiple fans to be assigned to a tool,
 				// we assume they all share the same fan value if such a config is set
-				const fan = (this.fan === -1)
-					? ((this.currentTool && this.currentTool.fans.length > 0) ? this.currentTool.fans[0] : -1)
-					: this.fan;
-				return (fan >= 0 && fan < this.fans.length && this.fans[fan]) ? Math.round(this.fans[fan].requestedValue * 100) : 0;
+				if(this.fans[2]) {
+					return this.fans[2].requestedValue * 100;
+				}
+				return 0;
 			},
 			set(value) {
 				value = Math.min(100, Math.max(0, value)) / 100;
-				if (this.fan === -1) {
-					this.sendCode(`M106 S${value.toFixed(2)}`);
-				} else {
-					this.sendCode(`M106 P${this.fan} S${value.toFixed(2)}`);
-				}
+				this.sendCode(`M106 P2 S${value.toFixed(2)}`);
 			}
 		},
 		isCompensationEnabled() { return this.move.compensation.type.toLowerCase() !== 'none' },

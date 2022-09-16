@@ -490,6 +490,7 @@ export default {
 		files: {
 			caption: 'Files (legacy)',
 			jobs: 'G-Code files',
+			jobsLegacy: 'G-Code files (legacy)',
 			filaments: 'Filaments (legacy)',
 			macros: 'Macros (legacy)',
 			menu: 'Display (legacy)',
@@ -734,11 +735,16 @@ export default {
         settingsElectronics: {
             caption: 'Electronics',
             diagnostics: 'Diagnostics',
-            board: 'Board: {0}',
+            downloadLogs: 'Logs',
+						board: 'Board: {0}',
             firmware: 'Firmware: {0} ({1})',
             dwsFirmware: 'Duet WiFi Server Version: {0}',
             updateNote: 'Note: You can install updates on the System page.'
         },
+				settingsPollen: {
+					legacyMode: "Legacy Mode",
+					password: "Enter the admin password for the machine to enable legacy mode (all DWC defaut screen)"
+				},
         settingsEndstops: {
             caption: 'Endstops',
             index: 'Index',

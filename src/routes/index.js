@@ -10,6 +10,8 @@ import Console from './Control/Console.vue'
 
 import Filaments from './Files/Filaments.vue'
 import Jobs from './Files/Jobs.vue'
+
+
 import Macros from './Files/Macros.vue'
 import System from './Files/System.vue'
 
@@ -23,6 +25,7 @@ import Plugins from './Settings/Plugins.vue'
 import MacrosPollen from './Settings/MacrosPollen.vue'
 import GeneralPollen from './Settings/GeneralPollen.vue'
 import HeightMapPollen from './Settings/HeightMapPollen.vue'
+import JobsPollen from './Files/JobsPollen.vue'
 
 import Page404 from './Page404.vue'
 
@@ -201,6 +204,7 @@ Vue.use(Filaments)
 Vue.use(Jobs)
 Vue.use(Macros)
 Vue.use(System)
+Vue.use(JobsPollen)
 
 // Job
 Vue.use(JobStatus)

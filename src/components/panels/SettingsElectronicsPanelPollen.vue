@@ -1,49 +1,62 @@
 <template>
-	<v-card outlined>
-		<v-card-title>
-			{{ $t('panel.settingsElectronics.caption') }}
-			<v-spacer></v-spacer>
-			<a v-show="isConnected" href="javascript:void(0)" @click="diagnostics">
-				<v-icon small>mdi-lifebuoy</v-icon> {{ $t('panel.settingsElectronics.diagnostics') }}
-			</a>
-		</v-card-title>
+	<v-col>
+		<v-row>
+			<v-card outlined>
+				<v-card-title>
+					{{ $t('panel.settingsElectronics.caption') }}
+					<v-spacer></v-spacer>
+					<a v-show="isConnected" href="javascript:void(0)" @click="diagnostics">
+						<v-icon small>mdi-lifebuoy</v-icon> {{ $t('panel.settingsElectronics.diagnostics') }}
+					</a>
+					<a class="ml-2" v-show="isConnected && this.state.logFile != null" href="javascript:void(0)" @click="downloadLogs()">
+						<v-icon small>mdi-post-outline</v-icon> {{ $t('panel.settingsElectronics.downloadLogs') }}
+					</a>
+				</v-card-title>
 
-		<v-card-text class="pt-0">
-			<template v-if="isConnected">
-				<template v-if="mainboard.name">
-					{{ $t('panel.settingsElectronics.board', [mainboard.name + (mainboard.shortName ? ` (${mainboard.shortName})` : '')]) }} <br>
-				</template>
-				<template v-if="dsfVersion">
-					{{ `DSF Version: ${dsfVersion}` }} <br>
-				</template>
-				<template v-if="mainboard.firmwareName">
-					{{ $t('panel.settingsElectronics.firmware', [mainboard.firmwareName + ' ' + $display(mainboard.firmwareVersion), $display(mainboard.firmwareDate)]) }} <br>
-				</template>
-				<template v-if="firstInterface.firmwareVersion && firstInterface.type === 'wifi'">
-					{{ $t('panel.settingsElectronics.dwsFirmware', [$display(firstInterface.firmwareVersion)]) }} <br>
-				</template>
-			</template>
-			<template v-else>
-				(not connected)
-			</template>
-		</v-card-text>
-	</v-card>
+				<v-card-text class="pt-0">
+					<template v-if="isConnected">
+						<template v-if="mainboard.name">
+							{{ $t('panel.settingsElectronics.board', [mainboard.name + (mainboard.shortName ? ` (${mainboard.shortName})` : '')]) }} <br>
+						</template>
+						<template v-if="dsfVersion">
+							{{ `DSF Version: ${dsfVersion}` }} <br>
+						</template>
+						<template v-if="mainboard.firmwareName">
+							{{ $t('panel.settingsElectronics.firmware', [mainboard.firmwareName + ' ' + $display(mainboard.firmwareVersion), $display(mainboard.firmwareDate)]) }} <br>
+						</template>
+						<template v-if="firstInterface.firmwareVersion && firstInterface.type === 'wifi'">
+							{{ $t('panel.settingsElectronics.dwsFirmware', [$display(firstInterface.firmwareVersion)]) }} <br>
+						</template>
+					</template>
+					<template v-else>
+						(not connected)
+					</template>
+				</v-card-text>
+			</v-card>
+		</v-row>
+		<v-row>
+		</v-row>
+	</v-col>
 </template>
 
 <script>
 'use strict'
 
 import { mapState, mapGetters, mapActions } from 'vuex'
+import saveAs from 'file-saver'
+import Path from '../../utils/path.js';
 
 export default {
 	computed: {
 		...mapGetters(['isConnected']),
 		...mapGetters('machine', ['connector']),
+		...mapState('machine/model', ['state']),
 		...mapState('machine/model', {
 			isDuetFirmware: state => (state.boards.length > 0 && state.boards[0].firmwareFileName) ? state.boards[0].firmwareFileName.startsWith('Duet') : true,
 			dsfVersion: state => state.state.dsfVersion,
 			mainboard: state => (state.boards.length > 0) ? state.boards[0] : {},
-			firstInterface: state => (state.network.interfaces.length > 0) ? state.network.interfaces[0] : {}
+			firstInterface: state => (state.network.interfaces.length > 0) ? state.network.interfaces[0] : {},
+			systemDirectory: (state) => state.directories.system,
 		}),
         connectorType() {
             return this.connector ? this.connector.type : null;
@@ -51,9 +64,17 @@ export default {
 	},
 	methods: {
 		...mapActions('machine', ['sendCode']),
+		...mapActions('machine', {
+			machineDownload: 'download',
+		}),
 		async diagnostics() {
 			await this.sendCode('M122');
 			await this.$router.push('/Console');
+		},
+		async downloadLogs(){
+			console.log(this.state);
+			const blob = await this.machineDownload({ filename: Path.combine(this.systemDirectory, this.state.logFile), type: 'blob' });
+			saveAs(blob, this.state.logFile);
 		}
 	}
 }

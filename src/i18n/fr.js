@@ -67,7 +67,7 @@ export default {
 		},
 		home: {
 			caption: 'Origine {0}',
-			captionAll: 'Tout aux Origines',
+			captionAll: 'Home',
 			title: 'Déplace l\'axe {0} à son origine (G28 {0})',
 			titleAll: 'Déplace tout les axes aux origines (G28)'
 		},
@@ -416,6 +416,7 @@ export default {
 		files: {
 			caption: 'Gestion de Fichiers',
 			jobs: 'Travails',
+			jobsLegacy: 'Travails (legacy)',
 			filaments: 'Filaments',
 			macros: 'Macros',
 			menu: 'Affichage',
@@ -636,10 +637,15 @@ export default {
 		settingsElectronics: {
 			caption: 'Électroniques',
 			diagnostics: 'Diagnostiques',
+			downloadLogs: "Journaux",
 			board: 'Circuit: {0}',
 			firmware: 'Firmware: {0} ({1})',
 			dwsFirmware: 'Duet WiFi Server Version: {0}',
 			updateNote: 'Remarque: Vous pouvez installer les mises à jour sur la page Système.'
+		},
+		settingsPollen: {
+			legacyMode: "Mode legacy",
+			password: "Entrer le mot de passe administrateur de la machine pour activer le mode legacy (Tous les écran par défaut de DWC)"
 		},
 		settingsEndstops: {
 			caption: 'Interrupteur de position',

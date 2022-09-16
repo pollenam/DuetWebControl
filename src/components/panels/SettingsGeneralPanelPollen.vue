@@ -1,13 +1,13 @@
 <template>
 	<v-card outlined>
 		<v-card-title class="pb-0">
-			Legacy mode
+			{{ $t('panel.settingsPollen.legacyMode') }}
 		</v-card-title>
 
 		<v-card-text>
 			<v-row :dense="$vuetify.breakpoint.mobile">
 				<v-col cols="12" sm="12">
-					<div>Enter the admin password for the machine to enable legacy mode (all DWC defaut screen)</div>
+					<div> {{ $t('panel.settingsPollen.password') }}</div>
 				</v-col>
 			</v-row>
 			<v-row :dense="$vuetify.breakpoint.mobile">

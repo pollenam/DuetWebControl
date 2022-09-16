@@ -1,7 +1,7 @@
 <template>
 	<v-row>
 		<v-col>
-			<job-file-list></job-file-list>
+			<job-file-list-pollen></job-file-list-pollen>
 		</v-col>
 	</v-row>
 </template>
@@ -10,7 +10,6 @@
 'use strict'
 
 import { registerRoute } from '..'
-import store from '@/store'
 
 export default {
 	install() {
@@ -19,9 +18,8 @@ export default {
 			Job: {
 				Jobs: {
 					icon: 'mdi-play',
-					caption: 'menu.files.jobsLegacy',
-					path: '/legacy/Job/Jobs',
-					condition: () => store.state.settings.legacyMode == true
+					caption: 'menu.files.jobs',
+					path: '/Job/Jobs'
 				}
 			}
 		});

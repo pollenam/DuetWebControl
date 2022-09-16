@@ -463,8 +463,8 @@ export default {
 			this.refresh();
 		},
 		async createNewHeightMap() {
-			console.log("TODO");
-			// this.sendCode(`M98 P"${Path.combine(this.directory, filename)}"`);
+			//TODO how to give s_count parameters ...
+			this.sendCode(`M98 P"/macros/HONEYPRINT/Compensation_Start`);
 		},
 		async saveParameters(){
 			await this.sendCode(`M98 P"/macros/HONEYPRINT/Tool_Offset_Save" T1 X${this.t1x} Y${this.t1y} Z${this.t1z}`);
