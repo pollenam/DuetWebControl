@@ -29,16 +29,25 @@
         </v-col>
       </v-row>
       <v-row class="row--highlighted" dense>
-        <v-col cols="6">
-          <code-btn block color="primary" code="TODO" tile>
-            Extrude <v-icon class="mr-1">mdi-arrow-down-bold</v-icon>
-          </code-btn>
-        </v-col>
-        <v-col cols="6">
-          <code-btn block color="primary" code="TODO" tile>
-            Retract <v-icon class="mr-1">mdi-arrow-up-bold</v-icon>
-          </code-btn>
-        </v-col>
+        <template v-if="shouldShowInfinite">
+          <v-col cols="6">
+            <v-btn block color="primary" @click="infiniteExtrude()" tile>
+              Extrude <v-icon class="mr-1">mdi-arrow-down-bold</v-icon>
+            </v-btn>
+          </v-col>
+          <v-col cols="6">
+            <v-btn block color="primary" @click="infiniteRetract()" tile>
+              Retract <v-icon class="mr-1">mdi-arrow-up-bold</v-icon>
+            </v-btn>
+          </v-col>
+        </template>
+        <template  v-if="shouldShowStop">
+          <v-col cols="12">
+            <v-btn block color="primary" @click="stopInfinite()" tile>
+              Stop <v-icon class="mr-1">mdi-stop</v-icon>
+            </v-btn>
+          </v-col>
+        </template>
       </v-row>
       <v-row class="row--highlighted">
         <v-col cols="3 d-flex align-center">
@@ -104,6 +113,7 @@
 
 import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
 import Path from '@/utils/path.js'
+import { DisconnectedError } from '@/utils/errors'
 
 export default {
 	computed: {
@@ -115,11 +125,19 @@ export default {
 		...mapState('machine/model', {
 			macrosDirectory: state => state.directories.macros,
 		}),
+    ...mapState('machine/honeyprint_cache', {
+			infiniteExtrusionStatus: state => state.infiniteExtrusionStatus,
+		}),
+    shouldShowInfinite() {
+      return this.infiniteExtrusionStatus[this.toolIndex] === 'stopped'
+    },
+    shouldShowStop() {
+      return this.infiniteExtrusionStatus[this.toolIndex] !== 'stopped'
+    },
     isSelected() {
       return this.tool.state == 'active';
     },
     toolExtruder() {
-      console.log(this.move.extruders);
       return this.move.extruders[this.tool.extruders[0]];
     },
     extruderNumber() {
@@ -131,7 +149,7 @@ export default {
         currentPid: "",
         extrusionSpeed: 1.2,
         pidItems:[]
-		}
+    }
 	},
   props: {
     tool: {
@@ -146,7 +164,7 @@ export default {
 	methods: {
 		...mapActions('machine', ['sendCode', 'getFileList']),
 		...mapMutations('machine/settings', ['toggleExtruderVisibility']),
-		...mapMutations('machine/honeyprint_cache', ['selectedExtruderMaterial', 'selectSelectedPid']),
+		...mapMutations('machine/honeyprint_cache', ['selectedExtruderMaterial', 'selectSelectedPid', 'selectInfiniteExtrusionStatus']),
 		getExtrusionFactor() {
       if(this.move.extruders[this.toolIndex * 2] != null) {
         return Math.round(this.move.extruders[this.toolIndex * 2].factor * 100);
@@ -207,15 +225,31 @@ export default {
         newValue: newValue
       });
     },
-    setExtrusionSpeed(value){
-      console.log('ExtruderPanelPollen extrusionSpeedChanged', value);
+    async setExtrusionSpeed(value){
       this.extrusionSpeed = value;
-      //TODO call extrudor speed macro ??
-    },
-    extrusionSpeedChanged(newValue) {
-      console.log('ExtruderPanelPollen extrusionSpeedChanged', newValue);
-      this.extrusionSpeed = newValue;
-      //TODO call extrudor speed macro ??
+
+      if(this.infiniteExtrusionStatus[this.toolIndex] !== "stopped") {
+        try {
+					await this.sendCode(`M98 P"/macros/EXTRUSION/Extrusion_Stop"`);
+				} catch (e) {
+					if (!(e instanceof DisconnectedError)) {
+						console.warn(e);
+					}
+				}
+
+        var speed = this.extrextrusionSpeed;
+        if(this.infiniteExtrusionStatus[this.toolIndex] === "retract") {
+          speed = -this.extrextrusionSpeed;
+        }
+        try {
+					await this.sendCode(`M98 P"/macros/EXTRUSION/Extrusion_Start" F${speed}`);
+				} catch (e) {
+					if (!(e instanceof DisconnectedError)) {
+						console.warn(e);
+					}
+          this.selectInfiniteExtrusionStatus({status:"stopped", index: this.toolIndex});
+				}
+      }
     },
     async PIDComboBoxChange(newValue) {
 			await this.sendCode(`M98 P"${Path.combine(this.macrosDirectory, "PID", newValue)}"`);
@@ -223,6 +257,55 @@ export default {
         extruderIndex: this.toolIndex,
         newValue: newValue
       });
+    },
+    async infiniteExtrude() {
+      var success = false;
+      try {
+					await this.sendCode(`M98 P"/macros/EXTRUSION/Extrusion_Start" F${this.extrusionSpeed}`);
+          success = true;
+				} catch (e) {
+					if (!(e instanceof DisconnectedError)) {
+						console.warn(e);
+					}
+          success = false;
+				}
+
+        if(success) {
+          this.selectInfiniteExtrusionStatus({status:"extrude", index:this.toolIndex});
+        }
+
+    },
+    async infiniteRetract() {
+      var success = false;
+      try {
+					await this.sendCode(`M98 P"/macros/EXTRUSION/Extrusion_Start" F${-this.extrusionSpeed}`);
+          success = true;
+				} catch (e) {
+					if (!(e instanceof DisconnectedError)) {
+						console.warn(e);
+					}
+          success = false;
+				}
+        if(success) {
+          this.selectInfiniteExtrusionStatus({status:"retract", index:this.toolIndex});
+        }
+    },
+    async stopInfinite() {
+      var success = false;
+
+      try {
+					await this.sendCode(`M98 P"/macros/EXTRUSION/Extrusion_Stop"`);
+          success = true;
+        } catch (e) {
+					if (!(e instanceof DisconnectedError)) {
+						console.warn(e);
+					}
+          success = false;
+				}
+
+        if(success)
+          this.selectInfiniteExtrusionStatus({status:"stopped", index: this.toolIndex});
+
     }
   },
   async mounted() {

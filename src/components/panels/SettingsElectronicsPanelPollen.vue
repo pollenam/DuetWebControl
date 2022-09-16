@@ -72,7 +72,6 @@ export default {
 			await this.$router.push('/Console');
 		},
 		async downloadLogs(){
-			console.log(this.state);
 			const blob = await this.machineDownload({ filename: Path.combine(this.systemDirectory, this.state.logFile), type: 'blob' });
 			saveAs(blob, this.state.logFile);
 		}

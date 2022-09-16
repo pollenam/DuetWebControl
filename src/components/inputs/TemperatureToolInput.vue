@@ -208,11 +208,7 @@ export default {
 				return;
 			}
 
-			console.log("bed", this.bed);
-			console.log("bedIndex", this.bedHeaterIndex);
-
 			var heater = this.getHeater();
-			console.log(heater);
 			switch (heater.state) {
 				case HeaterState.off:		// Off -> Active
 					if(this.tool) {

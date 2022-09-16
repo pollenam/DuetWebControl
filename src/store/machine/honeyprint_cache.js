@@ -3,6 +3,7 @@
 import { FileNotFoundError } from '@/utils/errors.js'
 import patch from '@/utils/patch.js'
 import Path from '@/utils/path.js'
+import Vue from 'vue'
 
 export default function(connector) {
 	return {
@@ -12,7 +13,8 @@ export default function(connector) {
       extrudersAvailableMaterials: ['ABS', 'PLA', 'TPU'],
       extrudersSelectedMaterials: ['ABS', 'ABS', 'ABS', 'ABS'],
 			selectedPid: ['','','',''],
-			lastPrintedJob: []
+			lastPrintedJob: [],
+			infiniteExtrusionStatus: ['','','','']
     },
 		actions: {
 			async load({ commit, dispatch }) {
@@ -90,6 +92,10 @@ export default function(connector) {
 			removeFileToShowedMacro(state, filename) {
 				state.showed_macros = state.showed_macros.filter(item => item !== filename);
 			},
+			selectInfiniteExtrusionStatus(state, data) {
+				state.infiniteExtrusionStatus[data.index] = data.status;
+				Vue.set(state.infiniteExtrusionStatus, data.index, data.status);
+			},
       selectedExtruderMaterial(state, data) {
         if (state.extrudersAvailableMaterials.indexOf(data.newValue) == -1)
         {
@@ -101,10 +107,6 @@ export default function(connector) {
         state.extrudersSelectedMaterials[data.extruderIndex] = data.newValue;
       },
 			selectSelectedPid(state, data) {
-				if (state.extrudersAvailableMaterials.indexOf(data.newValue) == -1)
-        {
-          state.extrudersAvailableMaterials.push(data.newValue);
-        }
             // We have to manually do that and not use v-model on the combobox to avoid errors
         // https://stackoverflow.com/questions/46044276/vuex-do-not-mutate-vuex-store-state-outside-mutation-handlers
         state.selectedPid[data.extruderIndex] = data.newValue;

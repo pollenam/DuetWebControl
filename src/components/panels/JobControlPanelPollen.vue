@@ -189,12 +189,10 @@ export default {
 	methods: {
 		...mapMutations('machine/honeyprint_cache', ['addLastPrintedJobDate']),
 		processAnotherCode() {
-			console.log(this.lastFileName);
 			if (this.lastFileName) {
 				if (this.lastFileSimulated) {
 					return `M37 P"${this.lastFileName}"`;
 				}
-				console.log("print Again", this.lastFileName);
 				this.addLastPrintedJobDate(this.lastFileName);
 				return `M32 "${this.lastFileName}"`;
 			}

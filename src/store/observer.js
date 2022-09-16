@@ -71,7 +71,7 @@ export default function(store) {
 			} else if  (mutation.type.indexOf('/honeyprint_cache/')  !== -1 ) {
 				machineCacheTimer[machine] = setTimeout(function() {
 						store.dispatch(`machine/honeyprint_cache/save`);
-				}, store.state.settings.cacheSaveDelay);
+				}, 100);
 			}
 		}
 	});
