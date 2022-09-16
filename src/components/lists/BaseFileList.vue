@@ -65,7 +65,7 @@ td {
 							{{ (props.item[header.value] !== null) ? $displaySize(props.item[header.value]) : '' }}
 						</template>
 						<template v-else-if="header.unit === 'date'">
-							{{ props.item.lastModified ? props.item.lastModified.toLocaleString() : $t('generic.noValue') }}
+							{{ props.item[header.value] ? props.item[header.value].toLocaleString() : $t('generic.noValue') }}
 						</template>
 						<template v-else-if="header.unit === 'filaments'">
 							<v-tooltip bottom :disabled="!props.item[header.value] || props.item[header.value].length <= 1">

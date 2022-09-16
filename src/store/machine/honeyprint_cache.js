@@ -11,7 +11,8 @@ export default function(connector) {
 			showed_macros: [],
       extrudersAvailableMaterials: ['ABS', 'PLA', 'TPU'],
       extrudersSelectedMaterials: ['ABS', 'ABS', 'ABS', 'ABS'],
-			selectedPid: ['','','','']
+			selectedPid: ['','','',''],
+			lastPrintedJob: []
     },
 		actions: {
 			async load({ commit, dispatch }) {
@@ -107,7 +108,22 @@ export default function(connector) {
             // We have to manually do that and not use v-model on the combobox to avoid errors
         // https://stackoverflow.com/questions/46044276/vuex-do-not-mutate-vuex-store-state-outside-mutation-handlers
         state.selectedPid[data.extruderIndex] = data.newValue;
-      }
+      },
+			addLastPrintedJobDate(state, filename){
+
+				var alreadyPrinted = false;
+				state.lastPrintedJob.forEach(element => {
+					if(element.name  === filename) {
+						element.date =  Date.now();
+						alreadyPrinted = true;
+					}
+				});
+
+				if(alreadyPrinted === false){
+					state.lastPrintedJob.push({name: filename, date: Date.now()});
+				}
+				console.log(state.lastPrintedJob);
+			}
 		}
 	}
 }

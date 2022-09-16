@@ -387,6 +387,7 @@ export default {
 			layerHeight: 'Hauteur de Couche',
 			filament: 'Utilisation de Filament',
 			printTime: 'Temps d\'Impression',
+			lastPrint: 'Dernière impression',
 			simulatedTime: 'Temps Simulé',
 			generatedBy: 'Généré par',
 

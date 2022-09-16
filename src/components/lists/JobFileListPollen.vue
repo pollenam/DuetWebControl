@@ -119,6 +119,9 @@ export default {
 		...mapState('settings', ['language']),
 		...mapState('uiInjection', ['contextMenuItems']),
 		...mapGetters(['isConnected', 'uiFrozen']),
+		...mapState('machine/honeyprint_cache', {
+			lastPrintedJob: state => state.lastPrintedJob,
+		}),
 		headers() {
 			return [
 				{
@@ -141,6 +144,11 @@ export default {
 					text: i18n.t('list.jobs.printTime'),
 					value: 'printTime',
 					unit: 'time'
+				},
+				{
+					text: i18n.t('list.jobs.lastPrint'),
+					value: 'lastPrint',
+					unit: 'date'
 				},
 				{
 					text: i18n.t('list.jobs.generatedBy'),
@@ -185,6 +193,7 @@ export default {
 	methods: {
 		...mapActions('machine', ['sendCode', 'getFileInfo']),
 		...mapMutations('machine/cache', ['clearFileInfo', 'setFileInfo']),
+		...mapMutations('machine/honeyprint_cache', ['addLastPrintedJobDate']),
 		getBigThumbnail(thumbnails) {
 			let biggestThumbnail = null;
 			for (const thumbnail of thumbnails) {
@@ -252,6 +261,11 @@ export default {
 								if (fileInfo.thumbnails && fileInfo.thumbnails.length !== 0) {
 									this.hasThumbnails = true;
 								}
+								this.lastPrintedJob.forEach(element => {
+										if(element.name  ===  Path.combine(this.directory,file.name)) {
+											file.lastPrint = new Date(element.date);
+										}
+								});
 							}
 						} catch (e) {
 							// Deal with the error. If the connection has been terminated, the next call will invalidate everything
@@ -309,6 +323,7 @@ export default {
 			}
 		},
 		start(item) {
+			this.addLastPrintedJobDate(Path.combine(this.directory,item.name));
 			this.sendCode(`M32 "${Path.combine(this.directory, (item && item.name) ? item.name : this.selection[0].name)}"`);
 		},
 		simulate(item) {

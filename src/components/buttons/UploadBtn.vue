@@ -23,7 +23,7 @@
 import JSZip from 'jszip'
 import { VBtn } from 'vuetify/lib'
 
-import { mapState, mapGetters, mapActions } from 'vuex'
+import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
 
 import { isPrinting, NetworkInterfaceType, StatusType } from '@/store/machine/modelEnums'
 import { DisconnectedError } from '@/utils/errors'
@@ -127,6 +127,7 @@ export default {
 	},
 	methods: {
 		...mapActions('machine', ['sendCode', 'upload', 'installSystemPackage']),
+		...mapMutations('machine/honeyprint_cache', ['addLastPrintedJobDate']),
 		chooseFile() {
 			if (!this.isBusy) {
 				this.$refs.fileInput.click();
@@ -362,6 +363,7 @@ export default {
 
 			// Deal with Upload & Start
 			if (this.target === 'start') {
+				this.addLastPrintedJobDate(files[0].filename);
 				await this.sendCode(`M32 "${files[0].filename}"`);
 			}
 

@@ -23,7 +23,7 @@
 					<v-icon class="mr-1">mdi-stop</v-icon> {{ cancelText }}
 				</code-btn>
 
-				<code-btn small class="ms-0 ms-md-2 mt-2 mt-md-0" v-if="!isPrinting && processAnotherCode" :code="processAnotherCode">
+				<code-btn small class="ms-0 ms-md-2 mt-2 mt-md-0" v-if="!isPrinting && processAnotherCode" :code="processAnotherCode()">
 					<v-icon class="mr-1">mdi-restart</v-icon> {{ processAnotherText }}
 				</code-btn>
       </div>
@@ -84,7 +84,7 @@
 'use strict'
 
 import Vue from 'vue'
-import { mapState, mapGetters } from 'vuex'
+import { mapState, mapGetters, mapMutations } from 'vuex'
 
 import { MachineMode, StatusType, isPaused, isPrinting } from '@/store/machine/modelEnums'
 import { extractFileName } from '../../utils/path.js'
@@ -125,15 +125,6 @@ export default {
 			}
 			return this.$t('panel.jobControl.cancelJob');
 		},
-		processAnotherCode() {
-			if (this.lastFileName) {
-				if (this.lastFileSimulated) {
-					return `M37 P"${this.lastFileName}"`;
-				}
-				return `M32 "${this.lastFileName}"`;
-			}
-			return '';
-		},
 		processAnotherText() {
 			if (this.lastFileSimulated) {
 				return this.$t('panel.jobControl.repeatSimulation');
@@ -150,7 +141,7 @@ export default {
 			if (!this.job.layers.length) {
 				return undefined;
 			}
-			return this.job.layers[this.job.layers.length - 1].time;
+			return this.job.layers[this.job.layers.length - 1].tie;
 		},
 		jobDuration() {
 			return isPrinting(this.state.status) ? this.job.duration : this.job.lastDuration;
@@ -193,6 +184,21 @@ export default {
 	data() {
 		return {
 			isSimulating: false
+		}
+	},
+	methods: {
+		...mapMutations('machine/honeyprint_cache', ['addLastPrintedJobDate']),
+		processAnotherCode() {
+			console.log(this.lastFileName);
+			if (this.lastFileName) {
+				if (this.lastFileSimulated) {
+					return `M37 P"${this.lastFileName}"`;
+				}
+				console.log("print Again", this.lastFileName);
+				this.addLastPrintedJobDate(this.lastFileName);
+				return `M32 "${this.lastFileName}"`;
+			}
+			return '';
 		}
 	},
 	mounted() {
