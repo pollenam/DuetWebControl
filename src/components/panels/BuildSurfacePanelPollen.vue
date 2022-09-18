@@ -165,7 +165,7 @@
           <v-row>
             <v-col class="d-flex flex-wrap align-center pb-0">
               <span class="pollen-attr-header mb-2">{{ $t('panel.buildSurfacePollen.zLimits') }}</span>
-              <v-switch hide-details="auto" class="ms-1 mt-0 mb-2" :disabled="uiFrozen"></v-switch>
+              <v-switch hide-details="auto" class="ms-1 mt-0 mb-2" :disabled="uiFrozen" v-model="zlimit"></v-switch>
               <v-spacer></v-spacer>
               <code-btn code="M290 R0 S0" no-wait class="mb-2">
                 {{ $t('panel.buildSurfacePollen.setZero') }}
@@ -271,7 +271,8 @@ export default {
 				index: 0,
 				preset: 0
 			},
-			displayToolPosition: true
+			displayToolPosition: true,
+			zlimit: false
 		}
 	},
 	methods: {
@@ -322,6 +323,13 @@ export default {
 			// Hide dialogs when the connection is interrupted
 			this.showMeshEditDialog = false;
 			this.moveStepDialog.shown = false;
+		},
+		async zlimit(newValue) {
+			if(newValue === true) {
+				await this.sendCode(`M98 P"/macros/HONEYPRINT/Z_Limits" S1`);
+			} else  {
+				await this.sendCode(`M98 P"/macros/HONEYPRINT/Z_Limits" S0`);
+			}
 		}
 	}
 }
