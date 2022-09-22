@@ -55,89 +55,11 @@ input {
 </style>
 
 <template>
-	<v-col cols="12" lg="auto" order="1" order-lg="0" sm="6">
+	<v-col cols="12">
 	<v-row>
-		<v-col :class="{ 'pa-1': $vuetify.breakpoint.xs }" class="flex-grow-1" cols="12" lg="auto" order="0" order-lg="0">
-			<div class="heightmap-container" ref="container" v-resize="resize">
-				<!-- h1 v-show="!ready" class="text-center">
-					{{ loading ? $t('generic.loading') : (errorMessage ? errorMessage : $t('plugins.heightmap.notAvailable')) }}
-				</h1-->
-
-				<div class="canvas-container">
-					<!-- v-show="ready" -->
-					<canvas @mousemove="canvasMouseMove" ref="canvas"></canvas>
-					<canvas class="legend" ref="legend" width="80"></canvas>
-				</div>
-			</div>
-		</v-col>
-
-		<v-col class="d-flex flex-column" cols="12" lg="auto" order="2" sm="6">
-			<v-card class="d-flex flex-column flex-grow-1" tile>
-				<v-card-title class="pt-2 pb-1">
-					<v-icon class="mr-2">mdi-information</v-icon>
-					{{ $t('plugins.heightmap.statistics') }}
-				</v-card-title>
-				<v-card-text class="d-flex flex-column flex-grow-1 justify-space-between pt-2">
-					<span>{{ $t('plugins.heightmap.numPoints', [$display(numPoints, 0)]) }}</span>
-					<span v-if="radius > 0">{{ $t('plugins.heightmap.radius', [$display(radius, 0, 'mm')]) }}</span>
-					<span>{{ $t('plugins.heightmap.area', [$display(area / 100, 1, 'cm²')]) }}</span>
-					<span>{{ $t('plugins.heightmap.maxDeviations', [$display(minDiff, 3), $display(maxDiff, 3, 'mm')]) }}</span>
-					<span>{{ $t('plugins.heightmap.meanError', [$display(meanError, 3, 'mm')]) }}</span>
-					<span>{{ $t('plugins.heightmap.rmsError', [$display(rmsError, 3, 'mm')]) }}</span>
-				</v-card-text>
-			</v-card>
-
-			<v-card class="d-flex flex-column mt-5" tile>
-				<v-card-title class="pt-2 pb-1">
-					<v-icon class="mr-2">mdi-eye</v-icon>
-					{{ $t('plugins.heightmap.display') }}
-				</v-card-title>
-				<v-card-text class="d-flex flex-column">
-					<div class="d-flex flex-column mt-1">
-						{{ $t('plugins.heightmap.colorScheme') }}
-						<v-btn-toggle class="mt-1" v-model="colorScheme">
-							<v-btn class="flex-grow-1" value="terrain">{{ $t('plugins.heightmap.terrain') }}</v-btn>
-							<v-btn class="flex-grow-1" value="heat">{{ $t('plugins.heightmap.heat') }}</v-btn>
-						</v-btn-toggle>
-					</div>
-
-					<!-- deviation coloring -->
-					<div class="d-flex flex-column mt-1">
-						{{ $t('plugins.heightmap.range') }}
-						<v-btn-toggle class="mt-1" v-model="deviationColoring">
-							<v-btn class="flex-grow-1" value="fixed">{{ $t('plugins.heightmap.fixed') }}</v-btn>
-							<v-btn class="flex-grow-1" value="deviation">{{ $t('plugins.heightmap.deviation') }}</v-btn>
-						</v-btn-toggle>
-					</div>
-					<v-switch :disabled="uiFrozen || loading || !ready" :label="$t('plugins.heightmap.invertZ')" v-model="invertZ"></v-switch>
-
-					<v-btn :disabled="uiFrozen || loading || !ready" :elevation="1" @click="topView" class="ml-0 mt-3">
-						<v-icon class="mr-1" small>mdi-format-vertical-align-bottom</v-icon>
-						{{ $t('plugins.heightmap.topView') }}
-					</v-btn>
-					<v-btn :disabled="uiFrozen || loading || !ready" :elevation="1" @click="resetView" class="ml-0 mt-3">
-						<v-icon class="mr-1" small>mdi-camera</v-icon>
-						{{ $t('plugins.heightmap.resetView') }}
-					</v-btn>
-				</v-card-text>
-			</v-card>
-		</v-col>
-
-		<v-tooltip :position-x="tooltip.x" :position-y="tooltip.y" absolute top v-model="tooltip.shown">
-			<span class="no-cursor">
-				{{ xLabel }}: {{ $display(tooltip.coord.x, 1, 'mm') }}
-				<br />
-				{{ yLabel }}: {{ $display(tooltip.coord.y, 1, 'mm') }}
-				<br />
-				Z: {{ $display(tooltip.coord.z, 3, 'mm') }}
-			</span>
-		</v-tooltip>
-	</v-row>
-	<v-row>
-		<v-col cols="6" lg="auto" order="1" order-lg="0" sm="6">
-			<v-row class="mr-2 pr-0">
-				<v-card width="100%" tile>
-					<v-card-title class="pt-2 pb-1">
+		<v-col cols="6" lg="8">
+				<v-card elevation="0">
+          <v-card-title class="v-card__title--dense">
 						<v-icon class="mr-2">mdi-format-list-bulleted</v-icon>
 						{{ $t('plugins.heightmap.listTitle') }}
 						<v-spacer></v-spacer>
@@ -202,19 +124,18 @@ input {
 						</template>
 					</v-data-table>
 					<file-edit-dialog :shown.sync="editDialog.shown" :filename="editDialog.filename" v-model="editDialog.content" @editComplete="$emit('fileEdited', $event)"></file-edit-dialog>
+
+          <v-card-actions>
+            <v-btn class="mr-1" @click="createNewHeightMap()" :disabled="uiFrozen">{{ $t('plugins.heightmap.create') }}</v-btn>
+            <label for="count">S.Count</label><input name="count" class="ml-1 mr-1" ref="input" step="any" min="0" v-model.number="s_count" type="number" />
+            <label for="repeat">S.Repeat</label><input name="repeat" class="ml-1 mr-1" ref="input" step="any" min="0" v-model.number="s_repeat" type="number" />
+            <label for="radius">S.Radius</label><input name="radius" class="ml-1 mr-1" ref="input" step="any" min="0" v-model.number="s_radius" type="number" />
+          </v-card-actions>
 				</v-card>
-			</v-row>
-			<v-row class="d-inline-flex mt-4 pt-0 mr-2 pr-0 align-center" >
-					<v-btn class="mr-1" @click="createNewHeightMap()">{{ $t('plugins.heightmap.create') }}</v-btn>
-					<label for="count">S.Count</label><input name="count" class="ml-1 mr-1" ref="input" step="any" min="0" v-model.number="s_count" type="number" />
-					<label for="repeat">S.Repeat</label><input name="repeat" class="ml-1 mr-1" ref="input" step="any" min="0" v-model.number="s_repeat" type="number" />
-					<label for="radius">S.Radius</label><input name="radius" class="ml-1 mr-1" ref="input" step="any" min="0" v-model.number="s_radius" type="number" />
-			</v-row>
 		</v-col>
-		<v-col cols="6" lg="auto" order="1" order-lg="0" sm="6">
-			<v-row class="ml-2 pl-0">
-				<v-card width="100%" tile>
-					<v-card-title class="pt-2 pb-1">
+		<v-col cols="6" lg="4">
+				<v-card elevation="0">
+          <v-card-title class="v-card__title--dense">
 						{{ $t('plugins.heightmap.parameters') }}
 					</v-card-title>
 					<v-card-text>
@@ -295,15 +216,93 @@ input {
 						</v-col>
 					</v-card-text>
 					<v-card-actions>
-						<v-btn  @click="restoreDefault()">{{ $t('plugins.heightmap.default') }}</v-btn>
-						<v-btn  @click="refreshOffsets()">{{ $t('plugins.heightmap.cancel') }}</v-btn>
-						<v-btn  @click="refreshOffsets()"> {{ $t('plugins.heightmap.refresh') }}</v-btn>
-						<v-btn  @click="saveParameters()"> {{ $t('plugins.heightmap.save') }}</v-btn>
+						<v-btn :disabled="uiFrozen" @click="restoreDefault()">{{ $t('plugins.heightmap.default') }}</v-btn>
+						<v-btn :disabled="uiFrozen" @click="refreshOffsets()">{{ $t('plugins.heightmap.cancel') }}</v-btn>
+						<v-btn :disabled="uiFrozen" @click="refreshOffsets()"> {{ $t('plugins.heightmap.refresh') }}</v-btn>
+						<v-btn :disabled="uiFrozen" @click="saveParameters()"> {{ $t('plugins.heightmap.save') }}</v-btn>
 					</v-card-actions>
 				</v-card>
-			</v-row>
 		</v-col>
 	</v-row>
+	<v-row>
+		<v-col :class="{ 'pa-1': $vuetify.breakpoint.xs }" class="flex-grow-1" cols="12" lg="auto" order="0" order-lg="0">
+			<div class="heightmap-container" ref="container" v-resize="resize">
+				<!-- h1 v-show="!ready" class="text-center">
+					{{ loading ? $t('generic.loading') : (errorMessage ? errorMessage : $t('plugins.heightmap.notAvailable')) }}
+				</h1-->
+
+				<div class="canvas-container">
+					<!-- v-show="ready" -->
+					<canvas @mousemove="canvasMouseMove" ref="canvas"></canvas>
+					<canvas class="legend" ref="legend" width="80"></canvas>
+				</div>
+			</div>
+		</v-col>
+
+		<v-col class="d-flex flex-column" cols="12" lg="auto" order="2" sm="6">
+
+			<v-card class="d-flex flex-column mt-5" tile>
+				<v-card-title class="pt-2 pb-1">
+					<v-icon class="mr-2">mdi-eye</v-icon>
+					{{ $t('plugins.heightmap.display') }}
+				</v-card-title>
+				<v-card-text class="d-flex flex-column">
+					<div class="d-flex flex-column mt-1">
+						{{ $t('plugins.heightmap.colorScheme') }}
+						<v-btn-toggle class="mt-1" v-model="colorScheme">
+							<v-btn class="flex-grow-1" value="terrain">{{ $t('plugins.heightmap.terrain') }}</v-btn>
+							<v-btn class="flex-grow-1" value="heat">{{ $t('plugins.heightmap.heat') }}</v-btn>
+						</v-btn-toggle>
+					</div>
+
+					<!-- deviation coloring -->
+					<div class="d-flex flex-column mt-1">
+						{{ $t('plugins.heightmap.range') }}
+						<v-btn-toggle class="mt-1" v-model="deviationColoring">
+							<v-btn class="flex-grow-1" value="fixed">{{ $t('plugins.heightmap.fixed') }}</v-btn>
+							<v-btn class="flex-grow-1" value="deviation">{{ $t('plugins.heightmap.deviation') }}</v-btn>
+						</v-btn-toggle>
+					</div>
+					<v-switch :disabled="uiFrozen || loading || !ready" :label="$t('plugins.heightmap.invertZ')" v-model="invertZ"></v-switch>
+
+					<v-btn :disabled="uiFrozen || loading || !ready" :elevation="1" @click="topView" class="ml-0 mt-3">
+						<v-icon class="mr-1" small>mdi-format-vertical-align-bottom</v-icon>
+						{{ $t('plugins.heightmap.topView') }}
+					</v-btn>
+					<v-btn :disabled="uiFrozen || loading || !ready" :elevation="1" @click="resetView" class="ml-0 mt-3">
+						<v-icon class="mr-1" small>mdi-camera</v-icon>
+						{{ $t('plugins.heightmap.resetView') }}
+					</v-btn>
+				</v-card-text>
+			</v-card>
+		</v-col>
+
+		<v-tooltip :position-x="tooltip.x" :position-y="tooltip.y" absolute top v-model="tooltip.shown">
+			<span class="no-cursor">
+				{{ xLabel }}: {{ $display(tooltip.coord.x, 1, 'mm') }}
+				<br />
+				{{ yLabel }}: {{ $display(tooltip.coord.y, 1, 'mm') }}
+				<br />
+				Z: {{ $display(tooltip.coord.z, 3, 'mm') }}
+			</span>
+		</v-tooltip>
+	</v-row>
+  <v-card :elevation="0">
+    <v-card-title class="v-card__title--dense">
+      <v-icon class="mr-2">mdi-information</v-icon>
+      {{ $t('plugins.heightmap.statistics') }}
+    </v-card-title>
+    <v-card-text>
+      <v-row dense class="row--separated-cols">
+        <v-col>{{ $t('plugins.heightmap.numPoints', [$display(numPoints, 0)]) }}</v-col>
+        <v-col v-if="radius > 0">{{ $t('plugins.heightmap.radius', [$display(radius, 0, 'mm')]) }}</v-col>
+        <v-col>{{ $t('plugins.heightmap.area', [$display(area / 100, 1, 'cm²')]) }}</v-col>
+        <v-col>{{ $t('plugins.heightmap.maxDeviations', [$display(minDiff, 3), $display(maxDiff, 3, 'mm')]) }}</v-col>
+        <v-col>{{ $t('plugins.heightmap.meanError', [$display(meanError, 3, 'mm')]) }}</v-col>
+        <v-col>{{ $t('plugins.heightmap.rmsError', [$display(rmsError, 3, 'mm')]) }}</v-col>
+      </v-row>
+    </v-card-text>
+  </v-card>
 	</v-col>
 </template>
 
