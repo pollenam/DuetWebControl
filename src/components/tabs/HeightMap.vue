@@ -56,7 +56,7 @@ input {
 
 <template>
 	<v-col cols="12">
-	<v-row>
+	<v-row dense>
 		<v-col cols="6" lg="8">
 				<v-card elevation="0">
           <v-card-title class="v-card__title--dense">
@@ -224,7 +224,7 @@ input {
 				</v-card>
 		</v-col>
 	</v-row>
-	<v-row>
+	<v-row dense>
 		<v-col :class="{ 'pa-1': $vuetify.breakpoint.xs }" class="flex-grow-1" cols="12" lg="auto" order="0" order-lg="0">
 			<div class="heightmap-container" ref="container" v-resize="resize">
 				<!-- h1 v-show="!ready" class="text-center">

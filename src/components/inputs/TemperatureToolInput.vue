@@ -1,6 +1,6 @@
 <style>
 .temperature-tool-component {
-	width: 80px;
+  min-width: 80px;
   display: inline-block;
 }
 
@@ -11,14 +11,16 @@
 </style>
 
 <template>
-  <div class="temperature-row">
-    <span class="temperature-tool-component">{{ getHeaterValue() }}</span>
-    <span class="gray--text mx-2">/</span>
-    <v-combobox hide-details="auto" ref="input" type="number" min="-273" max="1999" step="any" class="temperature-tool-component pt-0 mt-0" :label="label" :menu-props="{ maxHeight: '50%' }"
-          :value="inputValue" :search-input="inputValue" @update:search-input="change" @keyup.enter="apply" @blur="blur"
-          :loading="applying" :disabled="uiFrozen || !isValid" :items="items" hide-selected>
-    </v-combobox>
-		<a href="javascript:void(0)" class="black--text ml-6" @click="toolHeaterClick()">{{ getStatus() }}</a>
+  <div class="temperature-row d-flex align-baseline justify-space-between">
+    <span class="temperature-tool-component flex-grow-1">{{ getHeaterValue() }}</span>
+    <span class="gray--text flex-grow-0 mx-1">/</span>
+    <div class="d-flex flex-column flex-grow-1">
+      <v-combobox hide-details="auto" ref="input" type="number" min="-273" max="1999" step="any" class="temperature-tool-component pt-0 mt-0" :label="label" :menu-props="{ maxHeight: '50%' }"
+            :value="inputValue" :search-input="inputValue" @update:search-input="change" @keyup.enter="apply" @blur="blur"
+            :loading="applying" :disabled="uiFrozen || !isValid" :items="items" hide-selected>
+      </v-combobox>
+      <a href="javascript:void(0)" class="black--text mt-1" @click="toolHeaterClick()"><small>({{ getStatus() }})</small></a>
+    </div>
 		<reset-heater-fault-dialog :shown.sync="resetHeaterFault" :heater="faultyHeater"></reset-heater-fault-dialog>
 	</div>
 </template>

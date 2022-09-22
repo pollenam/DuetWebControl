@@ -1,5 +1,5 @@
 // import colors from 'vuetify/lib/util/colors'
 
 export default {
-  primary: '#eda900'
+  primary: '#fa9901'
 }

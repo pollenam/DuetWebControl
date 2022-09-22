@@ -1,7 +1,7 @@
 <template>
 	<v-row :dense="$vuetify.breakpoint.mobile">
 		<v-col cols="12">
-			<v-row align="stretch">
+			<v-row dense align="stretch">
 				<v-col cols="12" lg="6" class="d-flex">
 					<job-control-panel-pollen  class="w-100"></job-control-panel-pollen>
 				</v-col>
@@ -12,7 +12,7 @@
 					<light-factor-pollen-panel  class="w-100"></light-factor-pollen-panel>
 				</v-col>
 			</v-row>
-			<v-row>
+			<v-row dense>
 				<v-col cols="12" md="9">
 					<build-surface-pollen-panel></build-surface-pollen-panel>
 				</v-col>
@@ -20,7 +20,7 @@
 					<macro-list-pollen></macro-list-pollen>
 				</v-col>
 			</v-row>
-			<v-row>
+			<v-row dense>
         <v-col cols="12" md="6" lg="3" v-for="(tool, toolIndex) in extruderTools" :key=toolIndex>
           <extruder-panel-pollen :tool="tool" :toolIndex="toolIndex"></extruder-panel-pollen>
         </v-col>

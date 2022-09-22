@@ -297,7 +297,7 @@ export default {
 
 		// Set up Piecon
 		Piecon.setOptions({
-			color: '#eda900',			// Pie chart color
+			color: '#fa9901',			// Pie chart color
 			background: '#bbb',		// Empty pie chart color
 			shadow: '#fff',			// Outer ring color
 			fallback: false			// Toggles displaying percentage in the title bar (possible values - true, false, 'force')

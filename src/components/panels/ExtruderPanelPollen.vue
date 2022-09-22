@@ -12,6 +12,7 @@
 			{{ $t('panel.extruderPollen.title') }} {{ extruderNumber }}
 			<v-spacer></v-spacer>
       <v-combobox
+      class="mx-2"
           :value="extrudersSelectedMaterials[toolIndex]"
           :items="extrudersAvailableMaterials"
           @change="materialComboboxChange"
@@ -31,20 +32,34 @@
       <v-row class="row--highlighted" dense>
         <template v-if="shouldShowInfinite">
           <v-col cols="6">
-            <v-btn block color="primary" @click="infiniteExtrude()" :disabled="uiFrozen" tile>
-              Extrude <v-icon class="mr-1">mdi-arrow-down-bold</v-icon>
+            <v-btn block @click="infiniteExtrude()" elevation="0" :disabled="uiFrozen">
+              <v-icon class="mr-1">mdi-arrow-down-bold</v-icon>
+              <span class="hidden-lg-only">
+                Extrude
+              </span>
+              <span class="hidden-md-and-down hidden-xl-and-up">
+                Ext.
+              </span>
             </v-btn>
           </v-col>
           <v-col cols="6">
-            <v-btn block color="primary" @click="infiniteRetract()" :disabled="uiFrozen" tile>
-              Retract <v-icon class="mr-1">mdi-arrow-up-bold</v-icon>
+            <v-btn block @click="infiniteRetract()" elevation="0" :disabled="uiFrozen">
+              <v-icon class="mr-1">mdi-arrow-up-bold</v-icon>
+              <span class="hidden-lg-only">
+                Retract
+              </span>
+              <span class="hidden-md-and-down hidden-xl-and-up">
+                Ret.
+              </span>
             </v-btn>
           </v-col>
         </template>
         <template  v-if="shouldShowStop">
           <v-col cols="12">
-            <v-btn block color="primary" @click="stopInfinite()" :disabled="uiFrozen" tile>
-              Stop <v-icon class="mr-1">mdi-stop</v-icon>
+            <v-btn block @click="stopInfinite()" elevation="0" :disabled="uiFrozen">
+              <v-icon class="mr-1">mdi-stop</v-icon>
+              Stop
+              <v-progress-circular indeterminate class="ml-5" size="15"></v-progress-circular>
             </v-btn>
           </v-col>
         </template>
