@@ -89,7 +89,7 @@
           <percentage-input-pollen :value="getExtrusionFactor()" @input="setExtrusionFactor($event)" :max="getMaxExtrusionFactor()" :step="1" :disabled="uiFrozen"></percentage-input-pollen>
         </v-col>
 			</v-row>
-			<v-row v-if="!isSelected">
+			<v-row>
         <v-col cols="3 d-flex align-center">
           <span class="pollen-attr-header">{{ $t('panel.extruderPollen.pidSet') }}</span>
         </v-col>

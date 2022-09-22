@@ -1,6 +1,9 @@
 <template>
   <div class="v-toolbar-pollen-item">
-    <v-icon small class="mr-1">mdi-power</v-icon> {{ $t('panel.atx.caption') }}
+    <v-icon small class="mr-1">mdi-power</v-icon>
+    <span class="hidden-md-and-down">
+      {{ $t('panel.atx.caption') }}
+    </span>
 
     <v-switch :value="state.atxPower" hide-details="'auto'" :loading="sendingCode" :color="'success'" @change="togglePower" class="ml-2" :disabled="uiFrozen">
     </v-switch>

@@ -68,6 +68,13 @@ textarea {
 					<connect-btn v-if="showConnectButton" class="mb-2" block/>
 				</div>
 				<upload-btn target="start" :elevation="1" class="ma-2" block/>
+				<div class="ma-2">
+        <v-btn block href="https://pollenam.zendesk.com/" target="_blank" rel="nooperner">Support</v-btn>
+        </div>
+				<div class="ma-2 d-flex justify-space-around">
+          <atx-btn-pollen class="mt-2"></atx-btn-pollen>
+          <doors-btn-pollen class="mt-2"></doors-btn-pollen>
+        </div>
 			</div>
 
 			<v-list class="pt-0" :dense="!$vuetify.breakpoint.smAndDown" :expand="!$vuetify.breakpoint.smAndDown">
@@ -94,23 +101,24 @@ textarea {
 			<v-app-bar-nav-icon v-show="!showBottomNavigation" @click.stop="drawer = !drawer">
 				<v-icon>mdi-menu</v-icon>
 			</v-app-bar-nav-icon>
-			<v-toolbar-title class="px-1">
-				<a href="javascript:void(0)" id="title">{{ name }}</a>
-			</v-toolbar-title>
+      <router-link class="px-1" to="/" id="title">{{ name }}</router-link>
 			<connect-btn v-if="showConnectButton" class="hidden-xs-only ml-3"/>
 
-      <atx-btn-pollen class="ml-12"></atx-btn-pollen>
-      <doors-btn-pollen></doors-btn-pollen>
-      <a href="https://pollenam.zendesk.com/" target="_blank" rel="nooperner" class="ml-5 text-white">Support</a>
+      <atx-btn-pollen class="hidden-xs-only ml-12"></atx-btn-pollen>
+      <doors-btn-pollen class="hidden-xs-only"></doors-btn-pollen>
+      <a href="https://pollenam.zendesk.com/" target="_blank" rel="nooperner" class="hidden-xs-only ml-5 text-white">Support</a>
 
 			<v-spacer/>
 
-      <v-img src="./assets/honeyprint-sx2-logo.png" contain height="30px"></v-img>
+      <v-img src="./assets/honeyprint-sx2-logo.svg" contain height="30px" class="hidden-md-and-down"></v-img>
+      <v-img src="./assets/honeyprint-sx2-logo-small.svg" contain height="30px" class="hidden-lg-and-up"></v-img>
 
 			<v-spacer/>
 
       <div class="v-toolbar-pollen-item mr-12">
-        <v-icon small class="mr-1">mdi-information</v-icon> {{ $t('panel.status.caption') }}
+        <span class="hidden-md-and-down">
+          <v-icon small class="mr-1">mdi-information</v-icon> {{ $t('panel.status.caption') }}
+        </span>
 
         <status-label-pollen class="ml-2"></status-label-pollen>
       </div>

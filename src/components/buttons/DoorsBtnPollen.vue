@@ -1,6 +1,9 @@
 <template>
   <div class="v-toolbar-pollen-item">
-    <v-icon small class="mr-1">mdi-lock-outline</v-icon> {{ $t('panel.doors.caption') }}
+    <v-icon small class="mr-1">mdi-lock-outline</v-icon>
+    <span class="hidden-md-and-down">
+      {{ $t('panel.doors.caption') }}
+    </span>
 
     <v-switch :value="state.doorsLocked" hide-details="'auto'" :loading="sendingCode" :color="'success'" @change="togglePower" class="ml-2" :disabled="uiFrozen">
     </v-switch>

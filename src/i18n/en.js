@@ -686,6 +686,7 @@ export default {
 		movement: {
 			caption: 'Machine Movement',
 			compensation: 'Compensation & Calibration',
+			startCompensation: 'Start Compensation',
 			runBed: 'True Bed Levelling (G32)',
 			runDelta: 'Delta Calibration (G32)',
 			compensationInUse: 'Compensation in use: {0}',

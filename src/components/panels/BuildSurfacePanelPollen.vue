@@ -55,49 +55,9 @@
 
 			<v-spacer></v-spacer>
 
-			<v-menu offset-y left>
-				<template #activator="{ on }">
-					<v-btn v-show="visibleAxes.length" small class="mx-0" :elevation="0" v-on="on">
-						{{ $t('panel.movement.compensation') }} <v-icon>mdi-menu-down</v-icon>
-					</v-btn>
-				</template>
-
-				<v-card>
-					<v-list>
-						<template v-show="move.compensation">
-							<v-list-item>
-								<v-spacer></v-spacer>
-								{{ $t('panel.movement.compensationInUse', [$t(`panel.movement.compensationType.${move.compensation.type}`)]) }}
-								<v-spacer></v-spacer>
-							</v-list-item>
-
-							<v-divider></v-divider>
-						</template>
-
-						<v-list-item :disabled="!canHome" @click="sendCode('G32')">
-							<v-icon class="mr-1">mdi-format-vertical-align-center</v-icon> {{ $t(isDelta ? 'panel.movement.runDelta' : 'panel.movement.runBed') }}
-						</v-list-item>
-						<v-list-item :disabled="!move.compensation.type || move.compensation.type.indexOf('Point') === -1" @click="sendCode('M561')">
-							<v-icon class="mr-1">mdi-border-none</v-icon> {{ $t('panel.movement.disableBedCompensation') }}
-						</v-list-item>
-
-						<v-divider></v-divider>
-
-						<v-list-item :disabled="!canHome" @click="sendCode('G29')">
-							<v-icon class="mr-1">mdi-grid</v-icon> {{ $t('panel.movement.runMesh') }}
-						</v-list-item>
-						<v-list-item :disabled="uiFrozen" @click="showMeshEditDialog = true">
-							<v-icon class="mr-1">mdi-pencil</v-icon> {{ $t('panel.movement.editMesh') }}
-						</v-list-item>
-						<v-list-item :disabled="uiFrozen" @click="sendCode('G29 S1')">
-							<v-icon class="mr-1">mdi-content-save</v-icon> {{ $t('panel.movement.loadMesh') }}
-						</v-list-item>
-						<v-list-item :disabled="!isCompensationEnabled" @click="sendCode('G29 S2')">
-							<v-icon class="mr-1">mdi-grid-off</v-icon> {{ $t('panel.movement.disableMeshCompensation') }}
-						</v-list-item>
-					</v-list>
-				</v-card>
-			</v-menu>
+      <code-btn v-show="visibleAxes.length" small class="mx-0" :elevation="0" :disabled="uiFrozen" code='M98 P"/macros/HONEYPRINT/Compensation_Start"'>
+        {{ $t('panel.movement.startCompensation') }}
+      </code-btn>
 		</v-card-title>
 
 		<v-card-text v-show="visibleAxes.length !== 0">
@@ -154,10 +114,10 @@
           <v-row>
             <v-col>
 							<span class="pollen-attr-header">{{ $t('panel.buildSurfacePollen.level') }}</span>
-							<code-btn :code="`M290 R1 Z${-babystepAmount}`" no-wait block class="mt-3">
+							<code-btn :code="`M290 R1 Z${babystepAmount}`" no-wait block class="mt-3">
 								<v-icon>mdi-arrow-collapse-vertical</v-icon> {{ $displayZ(-babystepAmount) }}
 							</code-btn>
-							<code-btn :code="`M290 R1 Z${babystepAmount}`" no-wait block class="mt-2">
+							<code-btn :code="`M290 R1 Z${-babystepAmount}`" no-wait block class="mt-2">
 								<v-icon>mdi-arrow-split-horizontal</v-icon> +{{ $displayZ(babystepAmount) }}
 							</code-btn>
             </v-col>
@@ -167,7 +127,7 @@
               <span class="pollen-attr-header mb-2">{{ $t('panel.buildSurfacePollen.zLimits') }}</span>
               <v-switch hide-details="auto" class="ms-1 mt-0 mb-2" :disabled="uiFrozen" v-model="zlimit"></v-switch>
               <v-spacer></v-spacer>
-              <code-btn code="M290 R0 S0" no-wait class="mb-2">
+              <code-btn code='M98 P"/macros/HONEYPRINT/Set_Z0"' no-wait class="mb-2">
                 {{ $t('panel.buildSurfacePollen.setZero') }}
               </code-btn>
             </v-col>

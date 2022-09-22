@@ -6,7 +6,10 @@
   width: 300px;
   z-index: 999;
 
-  background-color: rgba(255, 255, 255, 0.75);
+  background: no-repeat center center fixed !important;
+  background-image: linear-gradient(rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)),
+                    url('../../assets/honeyprint-sx2-background.jpg') !important;
+  background-size: cover !important;
 
   &.v-card--console-drawer-pollen--expanded {
     width: 60%;

@@ -1,8 +1,15 @@
 @import './variables.scss';
 
+nav.v-navigation-drawer {
+  background: no-repeat center center fixed !important;
+  background-image: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)),
+                    url('../assets/honeyprint-sx2-background.jpg') !important;
+  background-size: cover !important;
+}
+
 div[data-app='true'] {
-  background: url('../assets/background.jpg') no-repeat center center fixed !important;
-  background-size: cover;
+  background: url('../assets/honeyprint-sx2-background.jpg') no-repeat center center fixed !important;
+  background-size: cover !important;
 }
 
 .theme--light.v-app-bar.v-toolbar.v-sheet {
@@ -38,6 +45,15 @@ div[data-app='true'] {
 .v-toolbar-pollen-item {
   display: flex;
   align-items: center;
+}
+
+.v-navigation-drawer__content {
+  .v-toolbar-pollen-item {
+    .v-input {
+      padding-top: 0px;
+      margin-top: 0px;
+    }
+  }
 }
 
 $pollen-row-padding: 8px 24px;
