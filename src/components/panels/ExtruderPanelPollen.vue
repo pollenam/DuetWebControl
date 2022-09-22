@@ -239,7 +239,6 @@ export default {
       }
     },
     materialComboboxChange(newValue) {
-      console.log('ExtruderPanelPollen getMaxExtrusionFactor extrusionSpeed', this.extrusionSpeed);
       this.selectedExtruderMaterial({
         extruderIndex: this.toolIndex,
         newValue: newValue
@@ -248,9 +247,10 @@ export default {
     async setExtrusionSpeed(value){
       this.extrusionSpeed = value;
 
-      if(this.infiniteExtrusionStatus[this.toolIndex] !== "stopped") {
+      if (this.infiniteExtrusionStatus[this.toolIndex] !== "stopped") {
         try {
-					await this.sendCode(`M98 P"/macros/EXTRUSION/Extrusion_Stop"`);
+					await this.sendCode('M43');
+
 				} catch (e) {
 					if (!(e instanceof DisconnectedError)) {
 						console.warn(e);
@@ -258,7 +258,7 @@ export default {
 				}
 
         var speed = this.extrextrusionSpeed;
-        if(this.infiniteExtrusionStatus[this.toolIndex] === "retract") {
+        if (this.infiniteExtrusionStatus[this.toolIndex] === "retract") {
           speed = -this.extrextrusionSpeed;
         }
         try {
@@ -306,15 +306,15 @@ export default {
 					}
           success = false;
 				}
-        if(success) {
-          this.selectInfiniteExtrusionStatus({status:"retract", index:this.toolIndex});
+        if (success) {
+          this.selectInfiniteExtrusionStatus({status: "retract", index: this.toolIndex});
         }
     },
     async stopInfinite() {
       var success = false;
 
       try {
-					await this.sendCode(`M98 P"/macros/EXTRUSION/Extrusion_Stop"`);
+					await this.sendCode('M43');
           success = true;
         } catch (e) {
 					if (!(e instanceof DisconnectedError)) {

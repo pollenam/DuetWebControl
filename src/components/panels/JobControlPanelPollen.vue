@@ -60,15 +60,6 @@
 
         <v-col class="d-flex flex-column justify-center text-center">
 					<span class="pollen-attr-header">
-						{{ $t('panel.jobData.nozzleSize') }}
-					</span>
-					<span>
-						{{ nozzleSize }}
-					</span>
-				</v-col>
-
-        <v-col class="d-flex flex-column justify-center text-center">
-					<span class="pollen-attr-header">
 						{{ $t('panel.jobData.speed') }}
 					</span>
 					<span>
