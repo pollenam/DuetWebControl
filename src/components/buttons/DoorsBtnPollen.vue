@@ -28,7 +28,7 @@ export default {
 			if (!this.sendingCode) {
 				this.sendingCode = true;
 				try {
-					await this.runFile(state ? 'Portes_on' : 'Portes_off');
+					await this.runFile(state ? '/macros/HONEYPRINT/Doors_On' : '/macros/HONEYPRINT/Doors_Off');
 				} catch (e) {
 					// handled before we get here
 				}
