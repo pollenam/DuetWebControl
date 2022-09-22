@@ -26,7 +26,7 @@
 				<upload-btn v-if="connectorType !== 'rest' || !isDuetFirmware" target="update" color="primary" class="mt-3 d-flex justify-center"></upload-btn>
 			</template>
 			<template v-else>
-				(not connected)
+				({{ $t('panel.settingsElectronics.notConnected') }})
 			</template>
 		</v-card-text>
 	</v-card>

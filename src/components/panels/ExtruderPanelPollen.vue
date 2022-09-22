@@ -25,25 +25,25 @@
 			<v-row class="row--highlighted">
         <v-col cols="12 d-flex flex-column">
           <div class="center-label">{{ extrusionSpeed }} {{ $t('generic.rpm') }}</div>
-          <percentage-input-pollen :value="extrusionSpeed" :min="getExtrusionSpeedMin()" :max="getExtrusionSpeedMax()" :step="0.1" @input="setExtrusionSpeed($event)"></percentage-input-pollen>
+          <percentage-input-pollen :value="extrusionSpeed" :min="getExtrusionSpeedMin()" :max="getExtrusionSpeedMax()" :step="0.1" @input="setExtrusionSpeed($event)" :disabled="uiFrozen"></percentage-input-pollen>
         </v-col>
       </v-row>
       <v-row class="row--highlighted" dense>
         <template v-if="shouldShowInfinite">
           <v-col cols="6">
-            <v-btn block color="primary" @click="infiniteExtrude()" tile>
+            <v-btn block color="primary" @click="infiniteExtrude()" :disabled="uiFrozen" tile>
               Extrude <v-icon class="mr-1">mdi-arrow-down-bold</v-icon>
             </v-btn>
           </v-col>
           <v-col cols="6">
-            <v-btn block color="primary" @click="infiniteRetract()" tile>
+            <v-btn block color="primary" @click="infiniteRetract()" :disabled="uiFrozen" tile>
               Retract <v-icon class="mr-1">mdi-arrow-up-bold</v-icon>
             </v-btn>
           </v-col>
         </template>
         <template  v-if="shouldShowStop">
           <v-col cols="12">
-            <v-btn block color="primary" @click="stopInfinite()" tile>
+            <v-btn block color="primary" @click="stopInfinite()" :disabled="uiFrozen" tile>
               Stop <v-icon class="mr-1">mdi-stop</v-icon>
             </v-btn>
           </v-col>
@@ -98,6 +98,7 @@
             :value="selectedPid[toolIndex]"
             :items="pidItems"
             :label="$t('panel.extruderPollen.selectPidPreset')"
+            :disabled="uiFrozen"
             return-object
             single-line
             @change="PIDComboBoxChange"
@@ -114,6 +115,9 @@
 import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
 import Path from '@/utils/path.js'
 import { DisconnectedError } from '@/utils/errors'
+
+const EXTRUSION_SPEED_MIN = 0.4;
+const EXTRUSION_SPEED_MAX = 12;
 
 export default {
 	computed: {
@@ -200,10 +204,26 @@ export default {
       return 0;
     },
     getExtrusionSpeedMax() {
-      return this.extrusionSpeed + this.extrusionSpeed * 0.5 ;
+      var candidateValue = this.extrusionSpeed + this.extrusionSpeed * 0.5;
+      if (candidateValue >= EXTRUSION_SPEED_MAX)
+      {
+        return EXTRUSION_SPEED_MAX;
+      }
+      else
+      {
+        return candidateValue;
+      }
     },
     getExtrusionSpeedMin() {
-      return this.extrusionSpeed - this.extrusionSpeed * 0.5;
+      var candidateValue = this.extrusionSpeed - this.extrusionSpeed * 0.5;
+      if (candidateValue <= EXTRUSION_SPEED_MIN)
+      {
+        return EXTRUSION_SPEED_MIN;
+      }
+      else
+      {
+        return candidateValue;
+      }
     },
     selectExtruder() {
       // FIXME Check if we might need M568 instead of TX.

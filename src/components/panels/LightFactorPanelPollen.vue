@@ -6,7 +6,7 @@
 		</v-card-title>
 
 		<v-card-text>
-			<percentage-input-pollen v-model="speedFactor" :min="0" :max="100" :step="1" :disabled="uiFrozen && fans[4] === null"></percentage-input-pollen>
+			<percentage-input-pollen v-model="speedFactor" :min="0" :max="100" :step="1" :disabled="uiFrozen || fans[4] === null"></percentage-input-pollen>
 		</v-card-text>
 	</v-card>
 </template>

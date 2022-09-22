@@ -29,7 +29,7 @@
 						</template>
 					</template>
 					<template v-else>
-						(not connected)
+            ({{ $t('panel.settingsElectronics.notConnected') }})
 					</template>
 				</v-card-text>
 			</v-card>

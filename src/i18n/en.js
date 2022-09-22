@@ -740,11 +740,16 @@ export default {
 						board: 'Board: {0}',
             firmware: 'Firmware: {0} ({1})',
             dwsFirmware: 'Duet WiFi Server Version: {0}',
-            updateNote: 'Note: You can install updates on the System page.'
+            updateNote: 'Note: You can install updates on the System page.',
+            notConnected: 'Not Connected'
         },
 				settingsPollen: {
+          enableLegacyMode: "Enable Legacy Mode",
+          disableLegacyMode: "Disable Legacy Mode",
 					legacyMode: "Legacy Mode",
-					password: "Enter the admin password for the machine to enable legacy mode (all DWC defaut screen)"
+					passwordDescription: "Enter the admin password for the machine to enable legacy mode (all DWC defaut screen)",
+          password: 'Password',
+          passwordHint: 'The password used to active legacy mode'
 				},
         settingsEndstops: {
             caption: 'Endstops',

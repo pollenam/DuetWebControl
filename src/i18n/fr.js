@@ -636,17 +636,22 @@ export default {
 			unavailable: 'Aucun réglage disponible.',
 		},
 		settingsElectronics: {
-			caption: 'Électroniques',
+			caption: 'Électronique',
 			diagnostics: 'Diagnostiques',
 			downloadLogs: "Journaux",
 			board: 'Circuit: {0}',
 			firmware: 'Firmware: {0} ({1})',
 			dwsFirmware: 'Duet WiFi Server Version: {0}',
-			updateNote: 'Remarque: Vous pouvez installer les mises à jour sur la page Système.'
+			updateNote: 'Remarque: Vous pouvez installer les mises à jour sur la page Système.',
+      notConnected: 'Non connecté'
 		},
 		settingsPollen: {
+      enableLegacyMode: "Activer Mode Legacy",
+      disableLegacyMode: "Désactiver Mode Legacy",
 			legacyMode: "Mode legacy",
-			password: "Entrer le mot de passe administrateur de la machine pour activer le mode legacy (Tous les écran par défaut de DWC)"
+			passwordDescription: "Entrer le mot de passe administrateur de la machine pour activer le mode legacy (Tous les écran par défaut de DWC)",
+      password: 'Mot de passe',
+      passwordHint: 'Le mot de passe utilisé pour activer le mode legacy'
 		},
 		settingsEndstops: {
 			caption: 'Interrupteur de position',

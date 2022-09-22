@@ -7,7 +7,7 @@
 		<v-card-text>
 			<v-row :dense="$vuetify.breakpoint.mobile">
 				<v-col cols="12" sm="12">
-					<div> {{ $t('panel.settingsPollen.password') }}</div>
+					<div> {{ $t('panel.settingsPollen.passwordDescription') }}</div>
 				</v-col>
 			</v-row>
 			<v-row :dense="$vuetify.breakpoint.mobile">
@@ -17,8 +17,8 @@
 							:append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
 							:type="show1 ? 'text' : 'password'"
 							name="input-10-1"
-							label="Password"
-							hint="Password to activate legacy mode"
+							:label="$t('panel.settingsPollen.password')"
+							:hint="$t('panel.settingsPollen.passwordHint')"
 							@click:append="show1 = !show1"
 							:error="error"
 							@keydown.enter="submit"
@@ -36,6 +36,8 @@
 
 <script>
 'use strict'
+
+import i18n from '../../i18n'
 
 import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
 var md5 = require("md5");
@@ -83,9 +85,9 @@ export default {
 		},
 		getBtnStateText(){
 			if(this.legacyMode) {
-				return "Disable legacy mode"
+				return i18n.t('panel.settingsPollen.disableLegacyMode')
 			} else {
-				return "Activate legacy mode"
+				return i18n.t('panel.settingsPollen.enableLegacyMode')
 			}
 		}
 	},

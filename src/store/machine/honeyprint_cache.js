@@ -14,7 +14,7 @@ export default function(connector) {
       extrudersSelectedMaterials: ['ABS', 'ABS', 'ABS', 'ABS'],
 			selectedPid: ['','','',''],
 			lastPrintedJob: [],
-			infiniteExtrusionStatus: ['','','','']
+			infiniteExtrusionStatus: ['stopped','stopped','stopped','stopped']
     },
 		actions: {
 			async load({ commit, dispatch }) {
