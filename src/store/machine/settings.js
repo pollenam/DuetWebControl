@@ -39,7 +39,7 @@ export default function(connector, pluginSettingFields) {
 			moveSteps: {								// mm
 				X: [100, 10, 1, 0.1],
 				Y: [100, 10, 1, 0.1],
-				Z: [100, 10, 1, 0.1],
+				Z: [100, 10, 1, 0.05],
 				default: [100, 10, 1, 0.1]
 			},
 			moveFeedrate: 6000,							// mm/min
