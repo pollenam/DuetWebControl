@@ -497,7 +497,12 @@ export default {
       nozzle: 'Nozzle',
       extrusionFactor: 'Facteur d\'extrusion',
       pidSet: 'PID',
-      selectPidPreset: 'Selectionnez le preset PID'
+      selectPidPreset: 'Selectionnez le preset PID',
+      extrude: 'Extruder',
+      extrudeShort: 'Ext.',
+      retract: 'Retracter',
+      retractShort: 'Ret.',
+      stop: 'Stop'
     },
 		atx: {
 			caption: 'VPower',

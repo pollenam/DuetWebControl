@@ -39,10 +39,10 @@
             <v-btn block @click="infiniteExtrude()" elevation="0" :disabled="uiFrozen">
               <v-icon class="mr-1">mdi-arrow-down-bold</v-icon>
               <span class="hidden-lg-only">
-                Extrude
+                {{ $t('panel.extruderPollen.extrude') }}
               </span>
               <span class="hidden-md-and-down hidden-xl-and-up">
-                Ext.
+                {{ $t('panel.extruderPollen.extrudeShort') }}
               </span>
             </v-btn>
           </v-col>
@@ -50,10 +50,10 @@
             <v-btn block @click="infiniteRetract()" elevation="0" :disabled="uiFrozen">
               <v-icon class="mr-1">mdi-arrow-up-bold</v-icon>
               <span class="hidden-lg-only">
-                Retract
+                {{ $t('panel.extruderPollen.retract') }}
               </span>
               <span class="hidden-md-and-down hidden-xl-and-up">
-                Ret.
+                {{ $t('panel.extruderPollen.retractShort') }}
               </span>
             </v-btn>
           </v-col>
@@ -62,7 +62,7 @@
           <v-col cols="12">
             <v-btn block @click="stopInfinite()" elevation="0" :disabled="uiFrozen">
               <v-icon class="mr-1">mdi-stop</v-icon>
-              Stop
+                {{ $t('panel.extruderPollen.stop') }}
               <v-progress-circular indeterminate class="ml-5" size="15"></v-progress-circular>
             </v-btn>
           </v-col>
