@@ -112,6 +112,7 @@ hr.hr--separated-rows {
   color: rgba(44, 34, 33, 0.7);
 }
 
+.theme--light.v-btn,
 .theme--light.v-list-item:not(.v-list-item--active):not(.v-list-item--disabled) {
   color: #5f5449;
 }
@@ -131,13 +132,9 @@ hr.hr--separated-rows {
   }
 }
 
-.theme--light.v-card {
-  /* color: rgba(0, 0, 0, 0.87); */
-  color: rgba(44, 34, 33, 1.0);
-}
+.theme--light.v-card,
 .theme--light.v-card > .v-card__text,
 .theme--light.v-card > .v-card__subtitle {
-  /* color: rgba(0, 0, 0, 0.6); */
   color: rgba(44, 34, 33, 1.0);
 }
 
