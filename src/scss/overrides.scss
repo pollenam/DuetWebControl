@@ -68,16 +68,29 @@ $pollen-row-padding: 8px 24px;
 }
 
 .row.row--separated-cols {
-  & > .col:not(:last-child) {
+  & > div:not(:last-child) {
     border-right: 1px solid #eda900;
 
     padding-right: 16px;
   }
 
-  & > .col:not(:first-child) {
+  & > div:not(:first-child) {
     border-left: 1px solid rgba(255, 255, 255, 0.5);
 
     padding-left: 16px;
+  }
+
+  @media #{map-get($display-breakpoints, 'sm-and-down')} {
+    & div.col-12 {
+      border: none;
+      padding-left: inherit;
+      padding-right: inherit;
+    }
+
+    & div.col-6:not(:last-child) {
+      border-left: none;
+      padding-left: inherit;
+    }
   }
 }
 
@@ -185,3 +198,4 @@ hr.hr--separated-rows {
     color: black;
   }
 }
+

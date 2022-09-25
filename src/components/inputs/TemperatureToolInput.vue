@@ -1,7 +1,10 @@
-<style>
+<style lang="scss">
 .temperature-tool-component {
-  min-width: 80px;
   display: inline-block;
+
+    input[type="number"] {
+      width: 1px;
+    }
 }
 
 .temperature-row {
@@ -11,7 +14,7 @@
 </style>
 
 <template>
-  <div class="temperature-row d-flex align-baseline justify-space-between">
+  <div class="temperature-row w-100 d-flex align-baseline justify-space-between">
     <span class="temperature-tool-component flex-grow-1">{{ getHeaterValue() }}</span>
     <span class="gray--text flex-grow-0 mx-1">/</span>
     <div class="d-flex flex-column flex-grow-1">
@@ -201,9 +204,14 @@ export default {
 				heater = this.chamber;
 			}
 
-			if(heater)
-				return heater.state;
-			return this.$t('generic.noValue');
+      if (heater && heater.state)
+      {
+        return heater.state;
+      }
+      else
+      {
+        return this.$t('generic.noValue');
+      }
 		},
 		toolHeaterClick() {
 			if (!this.isConnected) {

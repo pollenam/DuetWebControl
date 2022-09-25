@@ -7,7 +7,7 @@
 
 		<v-card-text>
 			<v-row dense class="row--separated-cols">
-				<v-col class="d-flex flex-column">
+				<v-col class="d-flex flex-column" cols="6">
 					<span class="pollen-attr-header">
 						Room
 					</span>
@@ -16,7 +16,7 @@
 					</span>
 				</v-col>
 
-				<v-col class="d-flex flex-column">
+				<v-col class="d-flex flex-column" cols="6">
 					<span class="pollen-attr-header">
 						Radiant
 					</span>

@@ -1,24 +1,28 @@
-<style scoped>
+<style lang="scss">
+  .v-input.extruder-material-combobox {
+    input[type="text"] {
+      width: 1px;
+    }
+  }
 
-.center-label {
-	text-align: center;
-}
-
+  .center-label {
+    text-align: center;
+  }
 </style>
 <template>
 	<v-card elevation="0" :class="{ 'v-card--highlighted': isSelected }">
 		<v-card-title class="v-card__title--dense justify-space-between">
-      <v-icon class="mr-1">mdi-water-outline</v-icon>
-			{{ $t('panel.extruderPollen.title') }} {{ extruderNumber }}
-			<v-spacer></v-spacer>
+      <div>
+        <v-icon class="mr-1">mdi-water-outline</v-icon>
+        {{ $t('panel.extruderPollen.title') }} {{ extruderNumber }}
+      </div>
       <v-combobox
-      class="mx-2"
+      class="mx-2 extruder-material-combobox"
           :value="extrudersSelectedMaterials[toolIndex]"
           :items="extrudersAvailableMaterials"
           @change="materialComboboxChange"
           label="Select material"
         ></v-combobox>
-			<v-spacer></v-spacer>
 			<v-checkbox class="v-input--checkbox--extruder-selection" hide-details="auto" color="success" :input-value="isSelected" @change="selectExtruder()" :disabled="uiFrozen"></v-checkbox>
 		</v-card-title>
 

@@ -62,7 +62,7 @@
 
 		<v-card-text v-show="visibleAxes.length !== 0">
 			<v-row dense class="row--separated-cols">
-				<v-col cols="7">
+				<v-col cols="12" md="7">
 					<v-row no-gutters>
 						<v-col class="d-flex align-center justify-start" cols="2">
 							<code-btn outlined fab large class="home_btn" code="G28" :disabled="!canHome" :title="$t('button.home.titleAll')" >
@@ -110,7 +110,7 @@
             </v-col>
 					</v-row>
 				</v-col>
-				<v-col cols="3">
+				<v-col cols="6" md="3">
           <v-row>
             <v-col>
 							<span class="pollen-attr-header">{{ $t('panel.buildSurfacePollen.level') }}</span>
@@ -133,7 +133,7 @@
             </v-col>
           </v-row>
 				</v-col>
-				<v-col cols="2">
+				<v-col cols="6" md="2">
           <v-row :key="`bed-title-${firstBedIndex()}-0`">
             <v-col class="d-flex flex-column">
               <span class="pollen-attr-header">{{ $t('panel.buildSurfacePollen.bed') }}</span>
