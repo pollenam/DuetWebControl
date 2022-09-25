@@ -125,7 +125,10 @@ export default function(connector) {
 					state.lastPrintedJob.push({name: filename, date: Date.now()});
 				}
 				console.log(state.lastPrintedJob);
-			}
+			},
+      resetInfiniteExtrusionStatus(state) {
+        state.infiniteExtrusionStatus = ['stopped', 'stopped', 'stopped', 'stopped'];
+      }
 		}
 	}
 }
