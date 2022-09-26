@@ -291,7 +291,7 @@ export default {
       }
     },
     async PIDComboBoxChange(newValue) {
-			await this.sendCode(`M98 P"${Path.combine(this.macrosDirectory, "PID", newValue)}"`);
+			await this.sendCode(`M98 P"${Path.combine(this.macrosDirectory, "PID", newValue)}" T${this.tool.number}`);
       this.selectSelectedPid({
         extruderIndex: this.toolIndex,
         newValue: newValue
