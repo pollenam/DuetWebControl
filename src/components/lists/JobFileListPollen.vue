@@ -323,8 +323,9 @@ export default {
 			}
 		},
 		start(item) {
-			this.addLastPrintedJobDate(Path.combine(this.directory,item.name));
-			this.sendCode(`M32 "${Path.combine(this.directory, (item && item.name) ? item.name : this.selection[0].name)}"`);
+      const targetPath = Path.combine(this.directory, (item && item.name) ? item.name : this.selection[0].name);
+			this.addLastPrintedJobDate(targetPath);
+			this.sendCode(`M32 "${targetPath}"`);
 		},
 		simulate(item) {
 			this.sendCode(`M37 P"${Path.combine(this.directory, (item && item.name) ? item.name : this.selection[0].name)}"`);

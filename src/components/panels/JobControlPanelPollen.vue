@@ -23,7 +23,7 @@
 					<v-icon class="mr-1">mdi-stop</v-icon> {{ cancelText }}
 				</code-btn>
 
-				<code-btn small class="ms-0 ms-md-2 mt-2 mt-md-0" v-if="!isPrinting && processAnotherCode" :code="processAnotherCode()">
+				<code-btn small class="ms-0 ms-md-2 mt-2 mt-md-0" v-if="processAnotherAvailable" :code="processAnotherCode()">
 					<v-icon class="mr-1">mdi-restart</v-icon> {{ processAnotherText }}
 				</code-btn>
       </div>
@@ -170,6 +170,9 @@ export default {
       }
 
       return Vue.prototype.$displayTime(this.jobDuration);
+    },
+    processAnotherAvailable() {
+      return (!this.isPrinting && this.lastFileName);
     }
 	},
 	data() {

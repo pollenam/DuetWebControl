@@ -363,8 +363,9 @@ export default {
 
 			// Deal with Upload & Start
 			if (this.target === 'start') {
-				this.addLastPrintedJobDate(files[0].filename);
-				await this.sendCode(`M32 "${files[0].filename}"`);
+        const targetPath = files[0].filename;
+				this.addLastPrintedJobDate(targetPath);
+				await this.sendCode(`M32 "${targetPath}"`);
 			}
 
 			// Deal with updates
