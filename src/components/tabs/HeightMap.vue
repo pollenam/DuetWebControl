@@ -56,9 +56,9 @@ input {
 
 <template>
 	<v-col cols="12">
-	<v-row dense>
-		<v-col cols="6" lg="8">
-				<v-card elevation="0">
+    <v-row dense>
+      <v-col cols="12" lg="8">
+				<v-card elevation="0" class="h-100">
           <v-card-title class="v-card__title--dense">
 						<v-icon class="mr-2">mdi-format-list-bulleted</v-icon>
 						{{ $t('plugins.heightmap.listTitle') }}
@@ -133,8 +133,8 @@ input {
           </v-card-actions>
 				</v-card>
 		</v-col>
-		<v-col cols="6" lg="4">
-				<v-card elevation="0">
+		<v-col cols="12" lg="4">
+				<v-card elevation="0" class="h-100">
           <v-card-title class="v-card__title--dense">
 						{{ $t('plugins.heightmap.parameters') }}
 					</v-card-title>
@@ -225,7 +225,7 @@ input {
 		</v-col>
 	</v-row>
 	<v-row dense>
-		<v-col :class="{ 'pa-1': $vuetify.breakpoint.xs }" class="flex-grow-1" cols="12" lg="auto" order="0" order-lg="0">
+		<v-col class="flex-grow-1" cols="12" lg="9">
 			<div class="heightmap-container" ref="container" v-resize="resize">
 				<!-- h1 v-show="!ready" class="text-center">
 					{{ loading ? $t('generic.loading') : (errorMessage ? errorMessage : $t('plugins.heightmap.notAvailable')) }}
@@ -239,10 +239,9 @@ input {
 			</div>
 		</v-col>
 
-		<v-col class="d-flex flex-column" cols="12" lg="auto" order="2" sm="6">
-
-			<v-card class="d-flex flex-column mt-5" tile>
-				<v-card-title class="pt-2 pb-1">
+		<v-col cols="6" lg="3">
+			<v-card class="h-100" elevation="0" tile>
+				<v-card-title class="v-card__title--dense">
 					<v-icon class="mr-2">mdi-eye</v-icon>
 					{{ $t('plugins.heightmap.display') }}
 				</v-card-title>
@@ -286,14 +285,14 @@ input {
 				Z: {{ $display(tooltip.coord.z, 3, 'mm') }}
 			</span>
 		</v-tooltip>
-	</v-row>
-  <v-card :elevation="0">
+  <v-col cols="6" lg="12">
+  <v-card class="h-100" :elevation="0">
     <v-card-title class="v-card__title--dense">
       <v-icon class="mr-2">mdi-information</v-icon>
       {{ $t('plugins.heightmap.statistics') }}
     </v-card-title>
     <v-card-text>
-      <v-row dense class="row--separated-cols">
+      <v-row dense class="row--separated-cols flex-md-row flex-column">
         <v-col>{{ $t('plugins.heightmap.numPoints', [$display(numPoints, 0)]) }}</v-col>
         <v-col v-if="radius > 0">{{ $t('plugins.heightmap.radius', [$display(radius, 0, 'mm')]) }}</v-col>
         <v-col>{{ $t('plugins.heightmap.area', [$display(area / 100, 1, 'cm²')]) }}</v-col>
@@ -303,6 +302,8 @@ input {
       </v-row>
     </v-card-text>
   </v-card>
+  </v-col>
+  </v-row>
 	</v-col>
 </template>
 

@@ -91,6 +91,14 @@ $pollen-row-padding: 8px 24px;
       border-left: none;
       padding-left: inherit;
     }
+
+    &.flex-md-row.flex-column {
+      & div {
+        border: none;
+        padding-left: inherit;
+        padding-right: inherit;
+      }
+    }
   }
 }
 
@@ -199,3 +207,7 @@ hr.hr--separated-rows {
   }
 }
 
+
+.h-100 {
+  height: 100%;
+}
