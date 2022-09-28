@@ -572,9 +572,10 @@ export default {
 					this.sendCode(`M568 P${tool.number} A0`);
 					break;
 
-				case HeaterState.active:	// Active -> Standby
-					this.sendCode(`M568 P${tool.number} A1`);
-					break;
+        // We decided to prevent standby mode
+				// case HeaterState.active:	// Active -> Standby
+				// 	this.sendCode(`M568 P${tool.number} A1`);
+				// 	break;
 
 				case HeaterState.fault:		// Fault -> Ask for reset
 					this.faultyHeater = this.heat.heaters.indexOf(heater);

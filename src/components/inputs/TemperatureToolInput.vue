@@ -119,10 +119,15 @@ export default {
 				try {
 					if (this.inputValue >= -273.15 && this.inputValue <= 1999) {
 						if (this.tool) {
+              // We decided to diable standby mode. Old implementation here down
+              // const currentTemps = this.tool[this.active ? 'active' : 'standby'];
+              // const newTemps = currentTemps.map((temp, i) => (i === this.toolHeaterIndex) ? this.inputValue : temp, this).join(':');
+              // await this.sendCode(`M568 P${this.tool.number} ${this.active ? 'S' : 'R'}${newTemps}`);
+
 							// Set tool temps
-							const currentTemps = this.tool[this.active ? 'active' : 'standby'];
-							const newTemps = currentTemps.map((temp, i) => (i === this.toolHeaterIndex) ? this.inputValue : temp, this).join(':');
-							await this.sendCode(`M568 P${this.tool.number} ${this.active ? 'S' : 'R'}${newTemps}`);
+              const currentTemps = this.tool['active'];
+              const newTemps = currentTemps.map((temp, i) => (i === this.toolHeaterIndex) ? this.inputValue : temp, this).join(':');
+              await this.sendCode(`M568 P${this.tool.number} S${newTemps}`);
 						} else if (this.bed) {
 							// Set bed temp
 							await this.sendCode(`M140 P${this.bedHeaterIndex} ${this.active ? 'S' : 'R'}${this.inputValue}`);
@@ -244,17 +249,18 @@ export default {
 					}
 					break;
 
-				case HeaterState.active:	// Active -> Standby
-					if(this.tool) {
-						this.sendCode(`M568 P${this.tool.number} A1`);
-					}
-					if(this.chamber) {
-						this.sendCode(`M141 P${this.chamberHeaterIndex} S-273.15`);
-					}
-					if(this.bed) {
-						this.sendCode(`M144 P${this.bedHeaterIndex}`);
-					}
-					break;
+        // Disabled to disabled standby mode
+				// case HeaterState.active:	// Active -> Standby
+				// 	if(this.tool) {
+				// 		this.sendCode(`M568 P${this.tool.number} A1`);
+				// 	}
+				// 	if(this.chamber) {
+				// 		this.sendCode(`M141 P${this.chamberHeaterIndex} S-273.15`);
+				// 	}
+				// 	if(this.bed) {
+				// 		this.sendCode(`M144 P${this.bedHeaterIndex}`);
+				// 	}
+				// 	break;
 
 				case HeaterState.fault:		// Fault -> Ask for reset
 					this.faultyHeater = this.heat.heaters.indexOf(heater);

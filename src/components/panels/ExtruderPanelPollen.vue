@@ -147,6 +147,7 @@ export default {
     ...mapState('machine/honeyprint_cache', ['extrudersAvailableMaterials', 'extrudersSelectedMaterials', 'selectedPid']),
 		...mapState('machine/model', {
 			macrosDirectory: state => state.directories.macros,
+      tools: state => state.tools
 		}),
     ...mapState('machine/honeyprint_cache', {
 			infiniteExtrusionStatus: state => state.infiniteExtrusionStatus,
@@ -245,17 +246,31 @@ export default {
       }
     },
     selectExtruder() {
-      // FIXME Check if we might need M568 instead of TX.
-      // See src/components/panels/ToolsPanel.vue toolHeaterClick
-      // this.sendCode(`M568 P${tool.number} A0`);
       if (this.isSelected)
       {
         this.sendCode('T-1');
       }
       else
       {
+        var previouslySelectedExtruderTool = this.selectedExtruderTool();
+
         this.sendCode(`T${this.tool.number}`);
+
+        if (previouslySelectedExtruderTool != undefined && previouslySelectedExtruderTool != null)
+        {
+          // Force previously selected extruder to active and not standby
+          this.sendCode(`M568 P${previouslySelectedExtruderTool.number} A2`);
+        }
       }
+    },
+    selectedExtruderTool() {
+      var selectedTools =
+        this.tools
+            .filter(tool => tool !== null)
+            .filter(tool => tool.extruders.length > 0)
+            .filter(tool => tool.state == 'active');
+
+      return selectedTools[0];
     },
     materialComboboxChange(newValue) {
       this.selectedExtruderMaterial({
