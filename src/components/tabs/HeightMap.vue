@@ -125,7 +125,7 @@ input {
 					</v-data-table>
 					<file-edit-dialog :shown.sync="editDialog.shown" :filename="editDialog.filename" v-model="editDialog.content" @editComplete="$emit('fileEdited', $event)"></file-edit-dialog>
 
-          <v-card-actions>
+          <v-card-actions class="absolute-0">
             <v-btn class="mr-1" @click="createNewHeightMap()" :disabled="uiFrozen">{{ $t('plugins.heightmap.create') }}</v-btn>
             <label for="count">S.Count</label><input name="count" class="ml-1 mr-1" ref="input" step="any" min="0" v-model.number="s_count" type="number" />
             <label for="repeat">S.Repeat</label><input name="repeat" class="ml-1 mr-1" ref="input" step="any" min="0" v-model.number="s_repeat" type="number" />
@@ -139,81 +139,61 @@ input {
 						{{ $t('plugins.heightmap.parameters') }}
 					</v-card-title>
 					<v-card-text>
-						<v-col cols="12" lg="auto" order="1" order-lg="0" sm="6">
-							<v-row>
-								<v-col cols="12" lg="12" order="1" order-lg="0" sm="12">
-									<strong>T1 {{ $t('plugins.heightmap.offset') }}</strong>
-									<v-row class="justify-center">
-										<v-col cols="4" lg="auto" order="1" order-lg="0" sm="6">
-											<label for="T1X">X:</label><input name="T1X" class="ml-1 mr-1" ref="input" step="0.01" v-model.number="t1x" type="number" />
-										</v-col>
-										<v-col cols="4" lg="auto" order="1" order-lg="0" sm="6">
-											<label for="T1Y">Y:</label><input name="T1Y" class="ml-1 mr-1" ref="input" step="0.01" v-model.number="t1y" type="number" />
-										</v-col>
-										<v-col cols="4" lg="auto" order="1" order-lg="0" sm="6">
-											<label for="T1Z">Z:</label><input name="T1Z" class="ml-1 mr-1" ref="input" step="0.01" v-model.number="t1z" type="number" />
-										</v-col>
-									</v-row>
-								</v-col>
-							</v-row>
-							<template  v-if="tools[2] !== null ">
-								<v-divider></v-divider>
-								<v-row>
-									<v-col cols="12" lg="12" order="1" order-lg="0" sm="12">
-										<strong>T2 {{ $t('plugins.heightmap.offset') }}</strong>
-										<v-row class="justify-center">
-											<v-col cols="4" lg="auto" order="1" order-lg="0" sm="6">
+            <v-simple-table class="v-data-table--no-bg">
+              <tbody>
+                <tr>
+                  <th class="px-0 font-size-0875">T1 {{ $t('plugins.heightmap.offset') }}</th>
+                  <td>
+                    <label for="T1X">X:</label>
+                    <input name="T1X" class="ml-1 mr-1" ref="input" step="0.01" v-model.number="t1x" type="number" />
+                  </td>
+                  <td>
+                    <label for="T1Y">Y:</label>
+                    <input name="T1Y" class="ml-1 mr-1" ref="input" step="0.01" v-model.number="t1y" type="number" />
+                  </td>
+                  <td>
+                    <label for="T1Z">Z:</label>
+                    <input name="T1Z" class="ml-1 mr-1" ref="input" step="0.01" v-model.number="t1z" type="number" />
+                  </td>
+                </tr>
+                <tr v-if="tools[2] !== null">
+                  <th class="px-0 font-size-0875">T2 {{ $t('plugins.heightmap.offset') }}</th>
+                  <td>
 												<label for="T2X">X:</label><input name="T2X" class="ml-1 mr-1" ref="input" step="0.01" v-model.number="t2x" type="number" />
-											</v-col>
-											<v-col cols="4" lg="auto" order="1" order-lg="0" sm="6">
+                  </td>
+                  <td>
 												<label for="T2Y">Y:</label><input name="T2Y" class="ml-1 mr-1" ref="input" step="0.01" v-model.number="t2y" type="number" />
-											</v-col>
-											<v-col cols="4" lg="auto" order="1" order-lg="0" sm="6">
+                  </td>
+                  <td>
 												<label for="T2Z">Z:</label><input name="T2Z" class="ml-1 mr-1" ref="input" step="0.01" v-model.number="t2z" type="number" />
-											</v-col>
-										</v-row>
-									</v-col>
-								</v-row>
-							</template>
-							<template  v-if="this.tools[3] !== null">
-								<v-divider></v-divider>
-								<v-row>
-									<v-col cols="12" lg="12" order="1" order-lg="0" sm="12">
-										<strong>T3 {{ $t('plugins.heightmap.offset') }}</strong>
-										<v-row class="justify-center">
-											<v-col cols="4" lg="auto" order="1" order-lg="0" sm="6">
+                  </td>
+                </tr>
+                <tr v-if="tools[3] !== null">
+                  <th class="px-0 font-size-0875">T3 {{ $t('plugins.heightmap.offset') }}</th>
+                  <td>
 												<label for="T3X">X:</label><input name="T3X" class="ml-1 mr-1" ref="input" step="0.01" v-model.number="t3x" type="number" />
-											</v-col>
-											<v-col cols="4" lg="auto" order="1" order-lg="0" sm="6">
+                  </td>
+                  <td>
 												<label for="T3Y">Y:</label><input name="T3Y" class="ml-1 mr-1" ref="input" step="0.01" v-model.number="t3y" type="number" />
-											</v-col>
-											<v-col cols="4" lg="auto" order="1" order-lg="0" sm="6">
+                  </td>
+                  <td>
 												<label for="T3Z">Z:</label><input name="T3Z" class="ml-1 mr-1" ref="input" step="0.01" v-model.number="t3z" type="number" />
-											</v-col>
-										</v-row>
-									</v-col>
-								</v-row>
-							</template>
-							<template  v-if="this.tools[4] !== null">
-								<v-divider></v-divider>
-								<v-row>
-									<v-col cols="12" lg="12" order="1" order-lg="0" sm="12">
-										<strong>T4 {{ $t('plugins.heightmap.offset') }}</strong>
-										<v-row class="justify-center">
-											<v-col cols="4" lg="auto" order="1" order-lg="0" sm="6">
+                  </td>
+                </tr>
+                <tr v-if="tools[4] !== null">
+                  <th class="px-0 font-size-0875">T4 {{ $t('plugins.heightmap.offset') }}</th>
+                  <td>
 												<label for="T4X">X:</label><input name="T4X" class="ml-1 mr-1" ref="input" step="0.01" v-model.number="t4x" type="number" />
-											</v-col>
-											<v-col cols="4" lg="auto" order="1" order-lg="0" sm="6">
+                  </td>
+                  <td>
 												<label for="T4Y">Y:</label><input name="T4Y" class="ml-1 mr-1" ref="input" step="0.01" v-model.number="t4y" type="number" />
-											</v-col>
-											<v-col cols="4" lg="auto" order="1" order-lg="0" sm="6">
+                  </td>
+                  <td>
 												<label for="T4Z">Z:</label><input name="T4Z" class="ml-1 mr-1" ref="input" step="0.01" v-model.number="t4z" type="number" />
-											</v-col>
-										</v-row>
-									</v-col>
-								</v-row>
-							</template>
-						</v-col>
+                  </td>
+                </tr>
+              </tbody>
+            </v-simple-table>
 					</v-card-text>
 					<v-card-actions>
 						<v-btn :disabled="uiFrozen" @click="restoreDefault()">{{ $t('plugins.heightmap.default') }}</v-btn>
