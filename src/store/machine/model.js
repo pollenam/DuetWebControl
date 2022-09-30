@@ -271,6 +271,7 @@ export const DefaultMachineModel = new MachineModel({
 			new Heater()
 		]
 	},
+	infiniteStatus: false,
 	move: {
 		axes: [
 			new Axis({
@@ -410,6 +411,15 @@ export class MachineModelModule {
 						}
 						state.move.kinematics = new Kinematics();
 						break;
+				}
+			}
+
+			if(payload.infiniteStatus !== null) {
+				if(payload.infiniteStatus === "" || payload.infiniteStatus === "n") {
+					state.infiniteStatus = false;
+				}
+				if(payload.infiniteStatus === "y") {
+					state.infiniteStatus = true;
 				}
 			}
 

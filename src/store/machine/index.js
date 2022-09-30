@@ -94,7 +94,11 @@ export default function(connector, pluginCacheFields = {}, pluginSettingFields =
 					throw e;
 				}
 			},
-
+			async sendInfinite(context, code) {
+				console.log("codeIndex", code);
+				const reply = await connector.sendInfinite(code);
+				return reply;
+			},
       async runFile({ dispatch }, fileNameOrPath) {
         if (this.uiFrozen) {
           return;

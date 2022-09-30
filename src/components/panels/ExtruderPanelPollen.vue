@@ -141,7 +141,7 @@ const EXTRUSION_SPEED_MAX = 12;
 export default {
 	computed: {
 		...mapGetters(['uiFrozen']),
-		...mapState('machine/model', ['move']),
+		...mapState('machine/model', ['move', 'infiniteStatus']),
 		...mapState('machine/settings', ['displayedExtruders']),
     ...mapState('machine/model', ['heat', 'tools']),
     ...mapState('machine/honeyprint_cache', ['extrudersAvailableMaterials', 'extrudersSelectedMaterials', 'selectedPid']),
@@ -153,9 +153,14 @@ export default {
 			infiniteExtrusionStatus: state => state.infiniteExtrusionStatus,
 		}),
     shouldShowInfinite() {
+      if(this.infiniteStatus === false)
+        return false;
       return this.infiniteExtrusionStatus[this.toolIndex] === 'stopped'
     },
-    shouldShowStop() {
+    shouldShowStop()
+    {
+      if(this.infiniteStatus === false)
+        return false;
       return this.infiniteExtrusionStatus[this.toolIndex] !== 'stopped'
     },
     isSelected() {
@@ -186,7 +191,7 @@ export default {
     }
   },
 	methods: {
-		...mapActions('machine', ['sendCode', 'getFileList']),
+		...mapActions('machine', ['sendCode', 'getFileList', 'sendInfinite']),
 		...mapMutations('machine/settings', ['toggleExtruderVisibility']),
 		...mapMutations('machine/honeyprint_cache', ['selectedExtruderMaterial', 'selectSelectedPid', 'selectInfiniteExtrusionStatus']),
 		getExtrusionFactor() {
@@ -314,8 +319,9 @@ export default {
     },
     async infiniteExtrude() {
       var success = false;
+
       try {
-					await this.sendCode(`M98 P"/macros/EXTRUSION/Extrusion_Start" F${this.extrusionSpeed}`);
+					await this.sendInfinite("G4242");
           success = true;
 				} catch (e) {
 					if (!(e instanceof DisconnectedError)) {
@@ -332,7 +338,7 @@ export default {
     async infiniteRetract() {
       var success = false;
       try {
-					await this.sendCode(`M98 P"/macros/EXTRUSION/Extrusion_Start" F${-this.extrusionSpeed}`);
+					await this.sendInfinite("G4242");
           success = true;
 				} catch (e) {
 					if (!(e instanceof DisconnectedError)) {
@@ -346,9 +352,8 @@ export default {
     },
     async stopInfinite() {
       var success = false;
-
       try {
-					await this.sendCode('M43');
+					await this.sendInfinite('G4545');
           success = true;
         } catch (e) {
 					if (!(e instanceof DisconnectedError)) {
