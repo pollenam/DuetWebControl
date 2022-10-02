@@ -66,6 +66,7 @@ export class MachineModel {
 		coldRetractTemperature: 90,
 		heaters: []
 	}
+	infiniteExtrusionStatus = ['stopped', 'stopped', 'stopped', 'stopped']
 	httpEndpoints = []							// *** missing in RRF (only applicable for Duet 3 in SBC mode)
 	inputs = [
 		new InputChannel({ name: InputChannelName.http }),
@@ -271,7 +272,7 @@ export const DefaultMachineModel = new MachineModel({
 			new Heater()
 		]
 	},
-	infiniteStatus: false,
+	infiniteExtrusionStatus: ['stopped', 'stopped', 'stopped', 'stopped'],
 	move: {
 		axes: [
 			new Axis({
@@ -414,12 +415,74 @@ export class MachineModelModule {
 				}
 			}
 
-			if(payload.infiniteStatus !== null) {
+			if( state.infiniteExtrusionStatus === null) {
+				state.infiniteExtrusionStatus = ['stopped', 'stopped', 'stopped'];
+			}
+
+			if(payload.infiniteStatus !== null && payload.infiniteStatus !== undefined && state.infiniteExtrusionStatus) {
 				if(payload.infiniteStatus === "" || payload.infiniteStatus === "n") {
 					state.infiniteStatus = false;
+					state.infiniteExtrusionStatus[0] = "stopped";
+					state.infiniteExtrusionStatus[1] = "stopped";
+					state.infiniteExtrusionStatus[2] = "stopped";
+					state.infiniteExtrusionStatus[3] = "stopped";
+					Vue.set(state.infiniteExtrusionStatus, 0, "stopped");
+					Vue.set(state.infiniteExtrusionStatus, 1, "stopped");
+					Vue.set(state.infiniteExtrusionStatus, 2, "stopped");
+					Vue.set(state.infiniteExtrusionStatus, 3, "stopped");
 				}
 				if(payload.infiniteStatus === "y") {
 					state.infiniteStatus = true;
+					if(payload.infiniteStatusExtruder1 === "e") {
+						state.infiniteExtrusionStatus[0] = "extrude";
+						Vue.set(state.infiniteExtrusionStatus, 0, "extrude");
+					}
+					if(payload.infiniteStatusExtruder2 === "e") {
+						state.infiniteExtrusionStatus[1] = "extrude";
+						Vue.set(state.infiniteExtrusionStatus, 1, "extrude");
+					}
+					if(payload.infiniteStatusExtruder3 === "e") {
+						state.infiniteExtrusionStatus[2] = "extrude";
+						Vue.set(state.infiniteExtrusionStatus, 2, "extrude");
+					}
+					if(payload.infiniteStatusExtruder4 === "e") {
+						state.infiniteExtrusionStatus[3] = "extrude";
+						Vue.set(state.infiniteExtrusionStatus, 3, "extrude");
+					}
+
+					if(payload.infiniteStatusExtruder1 === "r") {
+						state.infiniteExtrusionStatus[0] = "retract";
+						Vue.set(state.infiniteExtrusionStatus, 0, "retract");
+					}
+					if(payload.infiniteStatusExtruder2 === "r") {
+						state.infiniteExtrusionStatus[1] = "retract";
+						Vue.set(state.infiniteExtrusionStatus, 1, "retract");
+					}
+					if(payload.infiniteStatusExtruder3 === "r") {
+						state.infiniteExtrusionStatus[2] = "retract";
+						Vue.set(state.infiniteExtrusionStatus, 2, "retract");
+					}
+					if(payload.infiniteStatusExtruder4 === "r") {
+						state.infiniteExtrusionStatus[3] = "retract";
+						Vue.set(state.infiniteExtrusionStatus, 3, "retract");
+					}
+
+					if(payload.infiniteStatusExtruder1 === "n") {
+						state.infiniteExtrusionStatus[0] = "stopped";
+						Vue.set(state.infiniteExtrusionStatus, 0, "stopped");
+					}
+					if(payload.infiniteStatusExtruder2 === "n") {
+						state.infiniteExtrusionStatus[1] = "stopped";
+						Vue.set(state.infiniteExtrusionStatus, 1, "stopped");
+					}
+					if(payload.infiniteStatusExtruder3 === "n") {
+						state.infiniteExtrusionStatus[2] = "stopped";
+						Vue.set(state.infiniteExtrusionStatus, 2, "stopped");
+					}
+					if(payload.infiniteStatusExtruder4 === "n") {
+						state.infiniteExtrusionStatus[3] = "stopped";
+						Vue.set(state.infiniteExtrusionStatus, 3, "stopped");
+					}
 				}
 			}
 

@@ -23,14 +23,14 @@
           @change="materialComboboxChange"
           label="Select material"
         ></v-combobox>
-			<v-checkbox class="v-input--checkbox--extruder-selection" hide-details="auto" color="success" :input-value="isSelected" @change="selectExtruder()" :disabled="uiFrozen"></v-checkbox>
+			<v-checkbox class="v-input--checkbox--extruder-selection" hide-details="auto" color="success" :input-value="isSelected" @change="selectExtruder()" :disabled="uiFrozen || !shouldShowExtruderFactor"></v-checkbox>
 		</v-card-title>
 
 		<v-card-text class="d-flex flex-column v-card__text--with-rows-highlighted">
 			<v-row class="row--highlighted">
         <v-col cols="12 d-flex flex-column">
           <div class="center-label">{{ extrusionSpeed }} {{ $t('generic.rpm') }}</div>
-          <percentage-input-pollen :value="extrusionSpeed" :min="getExtrusionSpeedMin()" :max="getExtrusionSpeedMax()" :step="0.1" @input="setExtrusionSpeed($event)" :disabled="uiFrozen"></percentage-input-pollen>
+          <percentage-input-pollen :thumb="false" :value="extrusionSpeed" :min="getExtrusionSpeedMin()" :max="getExtrusionSpeedMax()" :step="0.1" @input="setExtrusionSpeed($event)" :disabled="uiFrozen"></percentage-input-pollen>
         </v-col>
       </v-row>
       <v-row class="row--highlighted" dense>
@@ -105,7 +105,7 @@
           <span class="pollen-attr-header">{{ $t('panel.extruderPollen.extrusionFactor') }}</span>
         </v-col>
         <v-col cols="9 d-flex align-center">
-          <percentage-input-pollen :value="getExtrusionFactor()" @input="setExtrusionFactor($event)" :max="getMaxExtrusionFactor()" :step="1" :disabled="uiFrozen"></percentage-input-pollen>
+          <percentage-input-pollen :value="getExtrusionFactor()" @input="setExtrusionFactor($event)" :max="getMaxExtrusionFactor()" :step="1" :disabled="uiFrozen || !shouldShowExtruderFactor"></percentage-input-pollen>
         </v-col>
 			</v-row>
 			<v-row>
@@ -141,7 +141,7 @@ const EXTRUSION_SPEED_MAX = 12;
 export default {
 	computed: {
 		...mapGetters(['uiFrozen']),
-		...mapState('machine/model', ['move', 'infiniteStatus']),
+		...mapState('machine/model', ['move']),
 		...mapState('machine/settings', ['displayedExtruders']),
     ...mapState('machine/model', ['heat', 'tools']),
     ...mapState('machine/honeyprint_cache', ['extrudersAvailableMaterials', 'extrudersSelectedMaterials', 'selectedPid']),
@@ -149,19 +149,21 @@ export default {
 			macrosDirectory: state => state.directories.macros,
       tools: state => state.tools
 		}),
-    ...mapState('machine/honeyprint_cache', {
+    ...mapState('machine/model', {
 			infiniteExtrusionStatus: state => state.infiniteExtrusionStatus,
 		}),
     shouldShowInfinite() {
-      if(this.infiniteStatus === false)
-        return false;
       return this.infiniteExtrusionStatus[this.toolIndex] === 'stopped'
     },
     shouldShowStop()
     {
-      if(this.infiniteStatus === false)
-        return false;
       return this.infiniteExtrusionStatus[this.toolIndex] !== 'stopped'
+    },
+    shouldShowExtruderFactor() {
+      return this.infiniteExtrusionStatus[0] === 'stopped' &&
+        this.infiniteExtrusionStatus[1]  === 'stopped' &&
+        this.infiniteExtrusionStatus[2]  === 'stopped' &&
+        this.infiniteExtrusionStatus[3] === 'stopped'
     },
     isSelected() {
       return this.tool.state == 'active';
@@ -193,7 +195,7 @@ export default {
 	methods: {
 		...mapActions('machine', ['sendCode', 'getFileList', 'sendInfinite']),
 		...mapMutations('machine/settings', ['toggleExtruderVisibility']),
-		...mapMutations('machine/honeyprint_cache', ['selectedExtruderMaterial', 'selectSelectedPid', 'selectInfiniteExtrusionStatus']),
+		...mapMutations('machine/honeyprint_cache', ['selectedExtruderMaterial', 'selectSelectedPid']),
 		getExtrusionFactor() {
       if(this.move.extruders[this.toolIndex * 2] != null) {
         return Math.round(this.move.extruders[this.toolIndex * 2].factor * 100);
@@ -283,30 +285,21 @@ export default {
         newValue: newValue
       });
     },
-    async setExtrusionSpeed(value){
+    async setExtrusionSpeed(value) {
       this.extrusionSpeed = value;
 
       if (this.infiniteExtrusionStatus[this.toolIndex] !== "stopped") {
         try {
-					await this.sendCode('M43');
+          if(this.infiniteExtrusionStatus[this.toolIndex] === "extrude") {
+            await this.sendCode("M98 P\"/macros/HONEYPRINT/Set_Extrusion_Rate " + this.getRPMForInfinite(true));
+          } else {
+            await this.sendCode("M98 P\"/macros/HONEYPRINT/Set_Extrusion_Rate " + this.getRPMForInfinite(false));
+          }
 
 				} catch (e) {
 					if (!(e instanceof DisconnectedError)) {
 						console.warn(e);
 					}
-				}
-
-        var speed = this.extrextrusionSpeed;
-        if (this.infiniteExtrusionStatus[this.toolIndex] === "retract") {
-          speed = -this.extrextrusionSpeed;
-        }
-        try {
-					await this.sendCode(`M98 P"/macros/EXTRUSION/Extrusion_Start" F${speed}`);
-				} catch (e) {
-					if (!(e instanceof DisconnectedError)) {
-						console.warn(e);
-					}
-          this.selectInfiniteExtrusionStatus({status:"stopped", index: this.toolIndex});
 				}
       }
     },
@@ -317,54 +310,112 @@ export default {
         newValue: newValue
       });
     },
-    async infiniteExtrude() {
-      var success = false;
 
-      try {
-					await this.sendInfinite("G4242");
-          success = true;
-				} catch (e) {
-					if (!(e instanceof DisconnectedError)) {
-						console.warn(e);
-					}
-          success = false;
-				}
+    getSelectedTools() {
+      var selectedTools = "";
+      if(this.infiniteExtrusionStatus[0] !== 'stopped') {
+        selectedTools = selectedTools + "1";
+      }
 
-        if(success) {
-          this.selectInfiniteExtrusionStatus({status:"extrude", index:this.toolIndex});
+      if(this.infiniteExtrusionStatus[1] !== 'stopped') {
+        selectedTools = selectedTools + "2";
+      }
+
+      if(this.infiniteExtrusionStatus[2] !== 'stopped') {
+        selectedTools = selectedTools + "3";
+      }
+
+      if(this.infiniteExtrusionStatus[3] !== 'stopped') {
+        selectedTools = selectedTools + "4";
+      }
+
+      selectedTools = selectedTools + (this.tool.number);
+      return selectedTools;
+    },
+    getSelectedToolsForStop() {
+      var selectedTools = "";
+      if(this.infiniteExtrusionStatus[0] !== 'stopped' && this.tool.number !== 1) {
+        selectedTools = selectedTools + "1";
+      }
+
+      if(this.infiniteExtrusionStatus[1] !== 'stopped' && this.tool.number !== 2) {
+        selectedTools = selectedTools + "2";
+      }
+
+      if(this.infiniteExtrusionStatus[2] !== 'stopped' && this.tool.number !== 3) {
+        selectedTools = selectedTools + "3";
+      }
+
+      if(this.infiniteExtrusionStatus[3] !== 'stopped' && this.tool.number !== 4) {
+        selectedTools = selectedTools + "4";
+      }
+      return selectedTools;
+    },
+    numberOfToolsExtruding() {
+      var i = 0;
+      this.infiniteExtrusionStatus.forEach((e) => {
+        if(e !== "stopped") {
+          i++;
         }
+      });
+      return i;
+    },
+    getRPMForInfinite(isExtruding) {
+      var rpmCommand = "";
+      if(this.tool.number === 1) {
+        rpmCommand = rpmCommand + "A";
+      }
+      if(this.tool.number === 2) {
+        rpmCommand = rpmCommand + "B";
+      }
+      if(this.tool.number === 3) {
+        rpmCommand = rpmCommand + "C";
+      }
+      if(this.tool.number === 4) {
+        rpmCommand = rpmCommand + "D";
+      }
+      if(isExtruding)
+        rpmCommand = rpmCommand +  this.extrusionSpeed;
+      else
+      rpmCommand = rpmCommand + "-" + this.extrusionSpeed;
 
+      return rpmCommand;
+    },
+    async infiniteExtrude() {
+      try {
+        await this.sendCode("M98 \"/macros/SELECT/Select T" + this.getSelectedTools() + "\"");
+        await this.sendCode("M98 P\"/macros/HONEYPRINT/Set_Extrusion_Rate " + this.getRPMForInfinite(true));
+        await this.sendInfinite({code: "startExtrude", toolNumber: this.tool.number});
+      } catch (e) {
+        if (!(e instanceof DisconnectedError)) {
+          console.warn(e);
+        }
+      }
     },
     async infiniteRetract() {
-      var success = false;
       try {
-					await this.sendInfinite("G4242");
-          success = true;
-				} catch (e) {
-					if (!(e instanceof DisconnectedError)) {
-						console.warn(e);
-					}
-          success = false;
-				}
-        if (success) {
-          this.selectInfiniteExtrusionStatus({status: "retract", index: this.toolIndex});
+        await this.sendCode("M98 \"/macros/SELECT/Select T" + this.getSelectedTools() + "\"");
+        await this.sendCode("M98 P\"/macros/HONEYPRINT/Set_Extrusion_Rate " + this.getRPMForInfinite(false));
+        await this.sendInfinite({code: "startRetract", toolNumber:this.tool.number});
+
+
+      } catch (e) {
+        if (!(e instanceof DisconnectedError)) {
+          console.warn(e);
         }
+      }
     },
     async stopInfinite() {
-      var success = false;
       try {
-					await this.sendInfinite('G4545');
-          success = true;
-        } catch (e) {
-					if (!(e instanceof DisconnectedError)) {
-						console.warn(e);
-					}
-          success = false;
-				}
-
-        if(success)
-          this.selectInfiniteExtrusionStatus({status:"stopped", index: this.toolIndex});
-
+        if(this.numberOfToolsExtruding() > 1) {
+          await this.sendCode("M98 “/macros/SELECT/Select T" + this.getSelectedToolsForStop());
+        }
+        await this.sendInfinite({code: "stop", toolNumber:this.tool.number});
+      } catch (e) {
+        if (!(e instanceof DisconnectedError)) {
+          console.warn(e);
+        }
+      }
     }
   },
   async mounted() {

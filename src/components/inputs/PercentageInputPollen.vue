@@ -23,7 +23,7 @@
 			</v-btn>
 		</v-col>
 		<v-col class="py-0" v-else>
-			<v-slider :value="innerValue" @change="$emit('input', $event)" :min="min" :max="max" :step="step" :disabled="disabled" hide-details thumb-label="always" class="slider"></v-slider>
+			<v-slider :value="innerValue" @change="$emit('input', $event)" :min="min" :max="max" :step="step" :disabled="disabled" hide-details :thumb-label="thumbLabel" class="slider"></v-slider>
 		</v-col>
 
 		<v-col cols="auto" class="grey--text text--darken--1 py-0">
@@ -48,6 +48,11 @@ export default {
 		value: {
 			type: Number,
 			required: true
+		},
+		thumb: {
+			type: Boolean,
+			required: false,
+			default: true
 		},
 		min: {
 			type: Number,
@@ -98,6 +103,13 @@ export default {
 				}
 			}
 			return result;
+		},
+		thumbLabel() {
+			if(this.thumb === true){
+				return "always";
+			} else {
+				return true;
+			}
 		}
 	},
 	data() {

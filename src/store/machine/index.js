@@ -95,8 +95,7 @@ export default function(connector, pluginCacheFields = {}, pluginSettingFields =
 				}
 			},
 			async sendInfinite(context, code) {
-				console.log("codeIndex", code);
-				const reply = await connector.sendInfinite(code);
+				const reply = await connector.sendInfinite(code.code, code.toolNumber);
 				return reply;
 			},
       async runFile({ dispatch }, fileNameOrPath) {

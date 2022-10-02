@@ -598,13 +598,11 @@ export default class PollConnector extends BaseConnector {
 	}
 
 
-	async sendInfinite(code ) {
-		console.log(code);
-		const response = await this.request('GET', 'rr_infinite', { gcode: code });
+	async sendInfinite(code, toolNumber) {
+		const response = await this.request('GET', 'rr_infinite', { gcode: code, tool: "E" + toolNumber });
 		if (!(response instanceof Object)) {
 			console.warn(`Received bad response for rr_infinite: ${JSON.stringify(response)}`);
 		}
-		console.log(response);
 		if (response.status !== 0) {
 			throw new CodeBufferError();
 		}
