@@ -467,19 +467,19 @@ export class MachineModelModule {
 						Vue.set(state.infiniteExtrusionStatus, 3, "retract");
 					}
 
-					if(payload.infiniteStatusExtruder1 === "n") {
+					if(payload.infiniteStatusExtruder1 === "n" || payload.infiniteStatusExtruder1 === "") {
 						state.infiniteExtrusionStatus[0] = "stopped";
 						Vue.set(state.infiniteExtrusionStatus, 0, "stopped");
 					}
-					if(payload.infiniteStatusExtruder2 === "n") {
+					if(payload.infiniteStatusExtruder2 === "n" || payload.infiniteStatusExtruder2 === "") {
 						state.infiniteExtrusionStatus[1] = "stopped";
 						Vue.set(state.infiniteExtrusionStatus, 1, "stopped");
 					}
-					if(payload.infiniteStatusExtruder3 === "n") {
+					if(payload.infiniteStatusExtruder3 === "n" || payload.infiniteStatusExtruder3 === "") {
 						state.infiniteExtrusionStatus[2] = "stopped";
 						Vue.set(state.infiniteExtrusionStatus, 2, "stopped");
 					}
-					if(payload.infiniteStatusExtruder4 === "n") {
+					if(payload.infiniteStatusExtruder4 === "n" || payload.infiniteStatusExtruder4 === "") {
 						state.infiniteExtrusionStatus[3] = "stopped";
 						Vue.set(state.infiniteExtrusionStatus, 3, "stopped");
 					}

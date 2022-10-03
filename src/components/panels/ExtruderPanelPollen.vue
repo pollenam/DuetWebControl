@@ -291,9 +291,9 @@ export default {
       if (this.infiniteExtrusionStatus[this.toolIndex] !== "stopped") {
         try {
           if(this.infiniteExtrusionStatus[this.toolIndex] === "extrude") {
-            await this.sendCode("M98 P\"/macros/HONEYPRINT/Set_Extrusion_Rate " + this.getRPMForInfinite(true));
+            await this.sendCode("M98 P\"/macros/HONEYPRINT/Set_Extrusion_Rate " + this.getRPMForInfinite(true) + "\"");
           } else {
-            await this.sendCode("M98 P\"/macros/HONEYPRINT/Set_Extrusion_Rate " + this.getRPMForInfinite(false));
+            await this.sendCode("M98 P\"/macros/HONEYPRINT/Set_Extrusion_Rate " + this.getRPMForInfinite(false) + "\"");
           }
 
 				} catch (e) {
@@ -383,8 +383,8 @@ export default {
     },
     async infiniteExtrude() {
       try {
-        await this.sendCode("M98 \"/macros/SELECT/Select T" + this.getSelectedTools() + "\"");
-        await this.sendCode("M98 P\"/macros/HONEYPRINT/Set_Extrusion_Rate " + this.getRPMForInfinite(true));
+        await this.sendCode("M98 P\"/macros/SELECT/Select T" + this.getSelectedTools() + "\"");
+        await this.sendCode("M98 P\"/macros/HONEYPRINT/Set_Extrusion_Rate " + this.getRPMForInfinite(true) + "\"");
         await this.sendInfinite({code: "startExtrude", toolNumber: this.tool.number});
       } catch (e) {
         if (!(e instanceof DisconnectedError)) {
@@ -394,11 +394,9 @@ export default {
     },
     async infiniteRetract() {
       try {
-        await this.sendCode("M98 \"/macros/SELECT/Select T" + this.getSelectedTools() + "\"");
-        await this.sendCode("M98 P\"/macros/HONEYPRINT/Set_Extrusion_Rate " + this.getRPMForInfinite(false));
+        await this.sendCode("M98 P\"/macros/SELECT/Select T" + this.getSelectedTools() + "\"");
+        await this.sendCode("M98 P\"/macros/HONEYPRINT/Set_Extrusion_Rate " + this.getRPMForInfinite(false) + "\"");
         await this.sendInfinite({code: "startRetract", toolNumber:this.tool.number});
-
-
       } catch (e) {
         if (!(e instanceof DisconnectedError)) {
           console.warn(e);
