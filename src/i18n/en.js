@@ -755,7 +755,9 @@ export default {
 					legacyMode: "Legacy Mode",
 					passwordDescription: "Enter the admin password for the machine to enable legacy mode (all DWC defaut screen)",
           password: 'Password',
-          passwordHint: 'The password used to active legacy mode'
+          passwordHint: 'The password used to active legacy mode',
+          networking: 'Networking',
+          ipAddress: 'IP Address'
 				},
         settingsEndstops: {
             caption: 'Endstops',

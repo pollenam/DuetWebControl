@@ -1,42 +1,36 @@
 <template>
-	<v-col>
-		<v-row>
-			<v-card outlined>
-				<v-card-title>
-					{{ $t('panel.settingsElectronics.caption') }}
-					<v-spacer></v-spacer>
-					<a v-show="isConnected" href="javascript:void(0)" @click="diagnostics">
-						<v-icon small>mdi-lifebuoy</v-icon> {{ $t('panel.settingsElectronics.diagnostics') }}
-					</a>
-					<a class="ml-2" v-show="isConnected && this.state.logFile != null" href="javascript:void(0)" @click="downloadLogs()">
-						<v-icon small>mdi-post-outline</v-icon> {{ $t('panel.settingsElectronics.downloadLogs') }}
-					</a>
-				</v-card-title>
+  <v-card outlined>
+    <v-card-title>
+      {{ $t('panel.settingsElectronics.caption') }}
+      <v-spacer></v-spacer>
+      <a v-show="isConnected" href="javascript:void(0)" @click="diagnostics">
+        <v-icon small>mdi-lifebuoy</v-icon> {{ $t('panel.settingsElectronics.diagnostics') }}
+      </a>
+      <a class="ml-2" v-show="isConnected && this.state.logFile != null" href="javascript:void(0)" @click="downloadLogs()">
+        <v-icon small>mdi-post-outline</v-icon> {{ $t('panel.settingsElectronics.downloadLogs') }}
+      </a>
+    </v-card-title>
 
-				<v-card-text class="pt-0">
-					<template v-if="isConnected">
-						<template v-if="mainboard.name">
-							{{ $t('panel.settingsElectronics.board', [mainboard.name + (mainboard.shortName ? ` (${mainboard.shortName})` : '')]) }} <br>
-						</template>
-						<template v-if="dsfVersion">
-							{{ `DSF Version: ${dsfVersion}` }} <br>
-						</template>
-						<template v-if="mainboard.firmwareName">
-							{{ $t('panel.settingsElectronics.firmware', [mainboard.firmwareName + ' ' + $display(mainboard.firmwareVersion), $display(mainboard.firmwareDate)]) }} <br>
-						</template>
-						<template v-if="firstInterface.firmwareVersion && firstInterface.type === 'wifi'">
-							{{ $t('panel.settingsElectronics.dwsFirmware', [$display(firstInterface.firmwareVersion)]) }} <br>
-						</template>
-					</template>
-					<template v-else>
-            ({{ $t('panel.settingsElectronics.notConnected') }})
-					</template>
-				</v-card-text>
-			</v-card>
-		</v-row>
-		<v-row>
-		</v-row>
-	</v-col>
+    <v-card-text class="pt-0">
+      <template v-if="isConnected">
+        <template v-if="mainboard.name">
+          {{ $t('panel.settingsElectronics.board', [mainboard.name + (mainboard.shortName ? ` (${mainboard.shortName})` : '')]) }} <br>
+        </template>
+        <template v-if="dsfVersion">
+          {{ `DSF Version: ${dsfVersion}` }} <br>
+        </template>
+        <template v-if="mainboard.firmwareName">
+          {{ $t('panel.settingsElectronics.firmware', [mainboard.firmwareName + ' ' + $display(mainboard.firmwareVersion), $display(mainboard.firmwareDate)]) }} <br>
+        </template>
+        <template v-if="firstInterface.firmwareVersion && firstInterface.type === 'wifi'">
+          {{ $t('panel.settingsElectronics.dwsFirmware', [$display(firstInterface.firmwareVersion)]) }} <br>
+        </template>
+      </template>
+      <template v-else>
+        ({{ $t('panel.settingsElectronics.notConnected') }})
+      </template>
+    </v-card-text>
+  </v-card>
 </template>
 
 <script>

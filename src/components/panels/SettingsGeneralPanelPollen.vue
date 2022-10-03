@@ -7,7 +7,7 @@
 		<v-card-text>
 			<v-row :dense="$vuetify.breakpoint.mobile">
 				<v-col cols="12" sm="12">
-					<div> {{ $t('panel.settingsPollen.passwordDescription') }}</div>
+					<div>{{ $t('panel.settingsPollen.passwordDescription') }}</div>
 				</v-col>
 			</v-row>
 			<v-row :dense="$vuetify.breakpoint.mobile">
@@ -27,7 +27,7 @@
 			</v-row>
 			<v-row :dense="$vuetify.breakpoint.mobile">
 				<v-col cols="12" sm="12">
-					<v-btn @click="clickLegacyModeBtn">{{ getBtnStateText() }}</v-btn>
+					<v-btn elevation="0" @click="clickLegacyModeBtn">{{ getBtnStateText() }}</v-btn>
 				</v-col>
 			</v-row>
 		</v-card-text>

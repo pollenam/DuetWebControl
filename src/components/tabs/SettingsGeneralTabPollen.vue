@@ -2,13 +2,18 @@
 	<v-row class="pa-3" :dense="$vuetify.breakpoint.mobile">
 		<v-col cols="12" md="4" lg="4">
 			<v-row :dense="$vuetify.breakpoint.mobile">
-				<v-col cols="12" sm="12">
+				<v-col cols="12">
 					<settings-electronics-pollen-panel></settings-electronics-pollen-panel>
 				</v-col>
 			</v-row>
 			<v-row :dense="$vuetify.breakpoint.mobile">
-				<v-col cols="12" sm="12">
+				<v-col cols="12">
 					<settings-about-pollen-panel></settings-about-pollen-panel>
+				</v-col>
+			</v-row>
+			<v-row :dense="$vuetify.breakpoint.mobile">
+				<v-col cols="12">
+					<settings-networking-panel-pollen></settings-networking-panel-pollen>
 				</v-col>
 			</v-row>
 		</v-col>

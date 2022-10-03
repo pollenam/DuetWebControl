@@ -222,9 +222,9 @@ export class MachineModel {
 		atxPower: null,
 		atxPowerPort: null,
     doorsLocked: null, // FIXME: Compute initial state ?
-        beep: null,
+    beep: null,
 		currentTool: -1,
-        deferredPowerDown: null,
+    deferredPowerDown: null,
 		displayMessage: '',
 		dsfVersion: null,						// *** missing in RRF
 		dsfPluginSupport: true,					// *** missing in RRF

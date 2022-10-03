@@ -657,7 +657,9 @@ export default {
 			legacyMode: "Mode legacy",
 			passwordDescription: "Entrer le mot de passe administrateur de la machine pour activer le mode legacy (Tous les écran par défaut de DWC)",
       password: 'Mot de passe',
-      passwordHint: 'Le mot de passe utilisé pour activer le mode legacy'
+      passwordHint: 'Le mot de passe utilisé pour activer le mode legacy',
+      networking: 'Réseau',
+      ipAddress: 'Adresse IP'
 		},
 		settingsEndstops: {
 			caption: 'Interrupteur de position',
