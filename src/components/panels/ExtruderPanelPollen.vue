@@ -406,7 +406,7 @@ export default {
     async stopInfinite() {
       try {
         if(this.numberOfToolsExtruding() > 1) {
-          await this.sendCode("M98 “/macros/SELECT/Select T" + this.getSelectedToolsForStop() + "\"");
+          await this.sendCode("M98 \"/macros/SELECT/Select T" + this.getSelectedToolsForStop() + "\"");
         }
         await this.sendInfinite({code: "stop", toolNumber:this.tool.number});
       } catch (e) {
