@@ -5,7 +5,7 @@
 </style>
 
 <template>
-	<v-row dense align="end">
+	<v-row dense align="end" style="position: relative;">
 		<v-col cols="auto" class="grey--text text--darken--1 py-0">
 			<v-btn x-small icon :disabled="disabled || innerValue <= min" @click="applyStep(-step)" @mousedown="mouseDown(false)" @mouseup="mouseUp(false)" @mouseleave="mouseUp(false)" @touchstart="mouseDown(false)" @touchend="mouseUp(false)" class="ml-0">
 				<v-icon>mdi-minus</v-icon>
@@ -23,6 +23,9 @@
 			</v-btn>
 		</v-col>
 		<v-col class="py-0" v-else>
+      <a v-if="resetVisible" href="javascript:void(0)" class="subtitle-2" style="position: absolute; right: 0px;">
+        <v-icon small class="mr-1">mdi-backup-restore</v-icon> {{ $t('generic.reset') }}
+      </a>
 			<v-slider :value="innerValue" @change="$emit('input', $event)" :min="min" :max="max" :step="step" :disabled="disabled" hide-details :thumb-label="thumbLabel" class="slider"></v-slider>
 		</v-col>
 
@@ -110,14 +113,18 @@ export default {
 			} else {
 				return true;
 			}
-		}
+		},
+    resetVisible() {
+      return (this.initialValue != this.innerValue);
+    }
 	},
 	data() {
 		return {
 			innerValue: this.value,
 			debounceTimer: undefined,
 			decreaseTimer: undefined,
-			increaseTimer: undefined
+			increaseTimer: undefined,
+      initialValue: null
 		}
 	},
 	methods: {
@@ -175,6 +182,9 @@ export default {
 				this.innerValue = newValue;
 			}
 		}
-	}
+	},
+  mounted() {
+    this.initialValue = this.innerValue;
+  }
 }
 </script>

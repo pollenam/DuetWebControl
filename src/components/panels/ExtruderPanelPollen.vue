@@ -73,7 +73,7 @@
           <span class="pollen-attr-header">{{ $t('panel.extruderPollen.mixer') }}</span>
         </v-col>
         <v-col cols="9 d-flex align-center">
-          <percentage-input-pollen :value="getMixerExtrusionFactor()" @input="setMixerExtrusionFactor($event)" :max="getMixerMaxExtrusionFactor()" :step="1" :disabled="uiFrozen"></percentage-input-pollen>
+          <percentage-input-pollen :value="getMixerExtrusionFactor()" @input="setMixerExtrusionFactor($event)" :max="getMixerMaxExtrusionFactor()" :step="1"></percentage-input-pollen>
         </v-col>
       </v-row>
 			<v-row>
