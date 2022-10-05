@@ -27,7 +27,7 @@
 		</v-card-title>
 
 		<v-card-text class="d-flex flex-column v-card__text--with-rows-highlighted">
-			<v-row class="row--highlighted">
+			<v-row dense class="row--highlighted">
         <v-col cols="12 d-flex flex-column">
           <div class="center-label">{{ extrusionSpeed }} {{ $t('generic.rpm') }}</div>
           <percentage-input-pollen :thumb="false" :value="extrusionSpeed" :min="getExtrusionSpeedMin()" :max="getExtrusionSpeedMax()" :step="0.1" @input="setExtrusionSpeed($event)" :disabled="uiFrozen"></percentage-input-pollen>
@@ -68,7 +68,7 @@
           </v-col>
         </template>
       </v-row>
-      <v-row class="row--highlighted">
+      <v-row class="row--highlighted" dense>
         <v-col cols="3 d-flex align-center">
           <span class="pollen-attr-header">{{ $t('panel.extruderPollen.mixer') }}</span>
         </v-col>
@@ -76,7 +76,7 @@
           <percentage-input-pollen :value="getMixerExtrusionFactor()" @input="setMixerExtrusionFactor($event)" :max="getMixerMaxExtrusionFactor()" :step="1"></percentage-input-pollen>
         </v-col>
       </v-row>
-			<v-row>
+			<v-row dense>
         <v-col cols="3 d-flex align-center">
           <span class="pollen-attr-header">{{ $t('panel.extruderPollen.feeder') }}</span>
         </v-col>
@@ -84,7 +84,7 @@
           <temperature-tool-input :tool="tool" :toolHeaterIndex="0" active></temperature-tool-input>
         </v-col>
 			</v-row>
-			<v-row class="row--highlighted justify-space-between align-center">
+			<v-row dense class="row--highlighted justify-space-between align-center">
         <v-col cols="3 d-flex align-center">
           <span class="pollen-attr-header">{{ $t('panel.extruderPollen.screw') }}</span>
         </v-col>
@@ -100,7 +100,7 @@
           <temperature-tool-input :tool="tool" :toolHeaterIndex="2" active></temperature-tool-input>
         </v-col>
 			</v-row>
-			<v-row class="row--highlighted">
+			<v-row dense class="row--highlighted">
         <v-col cols="3 d-flex align-center">
           <span class="pollen-attr-header">{{ $t('panel.extruderPollen.extrusionFactor') }}</span>
         </v-col>
@@ -108,7 +108,7 @@
           <percentage-input-pollen :value="getExtrusionFactor()" @input="setExtrusionFactor($event)" :max="getMaxExtrusionFactor()" :step="1" :disabled="uiFrozen || !shouldShowExtruderFactor"></percentage-input-pollen>
         </v-col>
 			</v-row>
-			<v-row>
+			<v-row dense>
         <v-col cols="3 d-flex align-center">
           <span class="pollen-attr-header">{{ $t('panel.extruderPollen.pidSet') }}</span>
         </v-col>
