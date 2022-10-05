@@ -36,7 +36,7 @@
       <v-row class="row--highlighted" dense>
         <template v-if="shouldShowInfinite">
           <v-col cols="6">
-            <v-btn block @click="infiniteExtrude()" elevation="0" :disabled="uiFrozen">
+            <v-btn block @click="infiniteExtrude()" elevation="0" :disabled="uiFrozen || this.isProcessing()">
               <v-icon class="mr-1">mdi-arrow-down-bold</v-icon>
               <span class="hidden-lg-only">
                 {{ $t('panel.extruderPollen.extrude') }}
@@ -47,7 +47,7 @@
             </v-btn>
           </v-col>
           <v-col cols="6">
-            <v-btn block @click="infiniteRetract()" elevation="0" :disabled="uiFrozen">
+            <v-btn block @click="infiniteRetract()" elevation="0" :disabled="uiFrozen || isProcessing()">
               <v-icon class="mr-1">mdi-arrow-up-bold</v-icon>
               <span class="hidden-lg-only">
                 {{ $t('panel.extruderPollen.retract') }}
@@ -134,6 +134,7 @@
 import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
 import Path from '@/utils/path.js'
 import { DisconnectedError } from '@/utils/errors'
+import { StatusType } from '../../store/machine/modelEnums.js'
 
 const EXTRUSION_SPEED_MIN = 0.4;
 const EXTRUSION_SPEED_MAX = 12;
@@ -141,7 +142,8 @@ const EXTRUSION_SPEED_MAX = 12;
 export default {
 	computed: {
 		...mapGetters(['uiFrozen']),
-		...mapState('machine/model', ['move']),
+    ...mapState('machine/model', ['move']),
+    ...mapState('machine/model', ['state']),
 		...mapState('machine/settings', ['displayedExtruders']),
     ...mapState('machine/model', ['heat', 'tools']),
     ...mapState('machine/honeyprint_cache', ['extrudersAvailableMaterials', 'extrudersSelectedMaterials', 'selectedPid', 'infiniteExtrusionRate']),
@@ -272,6 +274,9 @@ export default {
           this.sendCode(`M568 P${previouslySelectedExtruderTool.number} A2`);
         }
       }
+    },
+    isProcessing() {
+      return this.state.status ===  StatusType.processing
     },
     selectedExtruderTool() {
       var selectedTools =
