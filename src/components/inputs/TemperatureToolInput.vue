@@ -2,9 +2,10 @@
 .temperature-tool-component {
   display: inline-block;
 
-    input[type="number"] {
-      width: 1px;
-    }
+  input[type="number"] {
+    color: rgba(44, 34, 33, 0.7);
+    width: 1px;
+  }
 }
 
 .temperature-row {

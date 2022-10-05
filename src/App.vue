@@ -67,7 +67,6 @@ textarea {
 				<div class="ma-2">
 					<connect-btn v-if="showConnectButton" class="mb-2" block/>
 				</div>
-				<upload-btn target="start" :elevation="1" class="ma-2" block/>
 				<div class="ma-2">
         <v-btn block href="https://pollenam.zendesk.com/" target="_blank" rel="nooperner">Support</v-btn>
         </div>

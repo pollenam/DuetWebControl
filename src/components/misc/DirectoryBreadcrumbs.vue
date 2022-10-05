@@ -69,7 +69,7 @@ export default {
 				} else if (Path.startsWith(this.value, this.directories.macrosPublic) && this.isPublicOnly === "true") {
 					pathItems.shift();
 					pathItems[0] = this.directories.macrosPublic;
-					rootCaption = "Macro Public";
+					rootCaption = this.$t('list.macro.pollenTitle');
 				} else if (Path.startsWith(this.value, this.directories.macros)) {
 					pathItems.shift();
 					pathItems[0] = this.directories.macros;

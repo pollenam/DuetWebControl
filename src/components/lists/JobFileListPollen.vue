@@ -14,7 +14,7 @@
 
 <template>
 	<div>
-		<v-toolbar elevation="0">
+		<v-toolbar dense elevation="0">
 			<sd-card-btn v-if="volumes.length > 1" v-model="volume" class="hidden-sm-and-down"/>
 			<directory-breadcrumbs v-model="directory"/>
 

@@ -169,6 +169,10 @@ hr.hr--separated-rows {
 .theme--light.v-data-table {
   background-color: rgba(255, 255, 255, 0.1724);
 
+  tbody {
+    color: rgba(97, 80, 82, 0.8);
+  }
+
   thead, thead.v-data-table-header {
     background-color: rgba(255, 255, 255, 0.34);
     th {
@@ -269,4 +273,10 @@ hr.hr--separated-rows {
   .v-btn.v-btn--active {
     color: #{map-get($material-light, "primary")} !important;
   }
+}
+
+  @media #{map-get($display-breakpoints, 'sm-and-down')} {
+.v-card__title--dense {
+  padding: 8px 16px;
+}
 }

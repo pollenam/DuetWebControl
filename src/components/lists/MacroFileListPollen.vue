@@ -1,6 +1,6 @@
 <template>
 	<div class="component">
-		<v-toolbar elevation="0">
+		<v-toolbar dense elevation="0">
 			<directory-breadcrumbs v-model="directory" isPublicOnly="true"></directory-breadcrumbs>
 
 			<v-spacer></v-spacer>
