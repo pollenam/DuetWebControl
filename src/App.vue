@@ -110,7 +110,7 @@ textarea {
 			<v-spacer/>
 
       <v-img src="./assets/honeyprint-sx2-logo.png" aspect-ratio="1" contain height="30px" class="hidden-md-and-down"></v-img>
-      <v-img src="./assets/honeyprint-sx2-logo-small.png" contain height="30px" class="hidden-lg-and-up"></v-img>
+      <v-img src="./assets/honeyprint-sx2-logo-small.png" aspect-ratio="1" contain height="30px" class="hidden-lg-and-up"></v-img>
 
 			<v-spacer/>
 

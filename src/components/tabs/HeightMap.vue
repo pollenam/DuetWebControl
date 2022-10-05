@@ -134,8 +134,12 @@ input {
 									<template v-else-if="header.unit === 'boolean'">
 										<template v-if="props.item.name !== 'heightmap.csv'">
 											<v-btn elevation="0" @click.stop.prevent="selectHeightMap(props.item)"> {{ $t('plugins.heightmap.apply') }}</v-btn>
-											<v-btn elevation="0" @click.stop.prevent="removeHeightMap(props.item)">{{ $t('plugins.heightmap.delete') }}</v-btn>
-											<v-btn elevation="0" @click.stop.prevent="openHeightMap(props.item)">{{ $t('plugins.heightmap.open') }}</v-btn>
+											<v-btn elevation="0" @click.stop.prevent="removeHeightMap(props.item)">
+                        <v-icon>mdi-trash-can-outline</v-icon>
+                      </v-btn>
+											<v-btn elevation="0" @click.stop.prevent="openHeightMap(props.item)">
+                        <v-icon>mdi-file-document-edit</v-icon>
+                      </v-btn>
 										</template>
 										<template v-if="props.item.name === 'heightmap.csv'">
 											{{ $t('plugins.heightmap.selected') }}
@@ -252,7 +256,7 @@ input {
 			</div>
 		</v-col>
 
-		<v-col cols="6" lg="3">
+		<v-col cols="12" sm="6" lg="3">
 			<v-card class="h-100" elevation="0" tile>
 				<v-card-title class="v-card__title--dense">
 					<v-icon class="mr-2">mdi-eye</v-icon>
@@ -298,7 +302,7 @@ input {
 				Z: {{ $display(tooltip.coord.z, 3, 'mm') }}
 			</span>
 		</v-tooltip>
-  <v-col cols="6" lg="12">
+  <v-col cols="12" sm="6" lg="12">
   <v-card class="h-100" :elevation="0">
     <v-card-title class="v-card__title--dense">
       <v-icon class="mr-2">mdi-information</v-icon>

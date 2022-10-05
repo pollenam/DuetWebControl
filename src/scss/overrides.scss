@@ -141,6 +141,7 @@ hr.hr--separated-rows {
   color: rgba(97, 80, 82, 0.8);
 }
 
+.theme--light.v-input--switch .v-input--switch__track,
 .theme--light.v-input--switch.v-input--is-disabled:not(.v-input--is-dirty) .v-input--switch__track {
   color: rgba(255,255,255,0.7) !important;
 }

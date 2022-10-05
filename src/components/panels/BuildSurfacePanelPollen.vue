@@ -64,20 +64,17 @@
 			<v-row dense class="row--separated-cols">
 				<v-col cols="12" md="6">
 					<v-row>
-            <v-col class="d-flex flex-column justify-center" cols="4" md="2">
+            <v-col class="d-flex flex-column align-center justify-center" cols="4" md="3">
 							<code-btn outlined fab large class="home_btn" code="G28" :disabled="!canHome" :title="$t('button.home.titleAll')" >
 								{{ $t('button.home.captionAll') }}
 							</code-btn>
             </v-col>
-            <v-col class="d-flex-xs d-flex-sm flex-column justify-center hidden-md-and-down" cols="3">
+            <v-col class="d-flex flex-column justify-center" cols="8" md="9">
               <span class="pollen-attr-header">{{ $t('panel.speedFactor.caption') }}</span>
-            </v-col>
-            <v-col class="d-flex flex-column justify-center" cols="8" md="7">
-              <span class="pollen-attr-header hidden-lg-and-up">{{ $t('panel.speedFactor.caption') }}</span>
               <percentage-input-pollen v-model="speedFactor" :step="1" :min="speedFactorMin" :max="speedFactorMax" :disabled="uiFrozen"></percentage-input-pollen>
             </v-col>
 					</v-row>
-          <div class="axes-movements-wrapper mt-12">
+          <div class="axes-movements-wrapper mt-8">
             <v-row v-for="(axis, axisIndex) in visibleAxes" :key="axisIndex" no-gutters>
               <!-- Regular home buttons -->
               <v-col v-if="!isDelta" cols="auto" class="flex-shrink-1 hidden-sm-and-down d-flex justify-center align-center ps-2 pe-3">
@@ -109,7 +106,7 @@
           </div>
 
 				</v-col>
-				<v-col cols="6" md="2">
+				<v-col cols="6" md="3" lg="2">
           <v-row>
             <v-col>
 							<span class="pollen-attr-header">{{ $t('panel.buildSurfacePollen.level') }}</span>
@@ -135,7 +132,7 @@
             </v-col>
           </v-row>
 				</v-col>
-				<v-col cols="6" md="4">
+				<v-col cols="6" md="3" lg="4">
           <v-row :key="`bed-title-${firstBedIndex()}-0`">
             <v-col class="d-flex flex-column">
               <span class="pollen-attr-header">{{ $t('panel.buildSurfacePollen.bed') }}</span>
