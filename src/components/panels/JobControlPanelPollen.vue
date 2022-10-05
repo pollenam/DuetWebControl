@@ -1,32 +1,32 @@
 <template>
 	<v-card :elevation="0">
-		<v-card-title class="v-card__title--dense justify-space-between">
-      <div v-if="isPrinting">
+		<v-card-title class="v-card__title--dense">
+      <span v-if="isPrinting">
         <v-icon class="mr-2">mdi-play</v-icon>
         {{ $t('panel.jobControl.running') }}
         <span class="text--gray">
         {{ printFile }}
         </span>
-      </div>
+      </span>
 
-      <div v-if="!isPrinting">
+      <span v-else>
         <v-icon class="mr-2">mdi-sleep</v-icon>
         {{ $t('generic.status.idle') }}
-      </div>
+      </span>
 
-      <div>
-				<code-btn small class="ms-0 ms-md-2 mt-2 mt-md-0" :disabled="uiFrozen || !isPrinting || isPausing" :code="isPaused ? 'M24' : 'M25'" tabindex="0">
+              <v-spacer></v-spacer>
+
+				<code-btn class="ms-0 ms-md-2" :disabled="uiFrozen || !isPrinting || isPausing" :code="isPaused ? 'M24' : 'M25'" tabindex="0">
 					<v-icon class="mr-1">{{ isPaused ? 'mdi-play' : 'mdi-pause' }}</v-icon> {{ pauseResumeText }}
 				</code-btn>
 
-				<code-btn v-if="isPaused" small class="ms-0 ms-md-2 mt-2 mt-md-0" code="M0">
+				<code-btn v-if="isPaused" class="ms-0 ms-md-2" code="M0">
 					<v-icon class="mr-1">mdi-stop</v-icon> {{ cancelText }}
 				</code-btn>
 
-				<code-btn small class="ms-0 ms-md-2 mt-2 mt-md-0" v-if="processAnotherAvailable" :code="processAnotherCode()">
+				<code-btn class="ms-0 ms-md-2" v-if="processAnotherAvailable" :code="processAnotherCode()">
 					<v-icon class="mr-1">mdi-restart</v-icon> {{ processAnotherText }}
 				</code-btn>
-      </div>
 		</v-card-title>
 
 		<v-card-text>

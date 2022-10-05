@@ -22,3 +22,19 @@ $material-light: (
   ),
   'white': #fff
 );
+
+$font-size-root: 16px;
+
+$btn-sizes: (
+  (
+    'x-small': 20,
+    'small': 28,
+    'default': 32,
+    'large': 44,
+    'x-large': 52
+  )
+);
+$btn-letter-spacing: 0;
+$btn-toggle-btn-height: 32px;
+
+$alert-padding: 12px 16px;

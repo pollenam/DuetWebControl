@@ -41,7 +41,7 @@
               <span class="hidden-lg-only">
                 {{ $t('panel.extruderPollen.extrude') }}
               </span>
-              <span class="hidden-md-and-down hidden-xl-and-up">
+              <span class="hidden-md-and-down hidden-xl-only">
                 {{ $t('panel.extruderPollen.extrudeShort') }}
               </span>
             </v-btn>
@@ -52,7 +52,7 @@
               <span class="hidden-lg-only">
                 {{ $t('panel.extruderPollen.retract') }}
               </span>
-              <span class="hidden-md-and-down hidden-xl-and-up">
+              <span class="hidden-md-and-down hidden-xl-only">
                 {{ $t('panel.extruderPollen.retractShort') }}
               </span>
             </v-btn>

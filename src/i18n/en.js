@@ -1055,7 +1055,15 @@ export default {
 						default: "Restore default",
 						save: "Save",
 						refresh: "Refresh",
-						cancel: "Cancel"
+						cancel: "Cancel",
+
+            offsetParameters: 'Offset Parameters',
+            numPointsHeader: 'Number of points',
+            radiusHeader: 'Probing radius',
+            areaHeader: 'Probe area',
+            maxDeviationsHeader: 'Maximum deviations',
+            meanErrorHeader: 'Mean error',
+            rmsErrorHeader: 'RMS error'
         },
         objectModelBrowser: {
             menuCaption: 'Object Model'

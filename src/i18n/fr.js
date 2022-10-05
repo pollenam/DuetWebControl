@@ -787,7 +787,15 @@ export default {
 			default: "Restaurer les valeurs par défaut",
 			save: "Sauvegarder",
 			refresh: "Rafraichir",
-			cancel: "Annuler"
+			cancel: "Annuler",
+
+      offsetParameters: 'Paramètres d\'Offset',
+      numPointsHeader: 'Nombre de points',
+      radiusHeader: 'Rayon de palpage',
+      areaHeader: 'Zone de palpage',
+      maxDeviationsHeader: 'Maximum déviations',
+      meanErrorHeader: 'Erreur moyenne',
+      rmsErrorHeader: 'Erreur RMS'
 		}
 	}
 }

@@ -1,10 +1,30 @@
-<style scoped>
+<style lang="scss" scoped>
 .heightmap-container {
 	background-color: #000;
 	color: #fff;
 	border-radius: 8px;
 	display: flex;
 	height: 50%;
+}
+
+.v-data-table.heightmap-offsets-table {
+  .v-data-table__wrapper {
+    table {
+      tbody {
+        tr {
+          td {
+            padding: 0px 8px;
+            white-space: nowrap;
+
+            .heightmap-offsets-input {
+              width: 60px !important;
+              padding: 4px 6px;
+            }
+          }
+        }
+      }
+    }
+  }
 }
 
 h1 {
@@ -125,80 +145,87 @@ input {
 					</v-data-table>
 					<file-edit-dialog :shown.sync="editDialog.shown" :filename="editDialog.filename" v-model="editDialog.content" @editComplete="$emit('fileEdited', $event)"></file-edit-dialog>
 
-          <v-card-actions class="absolute-0">
+          <v-card-actions class="flex-wrap">
             <v-btn class="mr-1" @click="createNewHeightMap()" :disabled="uiFrozen">{{ $t('plugins.heightmap.create') }}</v-btn>
+            <span>
             <label for="count">S.Count</label><input name="count" class="ml-1 mr-1" ref="input" step="any" min="0" v-model.number="s_count" type="number" />
+            </span>
+            <span>
             <label for="repeat">S.Repeat</label><input name="repeat" class="ml-1 mr-1" ref="input" step="any" min="0" v-model.number="s_repeat" type="number" />
+            </span>
+            <span>
             <label for="radius">S.Radius</label><input name="radius" class="ml-1 mr-1" ref="input" step="any" min="0" v-model.number="s_radius" type="number" />
+            </span>
           </v-card-actions>
 				</v-card>
 		</v-col>
 		<v-col cols="12" lg="4">
 				<v-card elevation="0" class="h-100">
           <v-card-title class="v-card__title--dense">
-						{{ $t('plugins.heightmap.parameters') }}
+            <v-icon class="mr-2">mdi-arrow-all</v-icon>
+						{{ $t('plugins.heightmap.offsetParameters') }}
+            <v-spacer></v-spacer>
+						<v-icon @click="refreshOffsets()" class="ml-2">mdi-refresh</v-icon>
 					</v-card-title>
 					<v-card-text>
-            <v-simple-table class="v-data-table--no-bg">
+            <v-simple-table class="v-data-table--no-bg heightmap-offsets-table">
               <tbody>
                 <tr>
-                  <th class="px-0 font-size-0875">T1 {{ $t('plugins.heightmap.offset') }}</th>
+                  <th class="px-0 font-size-0875 pollen-attr-header">T1</th>
                   <td>
-                    <label for="T1X">X:</label>
-                    <input name="T1X" class="ml-1 mr-1" ref="input" step="0.01" v-model.number="t1x" type="number" />
+                    <label for="T1X">X</label>
+                    <input name="T1X" class="ml-2 mr-1 heightmap-offsets-input" ref="input" step="0.01" v-model.number="t1x" type="number" />
                   </td>
                   <td>
-                    <label for="T1Y">Y:</label>
-                    <input name="T1Y" class="ml-1 mr-1" ref="input" step="0.01" v-model.number="t1y" type="number" />
+                    <label for="T1Y">Y</label>
+                    <input name="T1Y" class="ml-2 mr-1 heightmap-offsets-input" ref="input" step="0.01" v-model.number="t1y" type="number" />
                   </td>
                   <td>
-                    <label for="T1Z">Z:</label>
-                    <input name="T1Z" class="ml-1 mr-1" ref="input" step="0.01" v-model.number="t1z" type="number" />
+                    <label for="T1Z">Z</label>
+                    <input name="T1Z" class="ml-2 mr-1 heightmap-offsets-input" ref="input" step="0.01" v-model.number="t1z" type="number" />
                   </td>
                 </tr>
                 <tr v-if="tools[2] !== null">
-                  <th class="px-0 font-size-0875">T2 {{ $t('plugins.heightmap.offset') }}</th>
+                  <th class="px-0 font-size-0875 pollen-attr-header">T2</th>
                   <td>
-												<label for="T2X">X:</label><input name="T2X" class="ml-1 mr-1" ref="input" step="0.01" v-model.number="t2x" type="number" />
+												<label for="T2X">X</label><input name="T2X" class="ml-2 mr-1 heightmap-offsets-input" ref="input" step="0.01" v-model.number="t2x" type="number" />
                   </td>
                   <td>
-												<label for="T2Y">Y:</label><input name="T2Y" class="ml-1 mr-1" ref="input" step="0.01" v-model.number="t2y" type="number" />
+												<label for="T2Y">Y</label><input name="T2Y" class="ml-2 mr-1 heightmap-offsets-input" ref="input" step="0.01" v-model.number="t2y" type="number" />
                   </td>
                   <td>
-												<label for="T2Z">Z:</label><input name="T2Z" class="ml-1 mr-1" ref="input" step="0.01" v-model.number="t2z" type="number" />
+												<label for="T2Z">Z</label><input name="T2Z" class="ml-2 mr-1 heightmap-offsets-input" ref="input" step="0.01" v-model.number="t2z" type="number" />
                   </td>
                 </tr>
                 <tr v-if="tools[3] !== null">
-                  <th class="px-0 font-size-0875">T3 {{ $t('plugins.heightmap.offset') }}</th>
+                  <th class="px-0 font-size-0875 pollen-attr-header">T3</th>
                   <td>
-												<label for="T3X">X:</label><input name="T3X" class="ml-1 mr-1" ref="input" step="0.01" v-model.number="t3x" type="number" />
+												<label for="T3X">X</label><input name="T3X" class="ml-2 mr-1 heightmap-offsets-input" ref="input" step="0.01" v-model.number="t3x" type="number" />
                   </td>
                   <td>
-												<label for="T3Y">Y:</label><input name="T3Y" class="ml-1 mr-1" ref="input" step="0.01" v-model.number="t3y" type="number" />
+												<label for="T3Y">Y</label><input name="T3Y" class="ml-2 mr-1 heightmap-offsets-input" ref="input" step="0.01" v-model.number="t3y" type="number" />
                   </td>
                   <td>
-												<label for="T3Z">Z:</label><input name="T3Z" class="ml-1 mr-1" ref="input" step="0.01" v-model.number="t3z" type="number" />
+												<label for="T3Z">Z</label><input name="T3Z" class="ml-2 mr-1 heightmap-offsets-input" ref="input" step="0.01" v-model.number="t3z" type="number" />
                   </td>
                 </tr>
                 <tr v-if="tools[4] !== null">
-                  <th class="px-0 font-size-0875">T4 {{ $t('plugins.heightmap.offset') }}</th>
+                  <th class="px-0 font-size-0875 pollen-attr-header">T4</th>
                   <td>
-												<label for="T4X">X:</label><input name="T4X" class="ml-1 mr-1" ref="input" step="0.01" v-model.number="t4x" type="number" />
+												<label for="T4X">X</label><input name="T4X" class="ml-2 mr-1 heightmap-offsets-input" ref="input" step="0.01" v-model.number="t4x" type="number" />
                   </td>
                   <td>
-												<label for="T4Y">Y:</label><input name="T4Y" class="ml-1 mr-1" ref="input" step="0.01" v-model.number="t4y" type="number" />
+												<label for="T4Y">Y</label><input name="T4Y" class="ml-2 mr-1 heightmap-offsets-input" ref="input" step="0.01" v-model.number="t4y" type="number" />
                   </td>
                   <td>
-												<label for="T4Z">Z:</label><input name="T4Z" class="ml-1 mr-1" ref="input" step="0.01" v-model.number="t4z" type="number" />
+												<label for="T4Z">Z</label><input name="T4Z" class="ml-2 mr-1 heightmap-offsets-input" ref="input" step="0.01" v-model.number="t4z" type="number" />
                   </td>
                 </tr>
               </tbody>
             </v-simple-table>
 					</v-card-text>
-					<v-card-actions>
+					<v-card-actions class="flex-wrap">
 						<v-btn :disabled="uiFrozen" @click="restoreDefault()">{{ $t('plugins.heightmap.default') }}</v-btn>
-						<v-btn :disabled="uiFrozen" @click="refreshOffsets()">{{ $t('plugins.heightmap.cancel') }}</v-btn>
-						<v-btn :disabled="uiFrozen" @click="refreshOffsets()"> {{ $t('plugins.heightmap.refresh') }}</v-btn>
 						<v-btn :disabled="uiFrozen" @click="saveParameters()"> {{ $t('plugins.heightmap.save') }}</v-btn>
 					</v-card-actions>
 				</v-card>
@@ -273,12 +300,31 @@ input {
     </v-card-title>
     <v-card-text>
       <v-row dense class="row--separated-cols flex-md-row flex-column">
-        <v-col>{{ $t('plugins.heightmap.numPoints', [$display(numPoints, 0)]) }}</v-col>
-        <v-col v-if="radius > 0">{{ $t('plugins.heightmap.radius', [$display(radius, 0, 'mm')]) }}</v-col>
-        <v-col>{{ $t('plugins.heightmap.area', [$display(area / 100, 1, 'cm²')]) }}</v-col>
-        <v-col>{{ $t('plugins.heightmap.maxDeviations', [$display(minDiff, 3), $display(maxDiff, 3, 'mm')]) }}</v-col>
-        <v-col>{{ $t('plugins.heightmap.meanError', [$display(meanError, 3, 'mm')]) }}</v-col>
-        <v-col>{{ $t('plugins.heightmap.rmsError', [$display(rmsError, 3, 'mm')]) }}</v-col>
+        <v-col class="d-flex flex-column justify-center text-center">
+          <span class="pollen-attr-header">{{ $t('plugins.heightmap.numPointsHeader') }}</span>
+          {{ $display(numPoints, 0) }}
+        </v-col>
+        <v-col class="d-flex flex-column justify-center text-center" v-if="radius > 0">
+          <span class="pollen-attr-header">{{ $t('plugins.heightmap.radiusHeader') }}</span>
+          {{ $display(radius, 0, 'mm') }}
+        </v-col>
+        <v-col class="d-flex flex-column justify-center text-center">
+          <span class="pollen-attr-header">{{ $t('plugins.heightmap.areaHeader') }}</span>
+          {{ $display(area / 100, 1, 'cm²') }}
+        </v-col>
+        <v-col class="d-flex flex-column justify-center text-center">
+          <span class="pollen-attr-header">{{ $t('plugins.heightmap.maxDeviationsHeader') }}</span>
+          {{ $display(minDiff, 3) }}
+          {{ $display(maxDiff, 3, 'mm') }}
+        </v-col>
+        <v-col class="d-flex flex-column justify-center text-center">
+          <span class="pollen-attr-header">{{ $t('plugins.heightmap.meanErrorHeader') }}</span>
+          {{ $display(meanError, 3, 'mm') }}
+        </v-col>
+        <v-col class="d-flex flex-column justify-center text-center">
+          <span class="pollen-attr-header">{{ $t('plugins.heightmap.rmsErrorHeader') }}</span>
+          {{ $display(rmsError, 3, 'mm') }}
+        </v-col>
       </v-row>
     </v-card-text>
   </v-card>

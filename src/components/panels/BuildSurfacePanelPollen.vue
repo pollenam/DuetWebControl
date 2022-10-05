@@ -55,8 +55,8 @@
 
 			<v-spacer></v-spacer>
 
-      <code-btn v-show="visibleAxes.length" small class="mx-0" :elevation="0" :disabled="uiFrozen" code='M98 P"/macros/HONEYPRINT/Compensation_Start"'>
-        {{ $t('panel.movement.startCompensation') }}
+      <code-btn v-show="visibleAxes.length" class="mx-0" :elevation="0" :disabled="uiFrozen" code='M98 P"/macros/HONEYPRINT/Compensation_Start"'>
+        <v-icon class="mr-1">mdi-grid</v-icon> {{ $t('panel.movement.startCompensation') }}
       </code-btn>
 		</v-card-title>
 
@@ -72,7 +72,7 @@
 						<v-col cols="10" class="axes-movements-wrapper">
 							<v-row v-for="(axis, axisIndex) in visibleAxes" :key="axisIndex" no-gutters>
 								<!-- Regular home buttons -->
-								<v-col v-if="!isDelta" cols="auto" class="flex-shrink-1 hidden-sm-and-down d-flex justify-center align-center text-body-1 ps-2 pe-3">
+								<v-col v-if="!isDelta" cols="auto" class="flex-shrink-1 hidden-sm-and-down d-flex justify-center align-center ps-2 pe-3">
 									{{ axis.letter }}
 								</v-col>
 
