@@ -293,11 +293,13 @@ export default {
 
       if (this.infiniteExtrusionStatus[this.toolIndex] !== "stopped") {
         try {
-          if(this.infiniteExtrusionStatus[this.toolIndex] === "extrude") {
+          // await this.sendInfinite({code: "stop", toolNumber:this.tool.number});
+          if (this.infiniteExtrusionStatus[this.toolIndex] === "extrude") {
             await this.sendCode("M98 P\"/macros/HONEYPRINT/Set_Extrusion_Rate\" " + this.getRPMForInfinite(true));
           } else {
             await this.sendCode("M98 P\"/macros/HONEYPRINT/Set_Extrusion_Rate\" " + this.getRPMForInfinite(false));
           }
+          // await this.sendInfinite({code: "startExtrude", toolNumber: this.tool.number});
 				} catch (e) {
 					if (!(e instanceof DisconnectedError)) {
 						console.warn(e);
@@ -432,7 +434,7 @@ export default {
           await this.sendCode("M98 P\"/macros/SELECT/Select \"T" + this.getSelectedToolsForStop());
         }
         await this.sendInfinite({code: "stop", toolNumber:this.tool.number});
-        await this.sendCode("M98 P\"/macros/HONEYPRINT/Set_Extrusion_Rate\" " + this.getToolNumberLetterForExtrusionRate() +"5");
+        await this.sendCode("M98 P\"/macros/HONEYPRINT/Set_Extrusion_Rate\" " + this.getToolNumberLetterForExtrusionRate() + "5");
       } catch (e) {
         if (!(e instanceof DisconnectedError)) {
           console.warn(e);
