@@ -14,7 +14,9 @@ export default function(connector) {
       extrudersSelectedMaterials: ['ABS', 'ABS', 'ABS', 'ABS'],
 			selectedPid: ['','','',''],
 			lastPrintedJob: [],
-			infiniteExtrusionStatus: ['stopped','stopped','stopped','stopped']
+			infiniteExtrusionStatus: ['stopped', 'stopped', 'stopped', 'stopped'],
+			infiniteExtrusionRate: [1.2, 1.2, 1.2, 1.2],
+			zLimit: true
     },
 		actions: {
 			async load({ commit, dispatch }) {
@@ -95,6 +97,13 @@ export default function(connector) {
 			selectInfiniteExtrusionStatus(state, data) {
 				state.infiniteExtrusionStatus[data.index] = data.status;
 				Vue.set(state.infiniteExtrusionStatus, data.index, data.status);
+			},
+			selectInfiniteExtrusionRate(state, data) {
+				state.infiniteExtrusionRate[data.index] = data.value;
+				Vue.set(state.infiniteExtrusionRate, data.index, data.value);
+			},
+			setZlimit(state, data) {
+				state.zLimit = data;
 			},
       selectedExtruderMaterial(state, data) {
         if (state.extrudersAvailableMaterials.indexOf(data.newValue) == -1)

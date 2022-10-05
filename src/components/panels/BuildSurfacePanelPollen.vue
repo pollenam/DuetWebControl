@@ -180,6 +180,7 @@ export default {
 		...mapState('machine/model', ['move', 'state', 'heat', 'fans']),
 		...mapState('machine/settings', ['moveFeedrate']),
 		...mapState('machine/settings', ['babystepAmount']),
+		...mapState('machine/honeyprint_cache', ['zLimit']),
 		...mapState('machine/model', {
 			machineSpeedFactor: state => state.move.speedFactor,
 			babystepping: state => (state.move.axes.length >= 3) ? state.move.axes[2].babystep : 0
@@ -232,12 +233,13 @@ export default {
 				preset: 0
 			},
 			displayToolPosition: true,
-			zlimit: false
+			zlimit: true
 		}
 	},
 	methods: {
 		...mapActions('machine', ['sendCode']),
 		...mapMutations('machine/settings', ['setMoveStep']),
+		...mapMutations('machine/honeyprint_cache', ['setZlimit']),
 		canMove(axis) {
 			return (axis.homed || !this.move.noMovesBeforeHoming) && this.canHome;
 		},
@@ -284,12 +286,16 @@ export default {
 			this.showMeshEditDialog = false;
 			this.moveStepDialog.shown = false;
 		},
+		async zLimit(newValue) {
+			this.zlimit = newValue;
+		},
 		async zlimit(newValue) {
 			if(newValue === true) {
 				await this.sendCode(`M98 P"/macros/HONEYPRINT/Z_Limits" S1`);
 			} else  {
 				await this.sendCode(`M98 P"/macros/HONEYPRINT/Z_Limits" S0`);
 			}
+			this.setZlimit(newValue);
 		}
 	}
 }

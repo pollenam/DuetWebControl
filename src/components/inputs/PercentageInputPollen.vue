@@ -23,7 +23,7 @@
 			</v-btn>
 		</v-col>
 		<v-col class="py-0" v-else>
-      <a v-if="resetVisible" href="javascript:void(0)" class="subtitle-2" style="position: absolute; right: 0px;">
+      <a v-if="resetVisible" v-on:click="resetValue" href="javascript:void(0)" class="subtitle-2" style="position: absolute; right: 0px;">
         <v-icon small class="mr-1">mdi-backup-restore</v-icon> {{ $t('generic.reset') }}
       </a>
 			<v-slider :value="innerValue" @change="$emit('input', $event)" :min="min" :max="max" :step="step" :disabled="disabled" hide-details :thumb-label="thumbLabel" class="slider"></v-slider>
@@ -173,6 +173,10 @@ export default {
 		increase() {
 			this.applyStep(this.step);
 			this.increaseTimer = setTimeout(this.increase, changeInterval);
+		},
+		resetValue() {
+			this.innerValue = this.initialValue;
+			this.$emit('input', this.innerValue);
 		}
 	},
 	watch: {

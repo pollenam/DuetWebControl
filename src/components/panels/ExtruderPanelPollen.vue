@@ -144,7 +144,7 @@ export default {
 		...mapState('machine/model', ['move']),
 		...mapState('machine/settings', ['displayedExtruders']),
     ...mapState('machine/model', ['heat', 'tools']),
-    ...mapState('machine/honeyprint_cache', ['extrudersAvailableMaterials', 'extrudersSelectedMaterials', 'selectedPid']),
+    ...mapState('machine/honeyprint_cache', ['extrudersAvailableMaterials', 'extrudersSelectedMaterials', 'selectedPid', 'infiniteExtrusionRate']),
 		...mapState('machine/model', {
 			macrosDirectory: state => state.directories.macros,
       tools: state => state.tools
@@ -195,7 +195,7 @@ export default {
 	methods: {
 		...mapActions('machine', ['sendCode', 'getFileList', 'sendInfinite']),
 		...mapMutations('machine/settings', ['toggleExtruderVisibility']),
-		...mapMutations('machine/honeyprint_cache', ['selectedExtruderMaterial', 'selectSelectedPid']),
+		...mapMutations('machine/honeyprint_cache', ['selectedExtruderMaterial', 'selectSelectedPid', 'selectInfiniteExtrusionRate']),
 		getExtrusionFactor() {
       if(this.move.extruders[this.toolIndex * 2] != null) {
         return Math.round(this.move.extruders[this.toolIndex * 2].factor * 100);
@@ -229,6 +229,9 @@ export default {
         return Math.max(150, this.move.extruders[(this.toolIndex * 2) + 1].factor * 100 + 50);
       }
       return 0;
+    },
+    getExtruderRate() {
+      return this.extrusionSpeed;
     },
     getExtrusionSpeedMax() {
       var candidateValue = this.extrusionSpeed + this.extrusionSpeed * 0.5;
@@ -291,17 +294,18 @@ export default {
       if (this.infiniteExtrusionStatus[this.toolIndex] !== "stopped") {
         try {
           if(this.infiniteExtrusionStatus[this.toolIndex] === "extrude") {
-            await this.sendCode("M98 P\"/macros/HONEYPRINT/Set_Extrusion_Rate\" "+ this.getRPMForInfinite(true));
+            await this.sendCode("M98 P\"/macros/HONEYPRINT/Set_Extrusion_Rate\" " + this.getRPMForInfinite(true));
           } else {
             await this.sendCode("M98 P\"/macros/HONEYPRINT/Set_Extrusion_Rate\" " + this.getRPMForInfinite(false));
           }
-
 				} catch (e) {
 					if (!(e instanceof DisconnectedError)) {
 						console.warn(e);
 					}
 				}
       }
+
+      this.selectInfiniteExtrusionRate({ index: this.toolIndex, value: this.extrusionSpeed });
     },
     async PIDComboBoxChange(newValue) {
 			await this.sendCode(`M98 P"${Path.combine(this.macrosDirectory, "PID", newValue)}" T${this.tool.number}`);
@@ -362,7 +366,7 @@ export default {
     },
     getRPMForInfinite(isExtruding) {
       var rpmCommand = "";
-      
+
       if(this.tool.number === 1) {
         rpmCommand = rpmCommand +"A";
       }
@@ -376,7 +380,7 @@ export default {
         rpmCommand = rpmCommand + "D";
       }
       //rpmCommand = rpmCommand + this.getToolNumberLetterForExtrusionRate();
-      
+
       if(isExtruding)
         rpmCommand = rpmCommand +  this.extrusionSpeed;
       else
@@ -385,7 +389,6 @@ export default {
       return rpmCommand;
     },
     getToolNumberLetterForExtrusionRate() {
-      
       if(this.tool.number === 1) {
         return "A";
       }
@@ -443,6 +446,13 @@ export default {
     if(files) {
       files = files.map(file => file.name);
       this.pidItems = files;
+    }
+
+    this.extrusionSpeed = this.infiniteExtrusionRate[this.toolIndex];
+  },
+  watch: {
+    infiniteExtrusionRate(to) {
+      this.extrusionSpeed = to[this.toolIndex];
     }
   }
 }
