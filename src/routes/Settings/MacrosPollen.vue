@@ -17,8 +17,8 @@ export default {
 		registerRoute(this, {
 			Settings: {
 				Automation: {
-					icon: 'mdi-polymer',
-					caption: 'Automation', //TODO i18n
+					icon: 'mdi-file-cog-outline',
+					caption: 'list.macro.pollenTitle',
 					path: '/Settings/Automation'
 				}
 			}

@@ -46,7 +46,7 @@
 			</v-btn>
 
 			<upload-btn :elevation="0" fab dark :directory="directory" target="macros" color="primary">
-				<v-icon>mdi-cloud-upload</v-icon>
+				<v-icon>mdi-arrow-up-bold-hexagon-outline</v-icon>
 			</upload-btn>
 		</v-speed-dial>
 

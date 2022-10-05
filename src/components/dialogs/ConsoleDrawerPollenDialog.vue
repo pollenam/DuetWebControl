@@ -44,7 +44,7 @@
 <template>
 	<v-card elevation="0" class="v-card--console-drawer-pollen hidden-md-and-down" :class="{ 'v-card--console-drawer-pollen--expanded': expanded }" v-if="isEnabled">
 		<v-card-title class="v-card__title--dense" @click="toggleExpanded">
-			<v-icon small class="mr-2">mdi-code-tags</v-icon> {{ $t('menu.control.console') }}
+			<v-icon class="mr-2">mdi-console</v-icon> {{ $t('menu.control.console') }}
 		</v-card-title>
 
 		<v-card-text>

@@ -28,7 +28,7 @@
             </template>
 
             <v-btn fab color="primary" @click="clickUpload">
-                <v-icon>mdi-cloud-upload</v-icon>
+                <v-icon>mdi-arrow-up-bold-hexagon-outline</v-icon>
             </v-btn>
         </v-speed-dial>
     </div>

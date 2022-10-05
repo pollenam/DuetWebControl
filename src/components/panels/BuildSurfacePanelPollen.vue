@@ -114,10 +114,12 @@
             <v-col>
 							<span class="pollen-attr-header">{{ $t('panel.buildSurfacePollen.level') }}</span>
 							<code-btn :code="`M290 R1 Z${babystepAmount}`" no-wait block class="mt-3">
-								<v-icon>mdi-arrow-collapse-vertical</v-icon> {{ $displayZ(-babystepAmount) }}
+								<v-icon>mdi-arrow-collapse-vertical</v-icon>
+                {{ $displayZ(-babystepAmount) }}
 							</code-btn>
 							<code-btn :code="`M290 R1 Z${-babystepAmount}`" no-wait block class="mt-2">
-								<v-icon>mdi-arrow-split-horizontal</v-icon> +{{ $displayZ(babystepAmount) }}
+								<v-icon style="font-size: 22px;">mdi-arrow-split-horizontal</v-icon>
+                +{{ $displayZ(babystepAmount) }}
 							</code-btn>
             </v-col>
           </v-row>
@@ -127,6 +129,7 @@
               <v-spacer></v-spacer>
               <v-switch hide-details="auto" class="ms-1 mt-0 mb-2" :color="'success'" :disabled="uiFrozen" v-model="zlimit"></v-switch>
               <code-btn code='M98 P"/macros/HONEYPRINT/Set_Z0"' no-wait block class="mb-2">
+								<v-icon small class="mr-1">mdi-arrow-collapse-down</v-icon>
                 {{ $t('panel.buildSurfacePollen.setZero') }}
               </code-btn>
             </v-col>

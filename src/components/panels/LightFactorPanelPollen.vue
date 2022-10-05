@@ -1,7 +1,7 @@
 <template>
 	<v-card :elevation="0">
 		<v-card-title class="v-card__title--dense">
-      <v-icon class="mr-2">mdi-weather-sunny</v-icon>
+      <v-icon class="mr-2">mdi-vanish</v-icon>
       {{ $t('panel.lightFactorPollen.title') }}
 		</v-card-title>
 

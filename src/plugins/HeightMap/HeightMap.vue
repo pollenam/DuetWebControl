@@ -41,7 +41,7 @@ h1 {
 		<v-col cols="12" lg="auto" order="1" order-lg="0" sm="6">
 			<v-card tile>
 				<v-card-title class="pt-2 pb-1">
-					<v-icon class="mr-2">mdi-format-list-bulleted</v-icon>
+					<v-icon class="mr-2">mdi-dots-grid</v-icon>
 					{{ $t('plugins.heightmap.listTitle') }}
 					<v-spacer></v-spacer>
 					<v-icon @click="refresh" class="ml-2">mdi-refresh</v-icon>

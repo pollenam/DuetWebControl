@@ -1,7 +1,7 @@
 <template>
 	<v-card elevation="0">
 		<v-card-title class="v-card__title--dense">
-			<v-icon small class="mr-1">mdi-polymer</v-icon> {{ $t('list.macro.pollenTitle') }}
+			<v-icon class="mr-1">mdi-file-cog-outline</v-icon> {{ $t('list.macro.pollenTitle') }}
 			<v-spacer></v-spacer>
 			<span v-show="isConnected" class="subtitle-2">{{ currentDirectory }}</span>
 		</v-card-title>

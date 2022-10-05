@@ -88,7 +88,7 @@
 			</v-btn>
 
 			<upload-btn fab dark :directory="directory" target="gcodes" color="primary">
-				<v-icon>mdi-cloud-upload</v-icon>
+				<v-icon>mdi-arrow-up-bold-hexagon-outline</v-icon>
 			</upload-btn>
 		</v-speed-dial>
 

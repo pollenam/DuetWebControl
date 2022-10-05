@@ -17,7 +17,7 @@ export default {
 		registerRoute(this, {
 			Job: {
 				Jobs: {
-					icon: 'mdi-play',
+					icon: 'mdi-file-multiple-outline',
 					caption: 'menu.files.jobs',
 					path: '/Job/Jobs'
 				}

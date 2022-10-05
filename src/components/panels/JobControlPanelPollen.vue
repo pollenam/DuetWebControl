@@ -2,7 +2,7 @@
 	<v-card :elevation="0">
 		<v-card-title class="v-card__title--dense">
       <span v-if="isPrinting">
-        <v-icon class="mr-2">mdi-play</v-icon>
+        <v-icon class="mr-2">mdi-play-speed</v-icon>
         {{ $t('panel.jobControl.running') }}
         <span class="text--gray">
         {{ printFile }}

@@ -36,7 +36,7 @@ export const Menu = Vue.observable({
 		pages: []
 	},
 	Job: {
-		icon: 'mdi-printer',
+		icon: 'mdi-animation-play',
 		caption: 'menu.job.caption',
 		pages: []
 	},

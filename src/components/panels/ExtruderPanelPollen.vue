@@ -13,7 +13,7 @@
 	<v-card elevation="0" :class="{ 'v-card--highlighted': isSelected }">
 		<v-card-title class="v-card__title--dense justify-space-between">
       <div>
-        <v-icon class="mr-1">mdi-water-outline</v-icon>
+        <v-icon class="mr-1">mdi-printer-3d-nozzle</v-icon>
         {{ $t('panel.extruderPollen.title') }} {{ extruderNumber }}
       </div>
       <v-combobox

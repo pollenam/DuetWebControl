@@ -166,7 +166,7 @@ export default {
 				return 'mdi-check';
 			}
 			if (file.startTime !== null) {
-				return 'mdi-cloud-upload';
+				return 'mdi-arrow-up-bold-hexagon-outline';
 			}
 			return 'mdi-asterisk';
 		},

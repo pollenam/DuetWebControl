@@ -82,7 +82,7 @@ input {
       <v-col cols="12" lg="8">
 				<v-card elevation="0" class="h-100">
           <v-card-title class="v-card__title--dense">
-						<v-icon class="mr-2">mdi-format-list-bulleted</v-icon>
+						<v-icon class="mr-2">mdi-dots-grid</v-icon>
 						{{ $t('plugins.heightmap.listTitle') }}
 						<v-spacer></v-spacer>
 						<v-icon @click="refresh" class="ml-2">mdi-refresh</v-icon>
