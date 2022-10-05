@@ -62,55 +62,54 @@
 
 		<v-card-text v-show="visibleAxes.length !== 0">
 			<v-row dense class="row--separated-cols">
-				<v-col cols="12" md="7">
-					<v-row no-gutters>
-						<v-col class="d-flex align-center justify-start" cols="2">
+				<v-col cols="12" md="6">
+					<v-row>
+            <v-col class="d-flex flex-column justify-center" cols="4" md="2">
 							<code-btn outlined fab large class="home_btn" code="G28" :disabled="!canHome" :title="$t('button.home.titleAll')" >
 								{{ $t('button.home.captionAll') }}
 							</code-btn>
-						</v-col>
-						<v-col cols="10" class="axes-movements-wrapper">
-							<v-row v-for="(axis, axisIndex) in visibleAxes" :key="axisIndex" no-gutters>
-								<!-- Regular home buttons -->
-								<v-col v-if="!isDelta" cols="auto" class="flex-shrink-1 hidden-sm-and-down d-flex justify-center align-center ps-2 pe-3">
-									{{ axis.letter }}
-								</v-col>
-
-								<!-- Decreasing movements -->
-								<v-col>
-									<v-row no-gutters class="axes-movements-row-wrapper">
-										<v-col v-for="index in numMoveSteps" :key="index"  :class="getMoveCellClass(index)">
-											<code-btn :code="getMoveCode(axis, index - 1, true)" :disabled="!canMove(axis)" no-wait @contextmenu.prevent="showMoveStepDialog(axis.letter, index - 1)" block tile class="move-btn">
-												{{ showSign(-moveSteps(axis.letter)[index - 1]) }}
-											</code-btn>
-										</v-col>
-									</v-row>
-								</v-col>
-
-								<!-- Increasing movements -->
-								<v-col class="axes-command-bordered-left">
-									<v-row no-gutters class="axes-movements-row-wrapper">
-										<v-col v-for="index in numMoveSteps" :key="index" :class="getMoveCellClass(numMoveSteps)">
-											<code-btn :code="getMoveCode(axis, numMoveSteps - index, false)" :disabled="!canMove(axis)" no-wait @contextmenu.prevent="showMoveStepDialog(axis.letter, numMoveSteps - index)" block tile class="move-btn">
-												{{ moveSteps(axis.letter)[numMoveSteps - index] }}
-											</code-btn>
-										</v-col>
-									</v-row>
-								</v-col>
-							</v-row>
-						</v-col>
-
-					</v-row>
-					<v-row class="mt-0">
-            <v-col class="d-flex flex-column justify-center" offset="2" cols="3">
+            </v-col>
+            <v-col class="d-flex-xs d-flex-sm flex-column justify-center hidden-md-and-down" cols="3">
               <span class="pollen-attr-header">{{ $t('panel.speedFactor.caption') }}</span>
             </v-col>
-            <v-col class="d-flex flex-column justify-center" cols="7">
+            <v-col class="d-flex flex-column justify-center" cols="8" md="7">
+              <span class="pollen-attr-header hidden-lg-and-up">{{ $t('panel.speedFactor.caption') }}</span>
               <percentage-input-pollen v-model="speedFactor" :step="1" :min="speedFactorMin" :max="speedFactorMax" :disabled="uiFrozen"></percentage-input-pollen>
             </v-col>
 					</v-row>
+          <div class="axes-movements-wrapper mt-12">
+            <v-row v-for="(axis, axisIndex) in visibleAxes" :key="axisIndex" no-gutters>
+              <!-- Regular home buttons -->
+              <v-col v-if="!isDelta" cols="auto" class="flex-shrink-1 hidden-sm-and-down d-flex justify-center align-center ps-2 pe-3">
+                {{ axis.letter }}
+              </v-col>
+
+              <!-- Decreasing movements -->
+              <v-col>
+                <v-row no-gutters class="axes-movements-row-wrapper">
+                  <v-col v-for="index in numMoveSteps" :key="index"  :class="getMoveCellClass(index)">
+                    <code-btn :code="getMoveCode(axis, index - 1, true)" :disabled="!canMove(axis)" no-wait @contextmenu.prevent="showMoveStepDialog(axis.letter, index - 1)" block tile class="move-btn">
+                      {{ showSign(-moveSteps(axis.letter)[index - 1]) }}
+                    </code-btn>
+                  </v-col>
+                </v-row>
+              </v-col>
+
+              <!-- Increasing movements -->
+              <v-col class="axes-command-bordered-left">
+                <v-row no-gutters class="axes-movements-row-wrapper">
+                  <v-col v-for="index in numMoveSteps" :key="index" :class="getMoveCellClass(numMoveSteps)">
+                    <code-btn :code="getMoveCode(axis, numMoveSteps - index, false)" :disabled="!canMove(axis)" no-wait @contextmenu.prevent="showMoveStepDialog(axis.letter, numMoveSteps - index)" block tile class="move-btn">
+                      {{ moveSteps(axis.letter)[numMoveSteps - index] }}
+                    </code-btn>
+                  </v-col>
+                </v-row>
+              </v-col>
+            </v-row>
+          </div>
+
 				</v-col>
-				<v-col cols="6" md="3">
+				<v-col cols="6" md="2">
           <v-row>
             <v-col>
 							<span class="pollen-attr-header">{{ $t('panel.buildSurfacePollen.level') }}</span>
@@ -125,15 +124,15 @@
           <v-row>
             <v-col class="d-flex flex-wrap align-center pb-0">
               <span class="pollen-attr-header mb-2">{{ $t('panel.buildSurfacePollen.zLimits') }}</span>
-              <v-switch hide-details="auto" class="ms-1 mt-0 mb-2" :color="'success'" :disabled="uiFrozen" v-model="zlimit"></v-switch>
               <v-spacer></v-spacer>
-              <code-btn code='M98 P"/macros/HONEYPRINT/Set_Z0"' no-wait class="mb-2">
+              <v-switch hide-details="auto" class="ms-1 mt-0 mb-2" :color="'success'" :disabled="uiFrozen" v-model="zlimit"></v-switch>
+              <code-btn code='M98 P"/macros/HONEYPRINT/Set_Z0"' no-wait block class="mb-2">
                 {{ $t('panel.buildSurfacePollen.setZero') }}
               </code-btn>
             </v-col>
           </v-row>
 				</v-col>
-				<v-col cols="6" md="2">
+				<v-col cols="6" md="4">
           <v-row :key="`bed-title-${firstBedIndex()}-0`">
             <v-col class="d-flex flex-column">
               <span class="pollen-attr-header">{{ $t('panel.buildSurfacePollen.bed') }}</span>
