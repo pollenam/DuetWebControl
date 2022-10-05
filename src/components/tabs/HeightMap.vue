@@ -8,6 +8,9 @@
 }
 
 .v-data-table.heightmap-offsets-table {
+  max-height: 300px;
+  overflow-y: scroll;
+
   .v-data-table__wrapper {
     table {
       tbody {
@@ -68,8 +71,7 @@ input::-webkit-inner-spin-button {
 
 input {
 	background-color: #fff8e1!important;
-	padding: 3px;
-	width: 70px !important;
+  padding: 4px 6px;
 }
 
 </style>
@@ -128,9 +130,9 @@ input {
 									</template>
 									<template v-else-if="header.unit === 'boolean'">
 										<template v-if="props.item.name !== 'heightmap.csv'">
-											<v-btn @click.stop.prevent="selectHeightMap(props.item)"> {{ $t('plugins.heightmap.apply') }}</v-btn>
-											<v-btn @click.stop.prevent="removeHeightMap(props.item)">{{ $t('plugins.heightmap.delete') }}</v-btn>
-											<v-btn @click.stop.prevent="openHeightMap(props.item)">{{ $t('plugins.heightmap.open') }}</v-btn>
+											<v-btn elevation="0" @click.stop.prevent="selectHeightMap(props.item)"> {{ $t('plugins.heightmap.apply') }}</v-btn>
+											<v-btn elevation="0" @click.stop.prevent="removeHeightMap(props.item)">{{ $t('plugins.heightmap.delete') }}</v-btn>
+											<v-btn elevation="0" @click.stop.prevent="openHeightMap(props.item)">{{ $t('plugins.heightmap.open') }}</v-btn>
 										</template>
 										<template v-if="props.item.name === 'heightmap.csv'">
 											{{ $t('plugins.heightmap.selected') }}
@@ -146,15 +148,16 @@ input {
 					<file-edit-dialog :shown.sync="editDialog.shown" :filename="editDialog.filename" v-model="editDialog.content" @editComplete="$emit('fileEdited', $event)"></file-edit-dialog>
 
           <v-card-actions class="flex-wrap">
-            <v-btn class="mr-1" @click="createNewHeightMap()" :disabled="uiFrozen">{{ $t('plugins.heightmap.create') }}</v-btn>
-            <span>
-            <label for="count">S.Count</label><input name="count" class="ml-1 mr-1" ref="input" step="any" min="0" v-model.number="s_count" type="number" />
+            <v-btn class="mr-3" elevation="0" @click="createNewHeightMap()" :disabled="uiFrozen">{{ $t('plugins.heightmap.create') }}</v-btn>
+            <span class="mx-1">
+            <label for="count" class="pollen-attr-header">S.Count</label>
+            <input name="count" class="mx-1" ref="input" step="any" min="0" v-model.number="s_count" type="number" />
             </span>
-            <span>
-            <label for="repeat">S.Repeat</label><input name="repeat" class="ml-1 mr-1" ref="input" step="any" min="0" v-model.number="s_repeat" type="number" />
+            <span class="mx-1">
+            <label for="repeat" class="pollen-attr-header">S.Repeat</label><input name="repeat" class="mx-1" ref="input" step="any" min="0" v-model.number="s_repeat" type="number" />
             </span>
-            <span>
-            <label for="radius">S.Radius</label><input name="radius" class="ml-1 mr-1" ref="input" step="any" min="0" v-model.number="s_radius" type="number" />
+            <span class="mx-1">
+            <label for="radius" class="pollen-attr-header">S.Radius</label><input name="radius" class="mx-1" ref="input" step="any" min="0" v-model.number="s_radius" type="number" />
             </span>
           </v-card-actions>
 				</v-card>
@@ -225,8 +228,8 @@ input {
             </v-simple-table>
 					</v-card-text>
 					<v-card-actions class="flex-wrap">
-						<v-btn :disabled="uiFrozen" @click="restoreDefault()">{{ $t('plugins.heightmap.default') }}</v-btn>
-						<v-btn :disabled="uiFrozen" @click="saveParameters()"> {{ $t('plugins.heightmap.save') }}</v-btn>
+						<v-btn elevation="0" :disabled="uiFrozen" @click="restoreDefault()">{{ $t('plugins.heightmap.default') }}</v-btn>
+						<v-btn elevation="0" :disabled="uiFrozen" @click="saveParameters()"> {{ $t('plugins.heightmap.save') }}</v-btn>
 					</v-card-actions>
 				</v-card>
 		</v-col>
@@ -271,11 +274,11 @@ input {
 					</div>
 					<v-switch :disabled="uiFrozen || loading || !ready" :label="$t('plugins.heightmap.invertZ')" v-model="invertZ"></v-switch>
 
-					<v-btn :disabled="uiFrozen || loading || !ready" :elevation="1" @click="topView" class="ml-0 mt-3">
+					<v-btn elevation="0" :disabled="uiFrozen || loading || !ready" @click="topView" class="ml-0 mt-3">
 						<v-icon class="mr-1" small>mdi-format-vertical-align-bottom</v-icon>
 						{{ $t('plugins.heightmap.topView') }}
 					</v-btn>
-					<v-btn :disabled="uiFrozen || loading || !ready" :elevation="1" @click="resetView" class="ml-0 mt-3">
+					<v-btn elevation="0" :disabled="uiFrozen || loading || !ready" @click="resetView" class="ml-0 mt-3">
 						<v-icon class="mr-1" small>mdi-camera</v-icon>
 						{{ $t('plugins.heightmap.resetView') }}
 					</v-btn>
