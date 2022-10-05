@@ -1,7 +1,7 @@
 <template>
 	<div class="component">
 		<v-toolbar dense elevation="0">
-			<directory-breadcrumbs v-model="directory" isPublicOnly="true"></directory-breadcrumbs>
+			<directory-breadcrumbs class="pl-0" v-model="directory" isPublicOnly="true"></directory-breadcrumbs>
 
 			<v-spacer></v-spacer>
 

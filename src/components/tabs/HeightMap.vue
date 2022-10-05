@@ -7,9 +7,12 @@
 	height: 50%;
 }
 
-.v-data-table.heightmap-offsets-table {
-  max-height: 300px;
+.v-data-table.heightmap-base-file-list {
+  max-height: 240px;
   overflow-y: scroll;
+}
+
+.v-data-table.heightmap-offsets-table {
 
   .v-data-table__wrapper {
     table {
@@ -91,7 +94,7 @@ input {
 
 					<v-data-table v-model="innerValue" v-bind="$props"
 						:single-select=true :items="files" item-key="name" :headers="defaultHeaders" disable-pagination hide-default-footer :mobile-breakpoint="0"
-						class="base-file-list elevation-0" :class="{ 'empty-table-fix' : !files.length }"
+						class="base-file-list heightmap-base-file-list elevation-0" :class="{ 'empty-table-fix' : !files.length }"
 						:sort-by.sync="sortBy"
             :sort-desc.sync="sortDesc"
 						>
