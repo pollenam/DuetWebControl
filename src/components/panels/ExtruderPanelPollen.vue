@@ -362,24 +362,42 @@ export default {
     },
     getRPMForInfinite(isExtruding) {
       var rpmCommand = "";
+      
       if(this.tool.number === 1) {
-        rpmCommand = rpmCommand + "A";
+        rpmCommand = rpmCommand +"A";
       }
       if(this.tool.number === 2) {
-        rpmCommand = rpmCommand + "B";
+        rpmCommand = rpmCommand +"B";
       }
-      if(this.tool.number === 3) {
-        rpmCommand = rpmCommand + "C";
+      if (this.tool.number === 3) {
+        rpmCommand = rpmCommand +"C";
       }
-      if(this.tool.number === 4) {
+      if (this.tool.number === 4) {
         rpmCommand = rpmCommand + "D";
       }
+      //rpmCommand = rpmCommand + this.getToolNumberLetterForExtrusionRate();
+      
       if(isExtruding)
         rpmCommand = rpmCommand +  this.extrusionSpeed;
       else
       rpmCommand = rpmCommand + "-" + this.extrusionSpeed;
 
       return rpmCommand;
+    },
+    getToolNumberLetterForExtrusionRate() {
+      
+      if(this.tool.number === 1) {
+        return "A";
+      }
+      if(this.tool.number === 2) {
+        return "B";
+      }
+      if (this.tool.number === 3) {
+        return "C";
+      }
+      if (this.tool.number === 4) {
+        return  "D";
+      }
     },
     async infiniteExtrude() {
       try {
@@ -411,6 +429,7 @@ export default {
           await this.sendCode("M98 P\"/macros/SELECT/Select \"T" + this.getSelectedToolsForStop());
         }
         await this.sendInfinite({code: "stop", toolNumber:this.tool.number});
+        await this.sendCode("M98 P\"/macros/HONEYPRINT/Set_Extrusion_Rate\" " + this.getToolNumberLetterForExtrusionRate() +"5");
       } catch (e) {
         if (!(e instanceof DisconnectedError)) {
           console.warn(e);
