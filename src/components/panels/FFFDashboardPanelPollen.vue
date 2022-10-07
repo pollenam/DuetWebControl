@@ -5,10 +5,10 @@
 				<v-col cols="12" lg="6" class="d-flex">
 					<job-control-panel-pollen  class="w-100"></job-control-panel-pollen>
 				</v-col>
-				<v-col cols="12" md="6" lg="4" class="d-flex">
+				<v-col cols="8" md="8" lg="4" class="d-flex">
 					<high-temperature-panel-pollen  class="w-100"></high-temperature-panel-pollen>
 				</v-col>
-				<v-col cols="12" md="6" lg="2" class="d-flex">
+				<v-col cols="4" md="4" lg="2" class="d-flex">
 					<light-factor-pollen-panel  class="w-100"></light-factor-pollen-panel>
 				</v-col>
 			</v-row>
@@ -21,7 +21,7 @@
 				</v-col>
 			</v-row>
 			<v-row dense>
-        <v-col cols="12" md="6" lg="3" v-for="(tool, toolIndex) in extruderTools" :key=toolIndex>
+        <v-col cols="12" md="6" lg="3" sm="6" v-for="(tool, toolIndex) in extruderTools" :key=toolIndex>
           <extruder-panel-pollen :tool="tool" :toolIndex="toolIndex"></extruder-panel-pollen>
         </v-col>
 			</v-row>

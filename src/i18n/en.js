@@ -353,7 +353,7 @@ export default {
 		yes: 'Yes',
 		no: 'No',
 		close: 'Close',
-		reset: 'Reset',
+		reset: '',
 		noValue: 'n/a',
 		loading: 'loading',
 		error: 'Error',

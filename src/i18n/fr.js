@@ -285,7 +285,7 @@ export default {
 		yes: 'Oui',
 		no: 'Non',
 		close: 'Fermer',
-		reset: 'Réinitialiser',
+		reset: '',
 		noValue: 'n/a',
 		loading: 'Chargement',
 		error: 'Erreur',

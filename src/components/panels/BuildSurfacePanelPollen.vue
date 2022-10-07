@@ -106,7 +106,7 @@
           </div>
 
 				</v-col>
-				<v-col cols="6" md="3" lg="2">
+				<v-col cols="6" md="3" lg="3">
           <v-row>
             <v-col>
 							<span class="pollen-attr-header">{{ $t('panel.buildSurfacePollen.level') }}</span>
@@ -123,7 +123,6 @@
           <v-row>
             <v-col class="d-flex flex-wrap align-center pb-0">
               <span class="pollen-attr-header mb-2">{{ $t('panel.buildSurfacePollen.zLimits') }}</span>
-              <v-spacer></v-spacer>
               <v-switch hide-details="auto" class="ms-1 mt-0 mb-2" :color="'success'" :disabled="uiFrozen" v-model="zlimit"></v-switch>
               <code-btn code='M98 P"/macros/HONEYPRINT/Set_Z0"' no-wait block class="mb-2">
 								<v-icon small class="mr-1">mdi-arrow-collapse-down</v-icon>
@@ -132,7 +131,7 @@
             </v-col>
           </v-row>
 				</v-col>
-				<v-col cols="6" md="3" lg="4">
+				<v-col cols="6" md="3" lg="3">
           <v-row :key="`bed-title-${firstBedIndex()}-0`">
             <v-col class="d-flex flex-column">
               <span class="pollen-attr-header">{{ $t('panel.buildSurfacePollen.bed') }}</span>

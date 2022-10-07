@@ -92,7 +92,7 @@
           <temperature-tool-input :tool="tool" :toolHeaterIndex="1" active></temperature-tool-input>
         </v-col>
 			</v-row>
-			<v-row class="justify-space-between align-center">
+      <v-row dense>
         <v-col cols="3 d-flex align-center">
           <span class="pollen-attr-header">{{ $t('panel.extruderPollen.nozzle') }}</span>
         </v-col>

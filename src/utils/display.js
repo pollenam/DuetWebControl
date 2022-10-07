@@ -19,7 +19,7 @@ export function display(value, precision, unit) {
 }
 
 export function displayZ(value, showUnit = true) {
-	return display(value, (store.state.machine.model.state.machineMode === MachineMode.cnc) ? 3 : 2, showUnit ? 'mm' : undefined);
+	return display(value, (store.state.machine.model.state.machineMode === MachineMode.cnc) ? 3 : 2, showUnit ? '' : undefined);
 }
 
 export function displaySize(bytes) {
@@ -110,4 +110,3 @@ Vue.prototype.$displayZ = displayZ;
 Vue.prototype.$displaySize = displaySize;
 Vue.prototype.$displaySpeed = displaySpeed;
 Vue.prototype.$displayTime = displayTime;
-

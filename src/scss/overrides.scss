@@ -281,3 +281,54 @@ hr.hr--separated-rows {
   padding: 8px 16px;
 }
 }
+//////////////////
+
+.theme--light.v-data-table tbody {
+    color: rgba(97,80,82,1);
+}
+
+.v-btn > .v-btn__content .v-icon {
+    font-size: 20px;
+    margin-right: 4px!important;
+}
+
+.v-icon.notranslate.mdi.mdi-arrow-split-horizontal.theme--light {
+    font-size: 18px !important;
+}
+
+.v-card__title--dense {
+    padding: 8px 16px;
+}
+
+.theme--light.v-input input {
+    color: rgba(97, 80, 82, 0.8);
+}
+
+.v-card__text--with-rows-highlighted > .row {
+    padding: 8px 16px;
+}
+
+.v-application .mt-8 {
+    margin-bottom: 12px !important;
+}
+
+.temperature-row {
+    margin-bottom: 0px !important;
+}
+
+.v-text-field.v-text-field--solo:not(.v-text-field--solo-flat) > .v-input__control > .v-input__slot {
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+.v-icon.v-icon.v-icon--link {
+    color: rgba(97, 80, 82, 0.8);
+}
+
+.v-application--is-ltr .ms-1 {
+    margin-left: 8px !important;
+    margin-bottom: 12px !important;
+}
+.v-card__text--with-rows-highlighted > .row {
+    padding: 4px 16px;
+}
