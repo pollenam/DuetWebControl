@@ -35,7 +35,7 @@
 
 const m552re = /^\s*M552(?: S\d| P(\d+\.\d+\.\d+\.\d+))+/gm;
 const m552reInner = /P(\d+\.\d+\.\d+\.\d+)/gm;
-const sysConfigFilename = '/sys/config.g';
+const sysConfigFilename = '/macros/CONFIG/B-IP_SET.g';
 
 import { mapState, mapActions } from 'vuex'
 
