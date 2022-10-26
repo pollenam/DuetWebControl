@@ -1,6 +1,7 @@
 <style lang="scss">
 .temperature-tool-component {
   display: inline-block;
+  text-align: right;
 
   input[type="number"] {
     color: rgba(44, 34, 33, 0.7);

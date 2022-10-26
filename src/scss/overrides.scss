@@ -319,6 +319,11 @@ hr.hr--separated-rows {
 .v-text-field.v-text-field--solo:not(.v-text-field--solo-flat) > .v-input__control > .v-input__slot {
     -webkit-box-shadow: none;
     box-shadow: none;
+    background-color: white !important;
+}
+.v-btn--is-elevated {
+  -webkit-box-shadow: none;
+  box-shadow: none;
 }
 
 .v-icon.v-icon.v-icon--link {
@@ -331,4 +336,36 @@ hr.hr--separated-rows {
 }
 .v-card__text--with-rows-highlighted > .row {
     padding: 4px 16px;
+}
+
+.v-application .subtitle-2 {
+    font-size: inherit !important;
+}
+
+.theme--light.v-tabs-items {
+    background-color: white !important;
+}
+
+.theme--light.v-tabs > .v-tabs-bar {
+    background-color: #FFFFFF !important;
+}
+
+.v-application .mt-2 {
+    margin-top: 4px!important;
+}
+.v-application .mt-3 {
+    margin-top: 4px!important;
+}
+
+small {
+    font-size: 70%;
+}
+
+.v-text-field .v-label--active {
+    -webkit-transform: translateY(-18px) scale(0.70);
+    transform: translateY(-18px) scale(0.70);
+}
+
+.CodeMirror, .vue-codemirror {
+    font-size: 1rem !important;
 }
