@@ -30,7 +30,7 @@
 			<v-row dense class="row--highlighted">
         <v-col cols="12 d-flex flex-column">
           <div class="center-label">{{ extrusionSpeed }} {{ $t('generic.rpm') }}</div>
-          <percentage-input-pollen :thumb="false" :value="extrusionSpeed" :min="getExtrusionSpeedMin()" :max="getExtrusionSpeedMax()" :step="0.1" @input="setExtrusionSpeed($event)" :disabled="uiFrozen"></percentage-input-pollen>
+          <percentage-input-pollen :value="extrusionSpeed" :min="getExtrusionSpeedMin()" :max="getExtrusionSpeedMax()" :step="0.1" @input="setExtrusionSpeed($event)" :disabled="uiFrozen"></percentage-input-pollen>
         </v-col>
       </v-row>
       <v-row class="row--highlighted" dense>

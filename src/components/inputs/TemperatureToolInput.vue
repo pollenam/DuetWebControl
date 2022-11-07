@@ -10,14 +10,14 @@
 }
 
 .temperature-row {
-	margin-bottom: 10px;
+	margin-bottom: 0px;
 	padding:0px;
 }
 </style>
 
 <template>
   <div class="temperature-row w-100 d-flex align-baseline justify-space-between">
-    <span class="temperature-tool-component flex-grow-1">{{ getHeaterValue() }}</span>
+    <span class="temperature-tool-component flex-grow-1" style="font-weight: 600">{{ getHeaterValue() }}</span>
     <span class="gray--text flex-grow-0 mx-1">/</span>
     <div class="d-flex flex-column flex-grow-1">
       <v-combobox hide-details="auto" ref="input" type="number" min="-273" max="1999" step="any" class="temperature-tool-component pt-0 mt-0" :label="label" :menu-props="{ maxHeight: '50%' }"
