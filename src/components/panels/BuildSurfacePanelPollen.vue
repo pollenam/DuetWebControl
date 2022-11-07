@@ -110,13 +110,13 @@
           <v-row>
             <v-col>
 							<span class="pollen-attr-header">{{ $t('panel.buildSurfacePollen.level') }}</span>
-							<code-btn :code="`M290 R1 Z${babystepAmount}`" no-wait block class="mt-3">
+							<code-btn :code="`M2901 R1 Z${babystepAmount}`" no-wait block class="mt-3">
 								<v-icon>mdi-arrow-collapse-vertical</v-icon>
-                {{ $displayZ(-babystepAmount) }}
+                {{ $displayZ(babystepAmount) }}
 							</code-btn>
-							<code-btn :code="`M290 R1 Z${-babystepAmount}`" no-wait block class="mt-2">
+							<code-btn :code="`M2901 R1 Z${-babystepAmount}`" no-wait block class="mt-2">
 								<v-icon style="font-size: 22px;">mdi-arrow-split-horizontal</v-icon>
-                +{{ $displayZ(babystepAmount) }}
+                +{{ $displayZ(-babystepAmount) }}
 							</code-btn>
             </v-col>
           </v-row>
