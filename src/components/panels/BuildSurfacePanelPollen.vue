@@ -201,7 +201,7 @@ export default {
 			},
 			set(value) {
 				value = Math.min(100, Math.max(0, value)) / 100;
-				this.sendCode(`M106 P2 S${value.toFixed(2)}`);
+				this.sendCode(`M106 S${value.toFixed(2)}`);
 			}
 		},
 		isCompensationEnabled() { return this.move.compensation.type.toLowerCase() !== 'none' },
