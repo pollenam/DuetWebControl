@@ -367,7 +367,7 @@ export default {
 			} catch (e) {
 				if (!(e instanceof DisconnectedError)) {
 					console.warn(e);
-					this.$makeNotification('error', this.$t('error.filelistRequestFailed'), e.message);
+					//this.$makeNotification('error', this.$t('error.filelistRequestFailed'), e.message);
 				}
 			}
 			this.innerLoading = false;
