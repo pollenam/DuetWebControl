@@ -2,7 +2,7 @@
 
 import { defaultMachine } from './machine'
 
-let settingsTimer, machineSettingsTimer = {}, machineCacheTimer = {}
+let settingsTimer, machineSettingsTimer = {}, machineCacheTimer = {}, honeyPrintCacheTimer = {}
 
 export function resetCacheTimer(machine) {
 	if (machineCacheTimer[machine]) {
@@ -68,11 +68,25 @@ export default function(store) {
 						store.dispatch(`machines/${machine}/cache/save`);
 					}
 				}, store.state.settings.cacheSaveDelay);
-			} else if  (mutation.type.indexOf('/honeyprint_cache/')  !== -1 ) {
-				machineCacheTimer[machine] = setTimeout(function() {
-						store.dispatch(`machine/honeyprint_cache/save`);
-				}, 100);
 			}
+			else if (mutation.type.indexOf('/honeyprint_cache/') !== -1) {
+					// honeyprint cache has changed
+					if (honeyPrintCacheTimer[machine]) {
+						clearTimeout(honeyPrintCacheTimer[machine]);
+					}
+
+					honeyPrintCacheTimer[machine] = setTimeout(function() {
+						honeyPrintCacheTimer[machine] = undefined;
+						if (store.state.machines[machine] !== undefined) {
+							store.dispatch(`machine/honeyprint_cache/save`);
+						}
+					}, 500);
+				}
+			// } else if  (mutation.type.indexOf('/honeyprint_cache/')  !== -1 ) {
+			// 	machineCacheTimer[machine] = setTimeout(function() {
+			// 			store.dispatch(`machine/honeyprint_cache/save`);
+			// 	}, 100);
+			// }
 		}
 	});
 }
