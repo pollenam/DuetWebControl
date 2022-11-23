@@ -22,7 +22,7 @@
 
 				<v-list-item v-for="item in filelist" :key="item.name" @click="itemClick(item)">
 					<v-list-item-avatar :size="32">
-						<v-icon small class="mr-1" :class="item.isDirectory ? 'grey lighten-1 white--text' : 'blue white--text'">
+						<v-icon small class="mr-1" :class="item.isDirectory ? 'grey lighten-1 white--text' : 'orange white--text'">
 							{{ item.isDirectory ? 'mdi-folder' : 'mdi-file' }}
 						</v-icon>
 					</v-list-item-avatar>
@@ -32,7 +32,7 @@
 					</v-list-item-content>
 
 					<v-list-item-action v-if="!item.isDirectory && item.executing">
-						<v-progress-circular class="list-icon" indeterminate color="blue"></v-progress-circular>
+						<v-progress-circular class="list-icon" indeterminate color="orange"></v-progress-circular>
 					</v-list-item-action>
 				</v-list-item>
 			</v-list>
