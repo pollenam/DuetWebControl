@@ -20,13 +20,13 @@
 
 			<v-spacer/>
 
-			<v-btn elevation="0" class="hidden-sm-and-down mr-3" :disabled="uiFrozen" @click="showNewDirectory = true">
+			<upload-btn class="hidden-sm-and-down" elevation="0" :directory="directory" target="gcodes" color="primary"/>
+			<v-btn elevation="0" class="hidden-sm-and-down mr-3 ml-3" :disabled="uiFrozen" @click="showNewDirectory = true">
 				<v-icon class="mr-1">mdi-folder-plus</v-icon> {{ $t('button.newDirectory.caption') }}
 			</v-btn>
 			<v-btn class="hidden-sm-and-down mr-3" color="primary" :loading="loading || fileinfoProgress !== -1" :disabled="uiFrozen" elevation="0" @click="refresh">
 				<v-icon class="mr-1">mdi-refresh</v-icon> {{ $t('button.refresh.caption') }}
 			</v-btn>
-			<upload-btn class="hidden-sm-and-down" elevation="0" :directory="directory" target="gcodes" color="primary"/>
 		</v-toolbar>
 
 		<base-file-list ref="filelist" v-model="selection" :headers="headers" :directory.sync="directory" :filelist.sync="filelist" :loading.sync="loading" sort-table="jobs" @directoryLoaded="directoryLoaded" @fileClicked="fileClicked" no-files-text="list.jobs.noJobs">
