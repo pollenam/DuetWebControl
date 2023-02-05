@@ -415,11 +415,12 @@ export class MachineModelModule {
 				}
 			}
 
-			if( state.infiniteExtrusionStatus === null) {
-				state.infiniteExtrusionStatus = ['stopped', 'stopped', 'stopped'];
+			if( state.infiniteExtrusionStatus === null || state.infiniteExtrusionStatus === undefined) {
+				state.infiniteExtrusionStatus = ['stopped', 'stopped', 'stopped', 'stopped'];
 			}
 
-			if(payload.infiniteStatus !== null && payload.infiniteStatus !== undefined && state.infiniteExtrusionStatus) {
+			if( payload.infiniteStatus !== null && payload.infiniteStatus !== undefined &&
+        state.infiniteExtrusionStatus !== null && state.infiniteExtrusionStatus !== undefined ) {
 				if(payload.infiniteStatus === "" || payload.infiniteStatus === "n") {
 					state.infiniteStatus = false;
 					state.infiniteExtrusionStatus[0] = "stopped";

@@ -14,7 +14,6 @@ export default function(connector) {
       extrudersSelectedMaterials: ['ABS', 'ABS', 'ABS', 'ABS'],
 			selectedPid: ['','','',''],
 			lastPrintedJob: [],
-			infiniteExtrusionStatus: ['stopped', 'stopped', 'stopped', 'stopped'], //NOT USED
 			infiniteExtrusionRate: [1.2, 1.2, 1.2, 1.2],
 			zLimit: true
     },
@@ -94,11 +93,6 @@ export default function(connector) {
 			removeFileToShowedMacro(state, filename) {
 				state.showed_macros = state.showed_macros.filter(item => item !== filename);
 			},
-			//NOT USED
-			selectInfiniteExtrusionStatus(state, data) {
-				state.infiniteExtrusionStatus[data.index] = data.status;
-				Vue.set(state.infiniteExtrusionStatus, data.index, data.status);
-			},
 			selectInfiniteExtrusionRate(state, data) {
 				state.infiniteExtrusionRate[data.index] = data.value;
 				Vue.set(state.infiniteExtrusionRate, data.index, data.value);
@@ -134,11 +128,7 @@ export default function(connector) {
 				if (alreadyPrinted === false) {
 					state.lastPrintedJob.push({name: filename, date: Date.now()});
 				}
-			},
-			//NOT USED
-      resetInfiniteExtrusionStatus(state) {
-        state.infiniteExtrusionStatus = ['stopped', 'stopped', 'stopped', 'stopped'];
-      }
+			}
 		}
 	}
 }
