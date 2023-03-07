@@ -1,6 +1,6 @@
 'use strict'
 
-import { FileNotFoundError } from '@/utils/errors.js'
+// import { FileNotFoundError } from '@/utils/errors.js'
 import patch from '@/utils/patch.js'
 import Path from '@/utils/path.js'
 import Vue from 'vue'
@@ -33,11 +33,18 @@ export default function(connector) {
 					}, { root: true });
 				} catch (e) {
           console.log("HoneyprintCache load: error downloading");
+          /*
+           * Let's stop throwing this now that we don't have a defaul file
 					if (!(e instanceof FileNotFoundError)) {
 						throw e;
 					}
+           */
 				}
 				//Create file if cache is empty
+        /*
+         *
+         * Disable here
+         *
 				if(!cache) {
 					try {
 						const content = new Blob([JSON.stringify({
@@ -55,6 +62,7 @@ export default function(connector) {
 						// handled before we get here
 					}
 				}
+        */
 
 				if (cache) {
 					commit('load', cache);
