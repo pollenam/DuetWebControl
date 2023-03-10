@@ -1,6 +1,6 @@
 'use strict'
 
-import { FileNotFoundError } from '@/utils/errors.js'
+// import { FileNotFoundError } from '@/utils/errors.js'
 import patch from '@/utils/patch.js'
 import Path from '@/utils/path.js'
 import Vue from 'vue'
@@ -14,7 +14,6 @@ export default function(connector) {
       extrudersSelectedMaterials: ['ABS', 'ABS', 'ABS', 'ABS'],
 			selectedPid: ['','','',''],
 			lastPrintedJob: [],
-			infiniteExtrusionStatus: ['stopped', 'stopped', 'stopped', 'stopped'], //NOT USED
 			infiniteExtrusionRate: [1.2, 1.2, 1.2, 1.2],
 			zLimit: true
     },
@@ -34,11 +33,18 @@ export default function(connector) {
 					}, { root: true });
 				} catch (e) {
           console.log("HoneyprintCache load: error downloading");
+          /*
+           * Let's stop throwing this now that we don't have a defaul file
 					if (!(e instanceof FileNotFoundError)) {
 						throw e;
 					}
+           */
 				}
 				//Create file if cache is empty
+        /*
+         *
+         * Disable here
+         *
 				if(!cache) {
 					try {
 						const content = new Blob([JSON.stringify({
@@ -56,6 +62,7 @@ export default function(connector) {
 						// handled before we get here
 					}
 				}
+        */
 
 				if (cache) {
 					commit('load', cache);
@@ -94,11 +101,6 @@ export default function(connector) {
 			removeFileToShowedMacro(state, filename) {
 				state.showed_macros = state.showed_macros.filter(item => item !== filename);
 			},
-			//NOT USED
-			selectInfiniteExtrusionStatus(state, data) {
-				state.infiniteExtrusionStatus[data.index] = data.status;
-				Vue.set(state.infiniteExtrusionStatus, data.index, data.status);
-			},
 			selectInfiniteExtrusionRate(state, data) {
 				state.infiniteExtrusionRate[data.index] = data.value;
 				Vue.set(state.infiniteExtrusionRate, data.index, data.value);
@@ -134,11 +136,7 @@ export default function(connector) {
 				if (alreadyPrinted === false) {
 					state.lastPrintedJob.push({name: filename, date: Date.now()});
 				}
-			},
-			//NOT USED
-      resetInfiniteExtrusionStatus(state) {
-        state.infiniteExtrusionStatus = ['stopped', 'stopped', 'stopped', 'stopped'];
-      }
+			}
 		}
 	}
 }

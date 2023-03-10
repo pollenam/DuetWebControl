@@ -149,34 +149,43 @@ export default {
     ...mapState('machine/honeyprint_cache', ['extrudersAvailableMaterials', 'extrudersSelectedMaterials', 'selectedPid', 'infiniteExtrusionRate']),
 		...mapState('machine/model', {
 			macrosDirectory: state => state.directories.macros,
-      tools: state => state.tools
-		}),
-    ...mapState('machine/model', {
+      tools: state => state.tools,
 			infiniteExtrusionStatus: state => state.infiniteExtrusionStatus,
 		}),
     shouldShowInfinite() {
+      if (this.infiniteExtrusionStatus === null || this.infiniteExtrusionStatus === undefined)
+      {
+        return false;
+      }
+
       return this.infiniteExtrusionStatus[this.toolIndex] === 'stopped'
     },
     shouldShowStop()
     {
+      if (this.infiniteExtrusionStatus === null || this.infiniteExtrusionStatus === undefined)
+      {
+        return false;
+      }
+
       return this.infiniteExtrusionStatus[this.toolIndex] !== 'stopped'
     },
     shouldShowExtruderFactor() {
+      if (this.infiniteExtrusionStatus === null || this.infiniteExtrusionStatus === undefined)
+      {
+        return false;
+      }
+
       return this.infiniteExtrusionStatus[0] === 'stopped' &&
         this.infiniteExtrusionStatus[1]  === 'stopped' &&
         this.infiniteExtrusionStatus[2]  === 'stopped' &&
         this.infiniteExtrusionStatus[3] === 'stopped'
     },
     shouldAllowSelect() {
-      return this.infiniteExtrusionStatus[0] === 'stopped' &&
-        this.infiniteExtrusionStatus[1]  === 'stopped' &&
-        this.infiniteExtrusionStatus[2]  === 'stopped' &&
-        this.infiniteExtrusionStatus[3] === 'stopped' &&
-        this.state.status ===  StatusType.processing
+      return this.shouldShowExtruderFactor &&
+        this.state.status === StatusType.processing
     },
-     
     isSelected() {
-      return this.tool.state == 'active';
+      return this.tool.state === 'active';
     },
     toolExtruder() {
       return this.move.extruders[this.tool.extruders[0]];
