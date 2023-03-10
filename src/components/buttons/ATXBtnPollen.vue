@@ -26,12 +26,12 @@ export default {
 		}
 	},
 	methods: {
-		...mapActions('machine', ['sendCode']),
+		...mapActions('machine', ['runFile']),
 		async togglePower(state) {
 			if (!this.sendingCode) {
 				this.sendingCode = true;
 				try {
-					await this.sendCode(state ? 'M80' : 'M81');
+					await this.runFile(state ? '/macros/HONEYPRINT/VPower_On' : '/macros/HONEYPRINT/VPower_Off');
 				} catch (e) {
 					// handled before we get here
 				}

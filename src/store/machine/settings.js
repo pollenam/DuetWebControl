@@ -48,14 +48,14 @@ export default function(connector, pluginSettingFields) {
 			extruderFeedrates: [50, 10, 5, 2, 1],		// mm/s
 			temperatures: {
 				tool: {
-					active: [250, 235, 220, 205, 195, 160, 120, 100, 0],
+					active: [],
 					standby: [210, 180, 160, 140, 0]
 				},
 				bed: {
-					active: [110, 100, 90, 70, 65, 60, 0],
+					active: [],
 					standby: [40, 30, 0]
 				},
-				chamber: [90, 80, 70, 60, 50, 40, 0]
+				chamber: []
 			},
 			spindleRPM: [10000, 75000, 5000, 2500, 1000, 0],
 

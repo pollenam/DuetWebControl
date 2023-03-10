@@ -23,7 +23,7 @@
           @change="materialComboboxChange"
           label="Select material"
         ></v-combobox>
-			<v-checkbox class="v-input--checkbox--extruder-selection" hide-details="auto" color="success" :input-value="isSelected" @change="selectExtruder()" :disabled="uiFrozen || !shouldAllowSelect"></v-checkbox>
+			<v-checkbox class="v-input--checkbox--extruder-selection" hide-details="auto" color="success" :input-value="isSelected" @change="selectExtruder()" :disabled="uiFrozen || shouldAllowSelect"></v-checkbox>
 		</v-card-title>
 
 		<v-card-text class="d-flex flex-column v-card__text--with-rows-highlighted">
