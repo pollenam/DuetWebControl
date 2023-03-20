@@ -1,6 +1,6 @@
 {
   "name": "duetwebcontrol",
-  "version": "3.4.0",
+  "version": "3.4.4",
   "pollenVersion": "BETA_1",
   "pkgVersion": "3.4.0",
   "repository": "github:chrishamm/DuetWebControl",
@@ -15,10 +15,10 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
-    "@babylonjs/core": "^4.2.0",
-    "@babylonjs/gui": "^4.2.0",
-    "@babylonjs/materials": "^4.2.0",
-    "@sindarius/gcodeviewer": "^2.1.17",
+    "@babylonjs/core": "^5.8.0",
+    "@babylonjs/gui": "^5.8.0",
+    "@babylonjs/materials": "^5.8.0",
+    "@sindarius/gcodeviewer": "^3.1.2",
     "chart.js": "^2.9.4",
     "chartjs-adapter-date-fns": "^1.0.0",
     "compare-versions": "^3.6.0",
@@ -70,7 +70,8 @@
       "eslint:recommended"
     ],
     "rules": {
-      "no-console": "off"
+      "no-console": "off",
+      "no-mixed-spaces-and-tabs": "off"
     },
     "parserOptions": {
       "parser": "babel-eslint"
@@ -82,7 +83,8 @@
     }
   },
   "browserslist": [
-    "> 1%",
-    "last 2 versions"
+        "> 1%",
+        "last 2 versions",
+        "iOS >= 9"
   ]
 }

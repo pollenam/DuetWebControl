@@ -21,6 +21,8 @@
 			<v-switch :label="$t('panel.settingsAppearance.bottomNavigation')" hide-details v-model="bottomNavigation"></v-switch>
 			<v-switch :label="$t('panel.settingsAppearance.numericInputs')" hide-details v-model="numericInputs"></v-switch>
 			<v-switch :label="$t('panel.settingsAppearance.iconMenu')" hide-details v-model="iconMenu"></v-switch>
+			<v-select :items="[0, 1, 2, 3, 4]" v-model.number="decimalPlaces" :label="$t('panel.settingsAppearance.decimalPlaces')" hide-details class="mt-3"></v-select>
+			<v-select :items="unitsOfMeasure" v-model="displayUnits" :label="$t('panel.settingsAppearance.displayUnitsTitle')" class="mt-3" hide-details item-text="value" item-value="value"></v-select>
 		</v-card-text>
 	</v-card>
 </template>
@@ -31,6 +33,7 @@
 import { mapState, mapMutations } from 'vuex'
 
 import { DashboardMode } from '@/store/settings'
+import { UnitOfMeasure } from '../../store/settings';
 
 export default {
 	computed: {
@@ -39,9 +42,17 @@ export default {
 			get() { return this.settings.darkTheme; },
 			set(value) { this.update({ darkTheme: value }); }
 		},
+		decimalPlaces: {
+			get() { return this.settings.decimalPlaces; },
+			set(value) { this.update({ decimalPlaces: value }); }
+		},
+		displayUnits: {
+			get() { return this.settings.displayUnits; },
+			set(value) { this.update({ displayUnits: value }); }
+		},
 		language: {
 			get() { return this.settings.language; },
-			set(value) { this.update({language: value}); }
+			set(value) { this.update({ language: value }); }
 		},
 		languages() {
 			const result = [];
@@ -52,11 +63,11 @@ export default {
 		},
 		useBinaryPrefix: {
 			get() { return this.settings.useBinaryPrefix; },
-			set(value) { this.update({useBinaryPrefix: value}); }
+			set(value) { this.update({ useBinaryPrefix: value }); }
 		},
 		disableAutoComplete: {
 			get() { return this.settings.disableAutoComplete; },
-			set(value) { this.update({disableAutoComplete: value}); }
+			set(value) { this.update({ disableAutoComplete: value }); }
 		},
 		dashboardMode: {
 			get() {
@@ -72,6 +83,11 @@ export default {
 		dashboardModes() {
 			return Object.keys(DashboardMode).map((key) => {
 				return { key, value: DashboardMode[key] };
+			});
+		},
+		unitsOfMeasure() {
+			return Object.keys(UnitOfMeasure).map((key) => {
+				return { key, value: UnitOfMeasure[key] };
 			});
 		},
 		bottomNavigation: {

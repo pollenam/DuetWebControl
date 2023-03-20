@@ -14,7 +14,7 @@ import {
 	LoginError, BadVersionError, InvalidPasswordError, NoFreeSessionError,
 	CodeResponseError, CodeBufferError
 } from '@/utils/errors'
-import Path from '@/utils/path.js'
+import Path from '@/utils/path'
 import { strToTime, timeToStr } from '@/utils/time'
 import { closeNotifications } from "@/utils/notifications";
 
@@ -69,12 +69,7 @@ export default class PollConnector extends BaseConnector {
 
 		const xhr = new XMLHttpRequest();
 		xhr.open(method, internalURL);
-		if (responseType === 'json') {
-			xhr.responseType = 'text';
-			xhr.setRequestHeader('Content-Type', 'application/json');
-		} else {
-			xhr.responseType = responseType;
-		}
+		xhr.responseType = (responseType === 'json') ? 'text' : responseType;
 		if (onProgress) {
 			xhr.onprogress = function(e) {
 				if (e.loaded && e.total) {
@@ -497,8 +492,8 @@ export default class PollConnector extends BaseConnector {
 			this.printFileSize = jobKey.file.size;
 		}
 
-		// Don't continue from here unless the layer number is known
-		if (jobKey.layer === null) {
+		// Don't continue from here unless the layer number is known and valid
+		if (jobKey.layer === null || jobKey.layer < 0) {
 			return false;
 		}
 
@@ -647,6 +642,10 @@ export default class PollConnector extends BaseConnector {
 			}
 			if (response.buff === 0) {
 				throw new CodeBufferError();
+			}
+			if (response.err !== undefined && response.err !== 0) {
+				console.warn(`Received error ${response.err} from rr_gcode`);
+				throw new CodeResponseError();
 			}
 		} catch (e) {
 			this.pendingCodes = this.pendingCodes.filter(code => code !== result);

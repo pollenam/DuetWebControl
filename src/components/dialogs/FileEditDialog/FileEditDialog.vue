@@ -53,10 +53,10 @@
 
 				<v-spacer></v-spacer>
 
-				<v-btn v-if="isGCode" class="hidden-xs-only" dark text href="https://duet3d.dozuki.com/Wiki/Gcode" target="_blank">
+				<v-btn v-if="isGCode" class="hidden-xs-only" dark text href="https://docs.duet3d.com/en/User_manual/Reference/Gcodes" target="_blank">
 					<v-icon class="mr-1">mdi-help</v-icon> {{ $t('dialog.fileEdit.gcodeReference') }}
 				</v-btn>
-				<v-btn v-if="isMenu" class="hidden-xs-only" dark text href="https://duet3d.dozuki.com/Wiki/Duet_2_Maestro_12864_display_menu_system" target="_blank">
+				<v-btn v-if="isMenu" class="hidden-xs-only" dark text href="https://docs.duet3d.com/en/User_manual/Connecting_hardware/Display_12864_menu#menu-files" target="_blank">
 					<v-icon class="mr-1">mdi-help</v-icon> {{ $t('dialog.fileEdit.menuReference') }}
 				</v-btn>
 				<v-btn dark text @click="save">
@@ -138,6 +138,18 @@ export default {
 		},
 		isMenu() {
 			return Path.startsWith(this.filename, this.menuDirectory);
+		},
+		isIOS() {
+			return [
+					'iPad Simulator',
+					'iPhone Simulator',
+					'iPod Simulator',
+					'iPad',
+					'iPhone',
+					'iPod'
+				].includes(navigator.platform)
+				// iPad on iOS 13 detection
+				|| (navigator.userAgent.includes("Mac") && "ontouchend" in document)
 		}
 	},
 	data() {
@@ -206,7 +218,7 @@ export default {
 	watch: {
 		shown(to) {
 			// Update textarea
-			this.useEditor = (!this.value || this.value.length < maxEditorFileSize) && this.isGCode && !window.disableCodeMirror;
+			this.useEditor = (!this.value || this.value.length < maxEditorFileSize) && this.isGCode && !window.disableCodeMirror && !this.isIOS;
 			this.innerValue = this.value || '';
 			this.$nextTick(() => this.valueChanged = false);
 
