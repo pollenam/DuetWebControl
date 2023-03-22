@@ -171,6 +171,10 @@ export default {
 			this.$root.$emit('dialog-closing')
 		},
 		async save() {
+			if (!this.innerValue && !confirm(this.$t('dialog.fileEdit.confirmSaveEmpty'))) {
+				return;
+			}
+
 			const content = new Blob([this.innerValue]);
 			this.close(true);
 
