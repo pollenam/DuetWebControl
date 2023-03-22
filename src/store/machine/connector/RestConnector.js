@@ -10,7 +10,7 @@ import {
 	LoginError, InvalidPasswordError
 } from '@/utils/errors'
 
-import { strToTime, timeToStr } from '@/utils/time'
+import { strToTime } from '@/utils/time'
 import { closeNotifications } from "@/utils/notifications";
 
 export default class RestConnector extends BaseConnector {
@@ -325,10 +325,8 @@ export default class RestConnector extends BaseConnector {
 
 	async upload({ filename, content, cancellationToken = null, onProgress }) {
 		const payload = (content instanceof(Blob)) ? content : new Blob([content]);
-		const params = {
-			timeModified: timeToStr((!this.settings.ignoreFileTimestamps && content instanceof File) ? new Date(content.lastModified) : new Date())
-		};
-		await this.request('PUT', 'machine/file/' + encodeURIComponent(filename), params, '', payload, onProgress, cancellationToken, filename);
+		// TODO add timestamp support
+		await this.request('PUT', 'machine/file/' + encodeURIComponent(filename), null, '', payload, onProgress, cancellationToken, filename);
 	}
 
 	async delete(filename) {

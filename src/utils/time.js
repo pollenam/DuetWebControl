@@ -3,19 +3,13 @@
 // Returns an ISO-like datetime string like "2016-10-24T15:39:09"
 // Cannot use toISOString() here because it doesn't output the localtime
 export function timeToStr(time) {
-	function pad(value) {
-		if (value < 10) {
-			return '0' + value.toString();
-		}
-		return value.toString();
-	}
 	let result = "";
 	result += time.getFullYear() + "-";
-	result += pad(time.getMonth() + 1) + "-";
-	result += pad(time.getDate()) + "T";
-	result += pad(time.getHours()) + ":";
-	result += pad(time.getMinutes()) + ":";
-	result += pad(time.getSeconds());
+	result += (time.getMonth() + 1) + "-";
+	result += time.getDate() + "T";
+	result += time.getHours() + ":";
+	result += time.getMinutes() + ":";
+	result += time.getSeconds();
 	return result;
 }
 

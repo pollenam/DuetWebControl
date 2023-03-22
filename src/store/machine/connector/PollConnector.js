@@ -288,7 +288,6 @@ export default class PollConnector extends BaseConnector {
 
 	lastSeqs = {}
 	lastStatus = null
-	wasSimulating = false
 	lastUptime = 0
 	layers = []
 	thumbnailsFile = null
@@ -361,15 +360,8 @@ export default class PollConnector extends BaseConnector {
 			// Apply new values
 			if (!isPrinting(status) && isPrinting(this.lastStatus)) {
 				response.result.job.lastFileCancelled = isPaused(this.lastStatus);
-				response.result.job.lastFileSimulated = this.wasSimulating;
+				response.result.job.lastFileSimulated = (this.lastStatus === StatusType.simulating);
 			}
-
-			if (status === StatusType.simulating) {
-				this.wasSimulating = true;
-			} else if (!isPrinting(status)) {
-				this.wasSimulating = false;
-			}
-
 			await this.dispatch('update', response.result);
 
 			// Check if any of the non-live fields have changed and query them if so

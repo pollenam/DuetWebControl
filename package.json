@@ -1,8 +1,8 @@
 {
   "name": "duetwebcontrol",
-  "version": "3.4.5",
+  "version": "3.4.4",
   "pollenVersion": "BETA_1",
-  "pkgVersion": "3.4.5",
+  "pkgVersion": "3.4.0",
   "repository": "github:chrishamm/DuetWebControl",
   "homepage": "https://forum.duet3d.com/category/27/duet-web-control",
   "license": "GPL-3.0",
@@ -44,7 +44,6 @@
     "@vue/cli-plugin-eslint": "^4.5.15",
     "@vue/cli-plugin-pwa": "^4.5.15",
     "@vue/cli-service": "^4.5.15",
-    "@vue/compiler-dom": "^3.2.45",
     "archiver": "^5.3.0",
     "babel-eslint": "^10.1.0",
     "babel-plugin-prismjs": "^2.0.1",
@@ -84,8 +83,8 @@
     }
   },
   "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "iOS >= 9"
+        "> 1%",
+        "last 2 versions",
+        "iOS >= 9"
   ]
 }

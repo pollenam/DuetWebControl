@@ -43,7 +43,7 @@ export const CompensationType = {
 
 export const DistanceUnit = {
 	mm: 'mm',
-	inch: 'in',
+	inch: 'inch',
 }
 
 export const EndstopType = {
