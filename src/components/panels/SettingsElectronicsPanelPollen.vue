@@ -22,6 +22,9 @@
         <template v-if="mainboard.firmwareName">
           {{ $t('panel.settingsElectronics.firmware', [mainboard.firmwareName + ' ' + $display(mainboard.firmwareVersion), $display(mainboard.firmwareDate)]) }} <br>
         </template>
+        <template v-if="confname">
+          {{ $t('panel.settingsElectronics.configuration', [confname]) }} <br>
+        </template>
         <template v-if="firstInterface.firmwareVersion && firstInterface.type === 'wifi'">
           {{ $t('panel.settingsElectronics.dwsFirmware', [$display(firstInterface.firmwareVersion)]) }} <br>
         </template>
@@ -51,6 +54,7 @@ export default {
 			mainboard: state => (state.boards.length > 0) ? state.boards[0] : {},
 			firstInterface: state => (state.network.interfaces.length > 0) ? state.network.interfaces[0] : {},
 			systemDirectory: (state) => state.directories.system,
+      confname: state => state.global.configuration,
 		}),
         connectorType() {
             return this.connector ? this.connector.type : null;

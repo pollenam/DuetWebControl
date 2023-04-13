@@ -187,7 +187,7 @@ export default {
 				if (this.lastFileSimulated) {
 					return `M37 P"${this.lastFileName}"`;
 				}
-				this.addLastPrintedJobDate(this.lastFileName);
+				//this.addLastPrintedJobDate(this.lastFileName);
 				return `M32 "${this.lastFileName}"`;
 			}
 			return '';

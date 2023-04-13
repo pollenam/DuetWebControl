@@ -646,7 +646,8 @@
       "firmware":"Firmware: {0} ({1})",
       "dwsFirmware":"Duet WiFi Server Version: {0}",
       "updateNote":"Remarque: Vous pouvez installer les mises à jour sur la page Système.",
-      "notConnected":"Non connecté"
+      "notConnected":"Non connecté",
+      "configuration":"Configuration: {0}"
     },
     "settingsPollen":{
       "enableLegacyMode":"Activer Mode Legacy",
