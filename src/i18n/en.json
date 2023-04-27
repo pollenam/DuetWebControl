@@ -279,7 +279,7 @@
     },
     "resetHeaterFault":{
       "title":"Reset Heater Fault",
-      "prompt":"A heater fault has occurred on heater {0}. It is strongly advised to turn off your machine now and to check your wiring before you continue. If you are absolutely sure that this is not a physical problem, you can reset the heater fault ON YOUR OWN RISK. Be aware that this is NOT RECOMMENDED and can lead to further problems. How would you like to proceed?",
+      "prompt":"A heater fault has occurred on heater {0}. This can be caused by a hardware malfunction. If the problem occurs again please contact support. How would you like to proceed?",
       "resetFault":"Reset Fault"
     },
     "runMacro":{
@@ -586,7 +586,8 @@
       "extrudeShort":"Ext.",
       "retract":"Retract",
       "retractShort":"Ret.",
-      "stop":"Stop"
+      "stop":"Stop",
+      "memory":"Restore Previous Temps"
     },
     "atx":{
       "caption":"VPower",

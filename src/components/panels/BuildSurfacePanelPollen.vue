@@ -123,7 +123,7 @@
           <v-row>
             <v-col class="d-flex flex-wrap align-center pb-0">
               <span class="pollen-attr-header mb-2">{{ $t('panel.buildSurfacePollen.zLimits') }}</span>
-              <v-switch hide-details="auto" class="ms-1 mt-0 mb-2" :color="'success'" :disabled="uiFrozen" v-model="zlimit"></v-switch>
+              <v-switch :value="move.limitAxes" hide-details="auto" class="ms-1 mt-0 mb-2" :color="'success'" :disabled="uiFrozen" v-model="zlimit"></v-switch>
               <code-btn code='M98 P"/macros/HONEYPRINT/Set_Z0"' no-wait block class="mb-2">
 								<v-icon small class="mr-1">mdi-arrow-collapse-down</v-icon>
                 {{ $t('panel.buildSurfacePollen.setZero') }}

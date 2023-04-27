@@ -29,7 +29,7 @@
 
 import { mapActions } from 'vuex'
 
-const countdownSeconds = 5
+const countdownSeconds = 1
 
 export default {
 	props: {

@@ -215,7 +215,7 @@
     },
     "resetHeaterFault":{
       "title":"Réinitialiser Défaut de Chauffage",
-      "prompt":"Un défaut de chauffage s'est produit sur le chauffage {0}. Il est fortement recommandé d'éteindre la machine maintenant et vérifier votre câblage avant de continuer. Si vous êtes absolument sûr qu'il n'y a pas de problème physique, vous pouvez réinitialiser le défaut A VOS RISQUES ET PERILS. Soyez conscient que ce n'est PAS RECOMMANDÉ et peut provoqué plus de problèmes. Comment voulez-vous proceder?",
+      "prompt":"Un défaut de chauffage s'est produit sur le chauffage {0}. Cela peut être dû à un défaut matériel. Si le problème apparaît à nouveau, veuillez contacter le support technique . Cliquez sur 'Reset' pour réactiver le composant.",
       "resetFault":"Réinitialiser Défaut"
     },
     "runMacro":{
@@ -499,7 +499,8 @@
       "extrudeShort":"Ext.",
       "retract":"Retracter",
       "retractShort":"Ret.",
-      "stop":"Stop"
+      "stop":"Stop",
+      "memory":"Anciennes Températures"
     },
     "atx":{
       "caption":"VPower",

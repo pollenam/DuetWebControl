@@ -67,6 +67,12 @@
             </v-btn>
           </v-col>
         </template>
+        <v-col cols="12">
+          <v-btn block @click="temperatureMemory()" elevation="0" :disabled="this.isProcessing()">
+            <v-icon class="mr-1">mdi-database</v-icon>
+              {{ $t('panel.extruderPollen.memory') }}
+          </v-btn>
+        </v-col>
       </v-row>
       <v-row class="row--highlighted" dense>
         <v-col cols="3 d-flex align-center">
@@ -145,12 +151,17 @@ export default {
     ...mapState('machine/model', ['move']),
     ...mapState('machine/model', ['state']),
 		...mapState('machine/settings', ['displayedExtruders']),
-    ...mapState('machine/model', ['heat', 'tools']),
+    ...mapState('machine/model', ['global', 'heat', 'tools']),
     ...mapState('machine/honeyprint_cache', ['extrudersAvailableMaterials', 'extrudersSelectedMaterials', 'selectedPid', 'infiniteExtrusionRate']),
 		...mapState('machine/model', {
 			macrosDirectory: state => state.directories.macros,
       tools: state => state.tools,
 			infiniteExtrusionStatus: state => state.infiniteExtrusionStatus,
+      infiniteStatus: state => state.infiniteStatus,
+      T1Selected: state => state.global.T1_Selected,
+      T2Selected: state => state.global.T2_Selected,
+      T3Selected: state => state.global.T3_Selected,
+      T4Selected: state => state.global.T4_Selected,
 		}),
     shouldShowInfinite() {
       if (this.infiniteExtrusionStatus === null || this.infiniteExtrusionStatus === undefined)
@@ -181,8 +192,27 @@ export default {
         this.infiniteExtrusionStatus[3] === 'stopped'
     },
     shouldAllowSelect() {
-      return this.shouldShowExtruderFactor &&
-        this.state.status === StatusType.processing
+      return !this.shouldShowExtruderFactor || 
+      this.state.status === StatusType.processing;
+    },
+    isSelected2(value) {
+      if (value == 1){
+        return this.T1Selected === '1';
+      }
+      else if (value == 2){
+        return this.T2Selected === '1';
+      }
+      else if (value == 3){
+        return this.T3Selected === '1';
+      }
+      else if (value == 4){
+        return this.T4Selected === '1';
+      }
+      else {
+        return this.tool.state === 'active';
+      }
+      
+      //return this.tool.state === 'active';
     },
     isSelected() {
       return this.tool.state === 'active';
@@ -426,6 +456,9 @@ export default {
         return  "D";
       }
     },
+    async temperatureMemory() {
+      await this.sendCode("M98 P\"/sys/pam_memory_T" + this.tool.number +".g\"");
+    },
     async infiniteExtrude() {
       try {
         await this.sendCode("M98 P\"/macros/SELECT/Select \"T" + this.getSelectedTools());
@@ -456,7 +489,7 @@ export default {
           await this.sendCode("M98 P\"/macros/SELECT/Select \"T" + this.getSelectedToolsForStop());
         }
         await this.sendInfinite({code: "stop", toolNumber:this.tool.number});
-        await this.sendCode("M98 P\"/macros/HONEYPRINT/Set_Extrusion_Rate\" " + this.getToolNumberLetterForExtrusionRate() + "5");
+        await this.sendCode("M98 P\"/macros/HONEYPRINT/Set_Extrusion_Rate\" " + this.getToolNumberLetterForExtrusionRate() + "0");
       } catch (e) {
         if (!(e instanceof DisconnectedError)) {
           console.warn(e);
