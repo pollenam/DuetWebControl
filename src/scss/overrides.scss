@@ -365,3 +365,45 @@ small {
 .CodeMirror, .vue-codemirror {
     font-size: 1rem !important;
 }
+
+/////////NEW GCODE VIEWER
+
+.v-expansion-panel-header > :not(.v-expansion-panel-header__icon) {
+    flex: 0 0 auto;
+
+}
+
+.theme--light.v-navigation-drawer {
+  background: no-repeat center center fixed !important;
+  background-image: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)),
+                    url('../assets/honeyprint-sx2-background.jpg') !important;
+}
+
+.v-sheet.v-card:not(.v-sheet--outlined){
+  box-shadow: none;
+  -webkit-box-shadow: none;
+}
+
+.heater-container[data-v-f5397b7c] {
+background-color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.axes[data-v-f5397b7c] {
+background-color: rgba(255, 255, 255, 0.8) !important;
+}
+
+
+/////////NEW Extrusion Control
+
+.v-btn-toggle:not(.v-btn-toggle--dense) .v-btn.v-btn.v-size--default {
+height:20px;
+}
+
+
+/////////NEW HEADER
+
+#title {
+font-size: 1.2rem !important;
+letter-spacing: -0.05rem !important;
+
+}

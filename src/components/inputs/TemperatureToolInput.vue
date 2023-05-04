@@ -13,6 +13,10 @@
 	margin-bottom: 0px;
 	padding:0px;
 }
+
+.v-input__append-inner {
+display: none !important;
+}
 </style>
 
 <template>

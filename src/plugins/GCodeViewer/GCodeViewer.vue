@@ -199,7 +199,7 @@
 							<v-btn :disabled="loading" :title="$t('plugins.gcodeViewer.reloadView.title')" @click="reloadviewer" block class="mb-2" color="primary">{{$t('plugins.gcodeViewer.reloadView.caption')}}</v-btn>
 							<v-card :key="index" v-for="(extruder, index) in toolColors">
 								<v-card-title>
-									<h3>{{$t('plugins.gcodeViewer.tool', [index])}}</h3>
+									<h5>{{$t('plugins.gcodeViewer.tool', [index])}}</h5>
 								</v-card-title>
 								<v-card-text>
 									<gcodeviewer-color-picker :editcolor="extruder" @updatecolor="value => {updateColor(index, value);}"></gcodeviewer-color-picker>
@@ -217,21 +217,21 @@
 						</v-expansion-panel-header>
 						<v-expansion-panel-content>
 							<v-card>
-								<h4>{{$tc('plugins.gcodeViewer.renderMode'.caption, 2)}}</h4>
+								<h5>{{$tc('plugins.gcodeViewer.renderMode'.caption, 2)}}</h5>
 								<v-btn-toggle block class="btn-toggle d-flex" exclusive v-model="colorMode">
 									<v-btn :disabled="loading" :value="0" block>{{$t("plugins.gcodeViewer.color")}}</v-btn>
 									<v-btn :disabled="loading" :value="1" block>{{$t('plugins.gcodeViewer.feedrate')}}</v-btn>
 									<v-btn :disabled="loading" :value="2" block>{{$t('plugins.gcodeViewer.feature')}}</v-btn>
 								</v-btn-toggle>
 								<v-checkbox class="mt-3" v-model="g1AsExtrusion" :label="$t('plugins.gcodeViewer.g1AsExtrusion')"></v-checkbox>
-								<h4>{{$t('plugins.gcodeViewer.minFeedrate')}}</h4>
+								<h5>{{$t('plugins.gcodeViewer.minFeedrate')}}</h5>
 								<v-slider :max="500" :min="5" v-model="minColorRate" thumb-label></v-slider>
-								<h4>{{$t('plugins.gcodeViewer.maxFeedrate')}}</h4>
+								<h5>{{$t('plugins.gcodeViewer.maxFeedrate')}}</h5>
 								<v-slider :max="500" :min="5" v-model="maxColorRate" thumb-label></v-slider>
 							</v-card>
 							<v-card>
 								<v-card-title>
-									<h4>{{$t('plugins.gcodeViewer.minFeedrateColor')}}</h4>
+									<h5>{{$t('plugins.gcodeViewer.minFeedrateColor')}}</h5>
 								</v-card-title>
 								<v-card-text>
 									<gcodeviewer-color-picker :editcolor="minFeedColor" @updatecolor="value => updateMinFeedColor(value)"></gcodeviewer-color-picker>
@@ -239,7 +239,7 @@
 							</v-card>
 							<v-card>
 								<v-card-title>
-									<h4>{{$t('plugins.gcodeViewer.maxFeedrateColor')}}</h4>
+									<h5>{{$t('plugins.gcodeViewer.maxFeedrateColor')}}</h5>
 								</v-card-title>
 								<v-card-text>
 									<gcodeviewer-color-picker :editcolor="maxFeedColor" @updatecolor="value => updateMaxFeedColor(value)"></gcodeviewer-color-picker>
