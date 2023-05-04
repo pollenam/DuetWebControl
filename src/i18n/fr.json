@@ -337,7 +337,7 @@
     "processed":"Traitement {0}, 100 % complet",
     "printing":"Impression {0}, {1} complète",
     "printed":"Impression {0}, 100 % complète",
-    "noJob":"Aucun Travail en Cours.",
+    "noJob":"Aucun G-Code en Cours.",
     "layer":"Couche {0} sur {1}",
     "filament":"Utilisation de Filament: {0}",
     "filamentRemaining":"{0} restant"
@@ -388,7 +388,7 @@
       "lastPrint":"Dernière impression",
       "simulatedTime":"Temps Simulé",
       "generatedBy":"Généré par",
-      "noJobs":"Aucun Travail",
+      "noJobs":"Aucun G-Code",
       "start":"Lancer Fichier",
       "simulate":"Simuler Fichier"
     },
@@ -406,15 +406,15 @@
       "heightmap":"Carte de Hauteur"
     },
     "job":{
-      "caption":"Travail Actuel",
+      "caption":"G-Code Actuel",
       "status":"Status",
       "webcam":"Webcam",
       "visualizer":"Visualiser"
     },
     "files":{
       "caption":"Gestion de Fichiers",
-      "jobs":"Travails",
-      "jobsLegacy":"Travails (legacy)",
+      "jobs":"G-Codes",
+      "jobsLegacy":"G-Codes (legacy)",
       "filaments":"Filaments",
       "macros":"Macros",
       "menu":"Affichage",
@@ -557,14 +557,14 @@
       "fan":"Ventilation"
     },
     "jobControl":{
-      "caption":"Contrôle du Travail",
-      "cancelJob":"Annuler Travail",
+      "caption":"Contrôle du G-Code",
+      "cancelJob":"Annuler G-Code",
       "cancelPrint":"Annuler Impression",
       "cancelSimulation":"Annuler Simulation",
-      "pauseJob":"Pause Travail",
+      "pauseJob":"Pause G-Code",
       "pausePrint":"Pause Impression",
       "pauseSimulation":"Pause Simulation",
-      "resumeJob":"Reprendre  Travail",
+      "resumeJob":"Reprendre  G-Code",
       "resumePrint":"Reprendre Impression",
       "resumeSimulation":"Reprendre Simulation",
       "repeatJob":"Recommencer",
@@ -592,7 +592,7 @@
       "simulation":"Simulation"
     },
     "jobInfo":{
-      "caption":"Information du Travail",
+      "caption":"Information du G-Code",
       "height":"Hauteur:",
       "layerHeight":"Hauteur de Couche:",
       "filament":"Utilisation de Filament:",

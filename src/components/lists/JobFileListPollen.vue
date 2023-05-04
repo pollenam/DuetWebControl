@@ -145,11 +145,11 @@ export default {
 					value: 'printTime',
 					unit: 'time'
 				},
-				{
-					text: i18n.t('list.jobs.lastPrint'),
-					value: 'lastPrint',
-					unit: 'date'
-				},
+				//{
+					//text: i18n.t('list.jobs.lastPrint'),
+					//value: 'lastPrint',
+					//unit: 'date'
+				//},
 				{
 					text: i18n.t('list.jobs.generatedBy'),
 					value: 'generatedBy'
@@ -261,11 +261,11 @@ export default {
 								if (fileInfo.thumbnails && fileInfo.thumbnails.length !== 0) {
 									this.hasThumbnails = true;
 								}
-								this.lastPrintedJob.forEach(element => {
-										if(element.name  ===  Path.combine(this.directory,file.name)) {
-											file.lastPrint = new Date(element.date);
-										}
-								});
+								//this.lastPrintedJob.forEach(element => {
+										//if(element.name  ===  Path.combine(this.directory,file.name)) {
+											//file.lastPrint = new Date(element.date);
+										//}
+								//});
 							}
 						} catch (e) {
 							// Deal with the error. If the connection has been terminated, the next call will invalidate everything
