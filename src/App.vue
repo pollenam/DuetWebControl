@@ -107,12 +107,13 @@ textarea {
       <doors-btn-pollen class="hidden-xs-only"></doors-btn-pollen>
       <a href="https://pollenam.zendesk.com/" target="_blank" rel="nooperner" class="hidden-xs-only ml-5 text-white">Support</a>
 
-			<v-spacer/>
-
+			<div style="-webkit-box-flex: 1 !important; -ms-flex-positive: 1 !important; flex-grow: 0.6 !important;">
+			</div>
       <v-img src="./assets/honeyprint-sx2-logo.png" aspect-ratio="1" contain height="30px" class="hidden-md-and-down"></v-img>
       <v-img src="./assets/honeyprint-sx2-logo-small.png" aspect-ratio="1" contain height="30px" class="hidden-lg-and-up"></v-img>
 
-			<v-spacer/>
+			<div style="-webkit-box-flex: 1 !important; -ms-flex-positive: 1 !important; flex-grow: 0.6 !important;">
+			</div>
 
       <div class="v-toolbar-pollen-item mr-12">
         <span class="hidden-md-and-down">
