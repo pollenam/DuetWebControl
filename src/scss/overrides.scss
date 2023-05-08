@@ -369,7 +369,7 @@ small {
 /////////NEW GCODE VIEWER
 
 .v-expansion-panel-header > :not(.v-expansion-panel-header__icon) {
-    flex: 0 0 auto;
+    flex: 0 0 auto !important;
 
 }
 
@@ -385,29 +385,30 @@ small {
 }
 
 .heater-container {
+display:none !important;
 background-color: rgba(255, 255, 255, 0.8) !important;
 }
 
 .axes {
+display:none !important;
 background-color: rgba(255, 255, 255, 0.8) !important;
 }
 
 .theme--light.v-expansion-panels .v-expansion-panel {
-    background-color: white !important;
+    background-color: rgba(255, 255, 255, 0.7) !important;
 }
 
-/////////NEW Extrusion Control
-
-.v-btn-toggle:not(.v-btn-toggle--dense) .v-btn.v-btn.v-size--default {
-height:20px;
+.theme--light.v-btn--active::before {
+opacity:0.48 !important;
 }
 
+.v-btn:before {
+background-color: #f8aa31 !important;
+}
 
 /////////NEW HEADER
 
 #title {
 font-size: 1.2rem !important;
 letter-spacing: -0.05rem !important;
-
-
 }

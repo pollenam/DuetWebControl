@@ -198,10 +198,10 @@
 						<v-expansion-panel-content>
 							<v-btn :disabled="loading" :title="$t('plugins.gcodeViewer.reloadView.title')" @click="reloadviewer" block class="mb-2" color="primary">{{$t('plugins.gcodeViewer.reloadView.caption')}}</v-btn>
 							<v-card :key="index" v-for="(extruder, index) in toolColors">
-								<v-card-title>
+								<v-card-title style="padding-bottom: 0px !important; padding-top: 0px !important; background-color: rgba(255, 255, 255, 0) !important;">
 									<h5>{{$t('plugins.gcodeViewer.tool', [index])}}</h5>
 								</v-card-title>
-								<v-card-text>
+								<v-card-text style="padding-bottom: 30px !important;">
 									<gcodeviewer-color-picker :editcolor="extruder" @updatecolor="value => {updateColor(index, value);}"></gcodeviewer-color-picker>
 								</v-card-text>
 							</v-card>
@@ -230,18 +230,18 @@
 								<v-slider :max="500" :min="5" v-model="maxColorRate" thumb-label></v-slider>
 							</v-card>
 							<v-card>
-								<v-card-title>
+								<v-card-title style="padding-bottom: 0px !important; padding-top: 0px !important; background-color: rgba(255, 255, 255, 0) !important;">
 									<h5>{{$t('plugins.gcodeViewer.minFeedrateColor')}}</h5>
 								</v-card-title>
-								<v-card-text>
+								<v-card-text style="padding-bottom: 30px !important;">
 									<gcodeviewer-color-picker :editcolor="minFeedColor" @updatecolor="value => updateMinFeedColor(value)"></gcodeviewer-color-picker>
 								</v-card-text>
 							</v-card>
 							<v-card>
-								<v-card-title>
+								<v-card-title style="padding-bottom: 0px !important; padding-top: 0px !important; background-color: rgba(255, 255, 255, 0) !important;">
 									<h5>{{$t('plugins.gcodeViewer.maxFeedrateColor')}}</h5>
 								</v-card-title>
-								<v-card-text>
+								<v-card-text style="padding-bottom: 30px !important;">
 									<gcodeviewer-color-picker :editcolor="maxFeedColor" @updatecolor="value => updateMaxFeedColor(value)"></gcodeviewer-color-picker>
 								</v-card-text>
 							</v-card>
@@ -261,8 +261,8 @@
 								<v-slider :max="maxHeight" :min="minHeight" step="0.1" thumb-label thumb-size="24" v-model="sliderBottomHeight"></v-slider>
 							</v-card>
 							<v-card>
-								<v-card-title>{{$t('plugins.gcodeViewer.progressColor')}}</v-card-title>
-								<v-card-text>
+								<v-card-title style="padding-bottom: 0px !important; padding-top: 0px !important; background-color: rgba(255, 255, 255, 0) !important;">{{$t('plugins.gcodeViewer.progressColor')}}</v-card-title>
+								<v-card-text style="padding-bottom: 30px !important;">
 									<gcodeviewer-color-picker :editcolor="progressColor" @updatecolor="value => updateProgressColor(value)"></gcodeviewer-color-picker>
 								</v-card-text>
 							</v-card>
@@ -275,14 +275,14 @@
 						</v-expansion-panel-header>
 						<v-expansion-panel-content>
 							<v-card>
-								<v-card-title>{{$t('plugins.gcodeViewer.background')}}</v-card-title>
-								<v-card-text>
+								<v-card-title style="padding-bottom: 0px !important; padding-top: 0px !important; background-color: rgba(255, 255, 255, 0) !important;">{{$t('plugins.gcodeViewer.background')}}</v-card-title>
+								<v-card-text style="padding-bottom: 30px !important;">
 									<gcodeviewer-color-picker :editcolor="backgroundColor" @updatecolor="value => updateBackground(value)"></gcodeviewer-color-picker>
 								</v-card-text>
 							</v-card>
 							<v-card>
-								<v-card-title>{{$t('plugins.gcodeViewer.bedRenderMode')}}</v-card-title>
-								<v-card-text>
+								<v-card-title style="padding-bottom: 0px !important; padding-top: 0px !important; background-color: rgba(255, 255, 255, 0) !important;">{{$t('plugins.gcodeViewer.bedRenderMode')}}</v-card-title>
+								<v-card-text style="padding-bottom: 30px !important;">
 									<v-btn-toggle class="d-flex flex-column" v-model="bedRenderMode">
 										<v-btn :value="0" block>{{$t('plugins.gcodeViewer.bed')}}</v-btn>
 										<v-btn :value="1" block>{{$t('plugins.gcodeViewer.volume')}}</v-btn>

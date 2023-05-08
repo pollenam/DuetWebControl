@@ -69,7 +69,7 @@
         </template>
         <v-col cols="12">
           <v-btn block @click="temperatureMemory()" elevation="0" :disabled="this.isProcessing()">
-            <v-icon class="mr-1">mdi-database</v-icon>
+            <v-icon class="mr-1">mdi-restore</v-icon>
               {{ $t('panel.extruderPollen.memory') }}
           </v-btn>
         </v-col>
@@ -192,7 +192,7 @@ export default {
         this.infiniteExtrusionStatus[3] === 'stopped'
     },
     shouldAllowSelect() {
-      return !this.shouldShowExtruderFactor || 
+      return !this.shouldShowExtruderFactor ||
       this.state.status === StatusType.processing;
     },
     isSelected2(value) {
@@ -211,7 +211,7 @@ export default {
       else {
         return this.tool.state === 'active';
       }
-      
+
       //return this.tool.state === 'active';
     },
     isSelected() {
