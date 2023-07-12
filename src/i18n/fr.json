@@ -285,6 +285,7 @@
     "close":"Fermer",
     "reset":"",
     "noValue":"n/a",
+    "noSensor":"Capteur abs.",
     "loading":"Chargement",
     "error":"Erreur",
     "info":"Info",
@@ -488,6 +489,7 @@
   "panel":{
     "extruderPollen":{
       "title":"Ext.",
+      "select":"Sélectionnez matériau",
       "mixer":"Mixeur",
       "feeder":"Point Froid",
       "screw":"Vis",
@@ -500,7 +502,10 @@
       "retract":"Retracter",
       "retractShort":"Ret.",
       "stop":"Stop",
-      "memory":"Anciennes Températures"
+      "memory":"Mémoire Temp.",
+      "memoryShort":"Mem.",
+      "stopheat":"Stopper Chauffe",
+      "stopheatShort":"Off"
     },
     "atx":{
       "caption":"VPower",
@@ -553,7 +558,7 @@
       "level":"Niveau",
       "setZero":"Mettre à zero",
       "zLimits":"Limites en Z",
-      "bed":"Chauffage Lit",
+      "bed":"Chauffage Plateau",
       "fan":"Ventilation"
     },
     "jobControl":{

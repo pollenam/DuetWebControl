@@ -15,7 +15,7 @@
 <template>
 	<div>
 		<v-toolbar dense elevation="0">
-			<sd-card-btn v-if="volumes.length > 1" v-model="volume" class="hidden-sm-and-down"/>
+			<sd-card-btn v-if="volumes.length > 2" v-model="volume" class="hidden-sm-and-down"/>
 			<directory-breadcrumbs v-model="directory" class="pl-0" />
 
 			<v-spacer/>
@@ -325,6 +325,7 @@ export default {
 		start(item) {
       const targetPath = Path.combine(this.directory, (item && item.name) ? item.name : this.selection[0].name);
 			//this.addLastPrintedJobDate(targetPath);
+			this.sendCode(`M991`);
 			this.sendCode(`M32 "${targetPath}"`);
 		},
 		simulate(item) {

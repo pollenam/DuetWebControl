@@ -5,7 +5,7 @@
       {{ $t('panel.atx.caption') }}
     </span>
 
-    <v-switch :value="state.atxPower" hide-details="'auto'" :loading="sendingCode" :color="'success'" @change="togglePower" class="ml-2" :disabled="uiFrozen">
+    <v-switch :value="state.atxPower" hide-details="'auto'" :loading="sendingCode" :dark="homingSequence" :color="'success'" @change="togglePower" class="ml-2" :disabled="uiFrozen || homingSequence">
     </v-switch>
   </div>
 </template>
@@ -18,20 +18,24 @@ import { mapState, mapGetters, mapActions } from 'vuex'
 export default {
 	computed: {
 		...mapGetters(['uiFrozen']),
-		...mapState('machine/model', ['state'])
+		...mapState('machine/model', {
+			homingSequence: state => state.global.HOMING_SEQUENCE_RUNNING,
+		}),
+		...mapState('machine/model', ['state']),
 	},
 	data() {
 		return {
-			sendingCode: false
+			sendingCode: false,
 		}
 	},
 	methods: {
-		...mapActions('machine', ['runFile']),
+		...mapActions('machine', ['runFile', 'sendCode']),
 		async togglePower(state) {
 			if (!this.sendingCode) {
 				this.sendingCode = true;
 				try {
 					await this.runFile(state ? '/macros/HONEYPRINT/VPower_On' : '/macros/HONEYPRINT/VPower_Off');
+					await this.sendCode(state ? '' : 'M991');
 				} catch (e) {
 					// handled before we get here
 				}

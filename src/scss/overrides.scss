@@ -374,7 +374,7 @@ small {
 }
 
 .theme--light.v-navigation-drawer {
-  background: no-repeat center center fixed !important;
+  background: repeat center center fixed ;
   background-image: linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)),
                     url('../assets/honeyprint-sx2-background.jpg') !important;
 }

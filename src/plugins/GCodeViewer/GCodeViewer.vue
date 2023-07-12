@@ -6,28 +6,23 @@
 	width: 100%;
 	height: 100%;
 }
-
 .btn-toggle {
 	flex-direction: column;
 }
-
 .primary-container {
 	position: relative;
 	width: 100%;
 	height: 100%;
 	background-color: green;
 }
-
 .v-input--checkbox {
 	margin: 0;
 	padding-left: 12px;
 }
-
 .v-input--switch {
 	margin: 0;
 	padding-left: 12px;
 }
-
 .viewer-box {
 	position: absolute;
 	top: 0;
@@ -36,7 +31,6 @@
 	bottom: 0;
 	background-color: yellow;
 }
-
 .full-screen {
 	position: fixed;
 	top: 0;
@@ -45,12 +39,10 @@
 	right: 0;
 	z-index: 10;
 }
-
 .full-screen-icon {
 	height: 40px;
 	width: 40px;
 }
-
 .drawer-zindex {
 	z-index: 20;
 }
@@ -63,7 +55,6 @@
 	-o-transition-duration: 0.3s;
 	transition-duration: 0.3s;
 }
-
 .button-container-drawer {
 	left: 355px !important;
 }
@@ -80,7 +71,6 @@
 	top: 0px;
 	z-index: 50 !important;
 }
-
 .loading-progress {
 	position: absolute;
 	width: 50%;
@@ -89,7 +79,6 @@
 	top: 5px;
 	z-index: 19 !important;
 }
-
 .scrubber {
 	position: absolute;
 	left: 5%;
@@ -97,7 +86,6 @@
 	bottom: 15px;
 	z-index: 19 !important;
 }
-
 .scrubber-sm{
 	position: absolute;
 	left: 5%;
@@ -105,7 +93,6 @@
 	bottom: 70px;
 	z-index: 19 !important;
 }
-
 /* Transitions lag when trying to show loading progress */
 .disable-transition {
 	transition: none !important;
@@ -357,16 +344,13 @@
 
 <script>
 'use strict';
-
 import gcodeViewer from '@sindarius/gcodeviewer';
 import {mapActions, mapState} from 'vuex';
 import Path from '../../utils/path.js';
 import {KinematicsName} from '../../store/machine/modelEnums';
 import {isPrinting} from '../../store/machine/modelEnums.js';
 import {setPluginData, PluginDataType} from '../../store';
-
 let viewer;
-
 export default {
 	data: function () {
 		return {
@@ -485,7 +469,6 @@ export default {
 	async mounted() {
 		viewer = new gcodeViewer(this.$refs.viewerCanvas);
 		await viewer.init();
-
 		viewer.buildObjects.objectCallback = this.objectSelectionCallback;
 		viewer.buildObjects.labelCallback = (label) => {
 			if (this.showObjectSelection) {
@@ -495,7 +478,6 @@ export default {
 			}
 		};
 		this.showObjectLabels = viewer.buildObjects.showLabel;
-
 		if (this.move.axes) {
 			for (var axesIdx in this.move.axes) {
 				let axes = this.move.axes[axesIdx];
@@ -507,15 +489,12 @@ export default {
 			}
 			viewer.bed.commitBedSize();
 		}
-
 		this.cameraInertia = viewer.cameraInertia;
-
 		viewer.bed.setDelta(this.isDelta);
 		this.bedRenderMode = viewer.bed.renderMode;
 		this.bedColor = viewer.bed.getBedColor();
 		this.showAxes = viewer.axes.visible;
 		viewer.gcodeProcessor.useSpecularColor(this.specular);
-
 		this.colorMode = viewer.gcodeProcessor.colorMode;
 		this.minFeedColor = viewer.gcodeProcessor.minFeedColorString;
 		this.maxFeedColor = viewer.gcodeProcessor.maxFeedColorString;
@@ -524,7 +503,6 @@ export default {
 		this.forceWireMode = viewer.gcodeProcessor.forceWireMode;
 		this.showCursor = localStorage.getItem('showCursor') === 'true';
 		this.g1AsExtrusion = viewer.gcodeProcessor.g1AsExtrusion;
-
 		if (viewer.lastLoadFailed()) {
 			this.renderQuality = 1;
 			viewer.updateRenderQuality(1);
@@ -542,7 +520,6 @@ export default {
 		};
 		this.viewModelEvent = async (path) => {
 			this.selectedFile = path;
-
 			try {
 				let blob = await this.machineDownload({
 					filename: Path.combine(path),
@@ -557,23 +534,19 @@ export default {
 				this.loading = false;
 			}
 		};
-
 		this.$root.$on('view-3d-model', this.viewModelEvent);
-
 		this.$nextTick(() => {
 			viewer.gcodeProcessor.resetTools();
 			for (let idx = 0; idx < this.toolColors.length; idx++) {
 				viewer.gcodeProcessor.addTool(this.toolColors[idx], 0.4); //hard code the nozzle size for now.
 			}
 		});
-
 		window.addEventListener('keyup', (e) => {
 			var key = e.key || e.keyCode;
 			if (key === 'Escape' || key === 'Esc' || key === 27) {
 				this.fullscreen = false;
 			}
 		});
-
 		//watch for resizing events
 		window.addEventListener('resize', () => {
 			this.$nextTick(() => {
@@ -618,7 +591,6 @@ export default {
 			viewer.bed.setBedColor(value);
 		},
 		resize() {
-
 			if(this.resizeDebounce){
 				clearTimeout(this.resizeDebounce);
 			}
@@ -648,13 +620,11 @@ export default {
 				viewer.clearScene(true);
 			}
 			this.selectedFile = this.job.file.fileName;
-
 			try {
 				let blob = await this.machineDownload({
 					filename: this.job.file.fileName,
 					type: 'text',
 				});
-
 				this.loading = true;
 				viewer.gcodeProcessor.setLiveTracking(true);
 				viewer.gcodeProcessor.updateForceWireMode(this.forceWireMode);
@@ -689,7 +659,6 @@ export default {
 			this.scrubFileSize = viewer.fileSize;
 			viewer.gcodeProcessor.forceRedraw();
 			viewer.gcodeProcessor.updateFilePosition(this.scrubPosition);
-
 			try {
 				viewer.buildObjects.loadObjectBoundaries(this.job.build.objects);
 			} catch {
@@ -733,7 +702,6 @@ export default {
 				viewer.gcodeProcessor.g1AsExtrusion = true;
 				viewer.gcodeProcessor.updateForceWireMode(true);
 			}
-
 		},
 		async fileSelected(e) {
 			const reader = new FileReader();
@@ -755,7 +723,6 @@ export default {
 				viewer.resize();
 			});
 		},
-
 		displayMaxFileFeedRate() {
 			if (this.maxFileFeedRate > 0) return `(${this.maxFileFeedRate / 60})`;
 		},
@@ -927,7 +894,6 @@ export default {
 			viewer.gcodeProcessor.g1AsExtrusion = to;
 			await this.reloadviewer();
 		}
-
 	},
 };
 </script>

@@ -4,29 +4,13 @@ import Vue from 'vue'
 import VueI18n from 'vue-i18n'
 
 import en from './en.json'
-import de from './de.json'
-import es from './es.json'
 import fr from './fr.json'
-import pl from './pl.json'
-import pt_br from './pt_br.json'
-import ru from './ru.json'
-import tr from './tr.json'
-import zh_cn from './zh_cn.json'
-import ja from './ja.json'
 
 Vue.use(VueI18n)
 
 const messages = Vue.observable({
 	en,
-	de,
-	es,
-	fr,
-	pl,
-	pt_br,
-	ru,
-	tr,
-	zh_cn,
-	ja
+	fr
 })
 
 /* eslint-disable */

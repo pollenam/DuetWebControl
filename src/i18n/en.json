@@ -353,6 +353,7 @@
     "close":"Close",
     "reset":"",
     "noValue":"n/a",
+    "noSensor":"No sensor",
     "loading":"loading",
     "error":"Error",
     "info":"Info",
@@ -575,6 +576,7 @@
   "panel":{
     "extruderPollen":{
       "title":"Ext.",
+      "select":"Select material",
       "mixer":"Mixer",
       "feeder":"Feeder",
       "screw":"Screw",
@@ -587,7 +589,10 @@
       "retract":"Retract",
       "retractShort":"Ret.",
       "stop":"Stop",
-      "memory":"Restore Previous Temps"
+      "memory":"Restore Temps",
+      "memoryShort":"Rest.",
+      "stopheat":"Heating off",
+      "stopheatShort":"Off"
     },
     "atx":{
       "caption":"VPower",

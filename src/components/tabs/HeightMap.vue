@@ -357,9 +357,9 @@ import {KinematicsName} from '../../store/machine/modelEnums';
 import i18n from '../../i18n'
 
 let heightMapViewer;
-const default_x = -13.31
+const default_x = 13.31
 const	default_y = 8.89
-const default_z = 40
+const default_z = -10
 
 export default {
 	computed: {
@@ -374,7 +374,8 @@ export default {
 			systemDirectory: (state) => state.directories.system,
 			axes: (state) => state.move.axes,
 			kinematicsName: (state) => state.move.kinematics.name,
-			tools: state => state.tools
+			tools: state => state.tools,
+			extruders: state => state.global.PAM_EXTRUDERS
 		}),
 		...mapState('settings', ['language']),
 		defaultHeaders() {
@@ -476,12 +477,12 @@ export default {
 			s_radius: 0,
 
 			t1x: default_x,
-			t1y: default_y,
+			t1y: -default_y,
 			t1z: default_z,
-			t2x: default_x,
-			t2y: default_y,
+			t2x: -default_x,
+			t2y: -default_y,
 			t2z: default_z,
-			t3x: default_x,
+			t3x: -default_x,
 			t3y: default_y,
 			t3z: default_z,
 			t4x: default_x,
@@ -503,19 +504,27 @@ export default {
 			this.sendCode(`M98 P"/macros/HONEYPRINT/Compensation_Start`);
 		},
 		async saveParameters(){
-			await this.sendCode(`M98 P"/macros/HONEYPRINT/Tool_Offset_Save" T1 X${this.t1x} Y${this.t1y} Z${this.t1z}`);
-			await this.sendCode(`M98 P"/macros/HONEYPRINT/Tool_Offset_Save" T2 X${this.t2x} Y${this.t2y} Z${this.t2z}`);
-			await this.sendCode(`M98 P"/macros/HONEYPRINT/Tool_Offset_Save" T3 X${this.t3x} Y${this.t3y} Z${this.t3z}`);
-			await this.sendCode(`M98 P"/macros/HONEYPRINT/Tool_Offset_Save" T4 X${this.t4x} Y${this.t4y} Z${this.t4z}`);
+			if (this.tools[1] !== null) {
+				await this.sendCode(`M98 P"/macros/HONEYPRINT/Tool_Offset_Save" T1 X${this.t1x} Y${this.t1y} Z${this.t1z}`);
+			}
+			if (this.tools[2] !== null) {
+				await this.sendCode(`M98 P"/macros/HONEYPRINT/Tool_Offset_Save" T2 X${this.t2x} Y${this.t2y} Z${this.t2z}`);
+			}
+			if (this.tools[3] !== null) {
+				await this.sendCode(`M98 P"/macros/HONEYPRINT/Tool_Offset_Save" T3 X${this.t3x} Y${this.t3y} Z${this.t3z}`);
+			}
+			if (this.tools[4] !== null) {default_x
+				await this.sendCode(`M98 P"/macros/HONEYPRINT/Tool_Offset_Save" T4 X${this.t4x} Y${this.t4y} Z${this.t4z}`);
+			}
 			this.refreshOffsets();
 		},
 		restoreDefault() {
-			this.t1x = default_x;
+			this.t1x = -default_x;
 			this.t2x = default_x;
 			this.t3x = default_x;
 			this.t4x = default_x;
 
-			this.t1y = default_y;
+			this.t1y = -default_y;
 			this.t2y = default_y;
 			this.t3y = default_y;
 			this.t4y = default_y;
@@ -749,9 +758,9 @@ export default {
 			}
 
 			if(this.tools[3] !== null) {
-			this.t3x = this.tools[3].offsets[0];
-			this.t3y = this.tools[3].offsets[1];
-			this.t3z = this.tools[3].offsets[2];
+				this.t3x = this.tools[3].offsets[0];
+				this.t3y = this.tools[3].offsets[1];
+				this.t3z = this.tools[3].offsets[2];
 			}
 
 			if(this.tools[4] !== null) {

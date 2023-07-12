@@ -55,7 +55,7 @@
 
 			<v-spacer></v-spacer>
 
-      <code-btn v-show="visibleAxes.length" class="mx-0" :elevation="0" :disabled="uiFrozen" code='M98 P"/macros/HONEYPRINT/Compensation_Start"'>
+      <code-btn v-show="visibleAxes.length" class="mx-0" :elevation="0" :disabled="uiFrozen || !canHome" code='M98 P"/macros/HONEYPRINT/Compensation_Start"'>
         <v-icon class="mr-1">mdi-grid</v-icon> {{ $t('panel.movement.startCompensation') }}
       </code-btn>
 		</v-card-title>
@@ -124,7 +124,7 @@
             <v-col class="d-flex flex-wrap align-center pb-0">
               <span class="pollen-attr-header mb-2">{{ $t('panel.buildSurfacePollen.zLimits') }}</span>
               <v-switch :value="move.limitAxes" hide-details="auto" class="ms-1 mt-0 mb-2" :color="'success'" :disabled="uiFrozen" v-model="zlimit"></v-switch>
-              <code-btn code='M98 P"/macros/HONEYPRINT/Set_Z0"' no-wait block class="mb-2">
+              <code-btn code='M98 P"/macros/HONEYPRINT/Set_Z0"' no-wait block class="mb-2" :disabled="uiFrozen || !canHome">
 								<v-icon small class="mr-1">mdi-arrow-collapse-down</v-icon>
                 {{ $t('panel.buildSurfacePollen.setZero') }}
               </code-btn>

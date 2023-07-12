@@ -14,19 +14,22 @@
         {{ $t('generic.status.idle') }}
       </span>
 
-              <v-spacer></v-spacer>
-
-				<code-btn class="ms-0 ms-md-2" :disabled="uiFrozen || !isPrinting || isPausing" :code="isPaused ? 'M24' : 'M25'" tabindex="0">
-					<v-icon class="mr-1">{{ isPaused ? 'mdi-play' : 'mdi-pause' }}</v-icon> {{ pauseResumeText }}
-				</code-btn>
+	        <v-spacer></v-spacer>
+			  	<v-btn class="ms-0 ms-md-2" @click="handlePauseResume" elevation="0" :disabled="uiFrozen || !isPrinting || isPausing">
+              		<v-icon class="mr-1">{{ isPaused ? 'mdi-play' : 'mdi-pause' }}</v-icon> {{ pauseResumeText }}
+            	</v-btn>
 
 				<code-btn v-if="isPaused" class="ms-0 ms-md-2" code="M0">
 					<v-icon class="mr-1">mdi-stop</v-icon> {{ cancelText }}
 				</code-btn>
 
-				<code-btn class="ms-0 ms-md-2" v-if="processAnotherAvailable" :code="processAnotherCode()">
+				<v-btn class="ms-0 ms-md-2" v-if="processAnotherAvailable" @click="handleProcessAnother" elevation="0" :disabled="uiFrozen">
+              		<v-icon class="mr-1">mdi-restart</v-icon> {{ processAnotherText }}
+            	</v-btn>
+
+				<!-- <code-btn class="ms-0 ms-md-2" v-if="processAnotherAvailable" :code="processAnotherCode()">
 					<v-icon class="mr-1">mdi-restart</v-icon> {{ processAnotherText }}
-				</code-btn>
+				</code-btn> -->
 		</v-card-title>
 
 		<v-card-text>
@@ -75,8 +78,8 @@
 'use strict'
 
 import Vue from 'vue'
-import { mapState, mapGetters, mapMutations } from 'vuex'
-
+import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
+import { DisconnectedError } from '@/utils/errors'
 import { MachineMode, StatusType, isPaused, isPrinting } from '@/store/machine/modelEnums'
 import { extractFileName } from '../../utils/path.js'
 
@@ -90,8 +93,7 @@ export default {
 			machineMode: state => state.state.machineMode,
 			status: state => state.state.status,
 			thumbnails: state => state.job.file.thumbnails,
-			jobFile: state => state.job.file
-
+			jobFile: state => state.job.file,
 		}),
 		...mapGetters(['uiFrozen']),
 		...mapGetters('machine/model', ['jobProgress']),
@@ -181,8 +183,9 @@ export default {
 		}
 	},
 	methods: {
+		...mapActions('machine', ['sendCode']),
 		...mapMutations('machine/honeyprint_cache', ['addLastPrintedJobDate']),
-		processAnotherCode() {
+		/* processAnotherCode() {
 			if (this.lastFileName) {
 				if (this.lastFileSimulated) {
 					return `M37 P"${this.lastFileName}"`;
@@ -191,6 +194,35 @@ export default {
 				return `M32 "${this.lastFileName}"`;
 			}
 			return '';
+		}, */
+		async stopInfiniteThenResume() {
+			try {
+				await this.sendCode('M991');
+				await this.sendCode('M24');
+			} catch (e) {
+				if (!(e instanceof DisconnectedError)) {
+					console.warn(e);
+				}
+			}	
+		},
+		handlePauseResume(){
+			if (this.isPaused) {
+				this.stopInfiniteThenResume();
+			}
+			else {
+				this.sendCode('M25');
+			}
+		},
+		async processAnotherCode(){
+			if (this.lastFileName) {
+				if (this.lastFileSimulated) {
+					this.sendCode(`M37 P"${this.lastFileName}"`);
+				}
+				else {
+					await this.sendCode('M991');
+					this.sendCode(`M32 "${this.lastFileName}"`);
+				}
+			}
 		}
 	},
 	mounted() {

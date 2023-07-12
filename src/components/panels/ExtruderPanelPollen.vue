@@ -35,7 +35,7 @@
       </v-row>
       <v-row class="row--highlighted" dense>
         <template v-if="shouldShowInfinite">
-          <v-col cols="6">
+          <v-col cols="12">
             <v-btn block @click="infiniteExtrude()" elevation="0" :disabled="uiFrozen || this.isProcessing()">
               <v-icon class="mr-1">mdi-arrow-down-bold</v-icon>
               <span class="hidden-lg-only">
@@ -43,17 +43,6 @@
               </span>
               <span class="hidden-md-and-down hidden-xl-only">
                 {{ $t('panel.extruderPollen.extrudeShort') }}
-              </span>
-            </v-btn>
-          </v-col>
-          <v-col cols="6">
-            <v-btn block @click="infiniteRetract()" elevation="0" :disabled="uiFrozen || this.isProcessing()">
-              <v-icon class="mr-1">mdi-arrow-up-bold</v-icon>
-              <span class="hidden-lg-only">
-                {{ $t('panel.extruderPollen.retract') }}
-              </span>
-              <span class="hidden-md-and-down hidden-xl-only">
-                {{ $t('panel.extruderPollen.retractShort') }}
               </span>
             </v-btn>
           </v-col>
@@ -67,12 +56,28 @@
             </v-btn>
           </v-col>
         </template>
-        <v-col cols="12">
-          <v-btn block @click="temperatureMemory()" elevation="0" :disabled="this.isProcessing()">
-            <v-icon class="mr-1">mdi-restore</v-icon>
-              {{ $t('panel.extruderPollen.memory') }}
-          </v-btn>
-        </v-col>
+          <v-col cols="6">
+            <v-btn block @click="temperatureMemory()" elevation="0" :disabled="this.isProcessing()">
+              <v-icon class="mr-1">mdi-restore</v-icon>
+              <span class="hidden-lg-only">
+                {{ $t('panel.extruderPollen.memory') }}
+              </span>
+              <span class="hidden-md-and-down hidden-xl-only">
+                {{ $t('panel.extruderPollen.memoryShort') }}
+              </span>
+            </v-btn>
+          </v-col>
+          <v-col cols="6">
+            <v-btn block @click="temperatureStop()" elevation="0" :disabled="this.isProcessing()">
+              <v-icon class="mr-1">mdi-power</v-icon>
+              <span class="hidden-lg-only">
+                {{ $t('panel.extruderPollen.stopheat') }}
+              </span>
+              <span class="hidden-md-and-down hidden-xl-only">
+                {{ $t('panel.extruderPollen.stopheatShort') }}
+              </span>
+            </v-btn>
+          </v-col>
       </v-row>
       <v-row class="row--highlighted" dense>
         <v-col cols="3 d-flex align-center">
@@ -192,7 +197,7 @@ export default {
         this.infiniteExtrusionStatus[3] === 'stopped'
     },
     shouldAllowSelect() {
-      return !this.shouldShowExtruderFactor ||
+      return !this.shouldShowExtruderFactor || 
       this.state.status === StatusType.processing;
     },
     isSelected2(value) {
@@ -211,7 +216,7 @@ export default {
       else {
         return this.tool.state === 'active';
       }
-
+      
       //return this.tool.state === 'active';
     },
     isSelected() {
@@ -347,9 +352,9 @@ export default {
         try {
           // await this.sendInfinite({code: "stop", toolNumber:this.tool.number});
           if (this.infiniteExtrusionStatus[this.toolIndex] === "extrude") {
-            await this.sendCode("M98 P\"/macros/HONEYPRINT/Set_Extrusion_Rate\" " + this.getRPMForInfinite(true));
+            await this.sendCode("M98 P\"/macros/HONEYPRINT/Set_Extrusion_Rate\" X1 " + this.getRPMForInfinite(true));
           } else {
-            await this.sendCode("M98 P\"/macros/HONEYPRINT/Set_Extrusion_Rate\" " + this.getRPMForInfinite(false));
+            await this.sendCode("M98 P\"/macros/HONEYPRINT/Set_Extrusion_Rate\" X1 " + this.getRPMForInfinite(false));
           }
           // await this.sendInfinite({code: "startExtrude", toolNumber: this.tool.number});
 				} catch (e) {
@@ -362,7 +367,7 @@ export default {
       this.selectInfiniteExtrusionRate({ index: this.toolIndex, value: this.extrusionSpeed });
     },
     async PIDComboBoxChange(newValue) {
-			await this.sendCode(`M98 P"${Path.combine(this.macrosDirectory, "PID", newValue)}" T${this.tool.number}`);
+			await this.sendCode(`M98 P"${Path.combine(this.macrosDirectory, "PID", newValue)}" B${this.tool.number}`);
       this.selectSelectedPid({
         extruderIndex: this.toolIndex,
         newValue: newValue
@@ -458,11 +463,17 @@ export default {
     },
     async temperatureMemory() {
       await this.sendCode("M98 P\"/sys/pam_memory_T" + this.tool.number +".g\"");
+      await this.sendCode("M568 P" + this.tool.number +" A2");
+    },
+    async temperatureStop() {
+      await this.sendCode("G10 P" + this.tool.number +" S65:0:0 R65:0:0");
+      await this.sendCode("M568 P" + this.tool.number +" A0");
+      await this.sendCode("M991");
     },
     async infiniteExtrude() {
       try {
-        await this.sendCode("M98 P\"/macros/SELECT/Select \"T" + this.getSelectedTools());
-        await this.sendCode("M98 P\"/macros/HONEYPRINT/Set_Extrusion_Rate\" " + this.getRPMForInfinite(true));
+        await this.sendCode("M98 P\"/macros/SELECT/Select\" T" + this.getSelectedTools());
+        await this.sendCode("M98 P\"/macros/HONEYPRINT/Set_Extrusion_Rate\" X1 " + this.getRPMForInfinite(true));
         await this.sendInfinite({code: "startExtrude", toolNumber: this.tool.number});
       } catch (e) {
         if (!(e instanceof DisconnectedError)) {
@@ -472,8 +483,8 @@ export default {
     },
     async infiniteRetract() {
       try {
-        await this.sendCode("M98 P\"/macros/SELECT/Select \"T" + this.getSelectedTools());
-        await this.sendCode("M98 P\"/macros/HONEYPRINT/Set_Extrusion_Rate\" " + this.getRPMForInfinite(false));
+        await this.sendCode("M98 P\"/macros/SELECT/Select\" T" + this.getSelectedTools());
+        await this.sendCode("M98 P\"/macros/HONEYPRINT/Set_Extrusion_Rate\" X1 " + this.getRPMForInfinite(false));
         await this.sendInfinite({code: "startRetract", toolNumber:this.tool.number});
 
 
@@ -486,10 +497,10 @@ export default {
     async stopInfinite() {
       try {
         if(this.numberOfToolsExtruding() > 1) {
-          await this.sendCode("M98 P\"/macros/SELECT/Select \"T" + this.getSelectedToolsForStop());
+          await this.sendCode("M98 P\"/macros/SELECT/Select\" T" + this.getSelectedToolsForStop());
         }
         await this.sendInfinite({code: "stop", toolNumber:this.tool.number});
-        await this.sendCode("M98 P\"/macros/HONEYPRINT/Set_Extrusion_Rate\" " + this.getToolNumberLetterForExtrusionRate() + "0");
+        await this.sendCode("M98 P\"/macros/HONEYPRINT/Set_Extrusion_Rate\" X1 " + this.getToolNumberLetterForExtrusionRate() + "0");
       } catch (e) {
         if (!(e instanceof DisconnectedError)) {
           console.warn(e);

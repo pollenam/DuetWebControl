@@ -34,7 +34,7 @@
 'use strict'
 
 import { mapState, mapGetters, mapActions } from 'vuex'
-import { AnalogSensorType, HeaterState } from '@/store/machine/modelEnums'
+import { AnalogSensorType, HeaterState, StatusType } from '@/store/machine/modelEnums'
 
 export default {
 	computed: {
@@ -129,13 +129,13 @@ export default {
 							// Set tool temps
               const currentTemps = this.tool['active'];
               const newTemps = currentTemps.map((temp, i) => (i === this.toolHeaterIndex) ? this.inputValue : temp, this).join(':');
-              await this.sendCode(`M568 P${this.tool.number} S${newTemps}`);
+              await this.sendCode(`M568 P${this.tool.number} S${newTemps} R${newTemps}`);
 						} else if (this.bed) {
 							// Set bed temp
-							await this.sendCode(`M140 P${this.bedHeaterIndex} ${this.active ? 'S' : 'R'}${this.inputValue}`);
+							await this.sendCode(`M140 P${this.bedHeaterIndex} S${this.inputValue} R${this.inputValue}`);
 						} else if (this.chamber) {
 							// Set chamber temp
-							await this.sendCode(`M141 P${this.chamberHeaterIndex} ${this.active ? 'S' : 'R'}${this.inputValue}`);
+							await this.sendCode(`M141 P${this.chamberHeaterIndex} S${this.inputValue} R${this.inputValue}`);
 						} else {
 							console.warn('[tool-input] Invalid target for tool-input');
 						}
@@ -157,6 +157,9 @@ export default {
 			} else {
 				this.inputValue = this.actualValue.toString();
 			}
+		},
+		isProcessing() {
+			return this.state.status === StatusType.processing
 		},
 		checkAfterBlur() {
 			this.blurTimer = null;
@@ -181,6 +184,9 @@ export default {
 			} else if (this.chamber) {
 				heater = this.chamber;
 			}
+			//if (heater && heater.sensor >= 600 ){
+				//return this.$t('No sensor');
+			//}
 
 			if (heater && heater.sensor >= 0 && heater.sensor < this.sensors.analog.length) {
 				const sensor = this.sensors.analog[heater.sensor];
@@ -199,6 +205,9 @@ export default {
 				}
 			}
 			const unit = (sensor.type === AnalogSensorType.dhtHumidity) ? '%RH' : '°C';
+			if(sensor.lastReading > 700){
+				return this.$t('generic.noSensor');
+			}
 			return this.$display(sensor.lastReading, 1, unit);
 		},
 		getStatus() {
@@ -224,7 +233,10 @@ export default {
 			if (!this.isConnected) {
 				return;
 			}
-
+			if (this.isProcessing()) {
+				this.sendCode('echo "yes"');
+				return;
+			}
 			var heater = this.getHeater();
 			switch (heater.state) {
 				case HeaterState.off:		// Off -> Active
@@ -240,6 +252,18 @@ export default {
 					break;
 
 				case HeaterState.standby:	// Standby -> Off
+					if(this.tool) {
+					this.sendCode(`M568 P${this.tool.number} A0`);
+					}
+					if(this.chamber) {
+						this.sendCode(`M141 P${this.chamberHeaterIndex} S-273.15`);
+					}
+					if(this.bed) {
+						this.sendCode(`M140 P${this.bedHeaterIndex} S-273.15`);
+					}
+					break;
+				
+				case HeaterState.active:	// Standby -> Off
 					if(this.tool) {
 					this.sendCode(`M568 P${this.tool.number} A0`);
 					}
