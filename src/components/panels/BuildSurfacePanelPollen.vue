@@ -55,9 +55,10 @@
 
 			<v-spacer></v-spacer>
 
-      <code-btn v-show="visibleAxes.length" class="mx-0" :elevation="0" :disabled="uiFrozen || !canHome" code='M98 P"/macros/HONEYPRINT/Compensation_Start"'>
+	  <v-btn v-show="visibleAxes.length" class="mx-0" @click="handleCompensation" elevation="0" :disabled="uiFrozen || !canCompensate">
         <v-icon class="mr-1">mdi-grid</v-icon> {{ $t('panel.movement.startCompensation') }}
-      </code-btn>
+      </v-btn>
+		
 		</v-card-title>
 
 		<v-card-text v-show="visibleAxes.length !== 0">
@@ -65,9 +66,9 @@
 				<v-col cols="12" md="6">
 					<v-row>
             <v-col class="d-flex flex-column align-center justify-center" cols="4" md="3">
-							<code-btn outlined fab large class="home_btn" code="G28" :disabled="!canHome" :title="$t('button.home.titleAll')" >
-								{{ $t('button.home.captionAll') }}
-							</code-btn>
+							<v-btn outlined fab large class="home_btn" @click="handleHoming" :disabled="!canHome" :title="$t('button.home.titleAll')" >
+        						{{ $t('button.home.captionAll') }}
+      						</v-btn>
             </v-col>
             <v-col class="d-flex flex-column justify-center" cols="8" md="9">
               <span class="pollen-attr-header">{{ $t('panel.speedFactor.caption') }}</span>
@@ -181,7 +182,8 @@ export default {
 		...mapState('machine/honeyprint_cache', ['zLimit']),
 		...mapState('machine/model', {
 			machineSpeedFactor: state => state.move.speedFactor,
-			babystepping: state => (state.move.axes.length >= 3) ? state.move.axes[2].babystep : 0
+			babystepping: state => (state.move.axes.length >= 3) ? state.move.axes[2].babystep : 0,
+			isCompensating: state => state.global.COMPENSATING_SEQUENCE_RUNNING
 		}),
 		speedFactor: {
 			get() { return (this.machineSpeedFactor !== null) ? (this.machineSpeedFactor * 100): 100; },
@@ -218,6 +220,9 @@ export default {
 				this.state.status !== StatusType.processing &&
 				this.state.status !== StatusType.resuming
 			);
+		},
+		canCompensate() {
+			return this.isCompensating === 0 && this.canHome
 		},
 		unhomedAxes() { return this.move.axes.filter(axis => axis.visible && !axis.homed); }
 	},
@@ -276,7 +281,25 @@ export default {
     },
 		firstBedHeater() {
       return this.heat.heaters[this.firstBedIndex()];
-    }
+    },
+		async handleCompensation() {
+			await this.sendCode('M991');
+			var today = new Date();
+			var dd = String(today.getDate()).padStart(2, '0');
+			var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+			var yyyy = today.getFullYear();
+			var hh = today.getHours();
+			var minutes = today.getMinutes();
+			var ss = today.getSeconds();
+
+			today = mm + '-' + dd + '-' + yyyy + '-' + hh + '-' + minutes + '-' + ss;
+
+			this.sendCode(`M98 P"/macros/HONEYPRINT/Compensation_Start" H"heightmap-${today}.csv"`);
+		},
+		async handleHoming() {
+			await this.sendCode('M991');
+			this.sendCode('G28');
+		}
 	},
 	watch: {
 		isConnected() {

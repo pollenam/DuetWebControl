@@ -93,7 +93,7 @@ input {
 
 
 					<v-data-table v-model="innerValue" v-bind="$props"
-						:single-select=true :items="files" item-key="name" :headers="defaultHeaders" disable-pagination hide-default-footer :mobile-breakpoint="0"
+						:items="files" item-key="name" :headers="defaultHeaders" disable-pagination hide-default-footer :mobile-breakpoint="0"
 						class="base-file-list heightmap-base-file-list elevation-0" :class="{ 'empty-table-fix' : !files.length }"
 						:sort-by.sync="sortBy"
             :sort-desc.sync="sortDesc"
@@ -109,7 +109,7 @@ input {
 
 						<template #item="props">
 							<tr :data-filename="(props.item.isDirectory ? '*' : '') + props.item.name"
-								:class="props.item.name === 'heightmap.csv'? 'amber lighten-3': props.item.name === selectedFile ? 'amber lighten-5': ''"
+								:class="props.item.name === appliedFile? 'amber lighten-3': props.item.name === selectedFile ? 'amber lighten-5': ''"
 								@click="onItemClick(props)"
 								tabindex="0">
 								<td v-for="header in defaultHeaders" :key="header.value" :class="header.cellClass">
@@ -132,8 +132,8 @@ input {
 										{{ displayTimeValue(props.item, header.value) }}
 									</template>
 									<template v-else-if="header.unit === 'boolean'">
-										<template v-if="props.item.name !== 'heightmap.csv'">
-											<v-btn elevation="0" @click.stop.prevent="selectHeightMap(props.item)"> {{ $t('plugins.heightmap.apply') }}</v-btn>
+										<template v-if="props.item.name !== appliedFile">
+											<v-btn elevation="0" :disabled="!canCompensate" @click.stop.prevent="selectHeightMap(props.item)"> {{ $t('plugins.heightmap.apply') }}</v-btn>
 											<v-btn elevation="0" @click.stop.prevent="removeHeightMap(props.item)">
                         <v-icon>mdi-trash-can-outline</v-icon>
                       </v-btn>
@@ -141,7 +141,7 @@ input {
                         <v-icon>mdi-file-document-edit</v-icon>
                       </v-btn>
 										</template>
-										<template v-if="props.item.name === 'heightmap.csv'">
+										<template v-if="props.item.name === appliedFile">
 											{{ $t('plugins.heightmap.selected') }}
 										</template>
 									</template>
@@ -155,16 +155,16 @@ input {
 					<file-edit-dialog :shown.sync="editDialog.shown" :filename="editDialog.filename" v-model="editDialog.content" @editComplete="$emit('fileEdited', $event)"></file-edit-dialog>
 
           <v-card-actions class="flex-wrap">
-            <v-btn class="mr-3" elevation="0" @click="createNewHeightMap()" :disabled="uiFrozen">{{ $t('plugins.heightmap.create') }}</v-btn>
+            <v-btn class="mr-3" elevation="0" @click="createNewHeightMap()" :disabled="uiFrozen || !canCompensate"> {{ $t('plugins.heightmap.create') }}</v-btn>
             <span class="mx-1">
-            <label for="count" class="pollen-attr-header">S.Count</label>
-            <input name="count" class="mx-1" ref="input" step="any" min="0" v-model.number="s_count" type="number" />
+            <label :title="$t('plugins.heightmap.tooltipSpacing')" for="count" class="pollen-attr-header">S.Spacing</label>
+            <input name="count" class="mx-1" ref="input" step="any" :placeholder="default_spacing" min="1" :max="max_s_spacing" v-model.number="s_spacing" type="number" />
             </span>
             <span class="mx-1">
-            <label for="repeat" class="pollen-attr-header">S.Repeat</label><input name="repeat" class="mx-1" ref="input" step="any" min="0" v-model.number="s_repeat" type="number" />
+            <label :title="$t('plugins.heightmap.tooltipRepeat')" for="repeat" class="pollen-attr-header">S.Repeat</label><input name="repeat" class="mx-1" ref="input" step="any" :placeholder="default_repeat" min="1" max="31" v-model.number="s_repeat" type="number" />
             </span>
             <span class="mx-1">
-            <label for="radius" class="pollen-attr-header">S.Radius</label><input name="radius" class="mx-1" ref="input" step="any" min="0" v-model.number="s_radius" type="number" />
+            <label :title="$t('plugins.heightmap.tooltipRadius')" for="radius" class="pollen-attr-header">S.Radius</label><input name="radius" class="mx-1" ref="input" step="any" :placeholder="default_radius" min="3" max="130" v-model.number="s_radius" type="number" />
             </span>
           </v-card-actions>
 				</v-card>
@@ -352,7 +352,7 @@ import {setPluginData, PluginDataType} from '../../store';
 import CSV from '../../utils/csv.js';
 import Events from '../../utils/events.js';
 import Path from '../../utils/path.js';
-import {KinematicsName} from '../../store/machine/modelEnums';
+import {KinematicsName, StatusType} from '../../store/machine/modelEnums';
 
 import i18n from '../../i18n'
 
@@ -369,13 +369,19 @@ export default {
 			pluginCache: (state) => state.plugins.HeightMap
 
 		}),
+		...mapState('machine/model', ['state']),
 		...mapState('machine/model', {
 			heightmapFile: (state) => state.move.compensation.file,
 			systemDirectory: (state) => state.directories.system,
 			axes: (state) => state.move.axes,
 			kinematicsName: (state) => state.move.kinematics.name,
 			tools: state => state.tools,
-			extruders: state => state.global.PAM_EXTRUDERS
+			extruders: state => state.global.PAM_EXTRUDERS,
+			appliedFile: state => state.global.heightmap_file_name,
+			default_spacing: state => state.global.DEFAULT_S_SPACING,
+			default_repeat: state => state.global.DEFAULT_S_REPEAT,
+			default_radius: state => state.global.DEFAULT_S_RADIUS,
+			isCompensating: state => state.global.COMPENSATING_SEQUENCE_RUNNING
 		}),
 		...mapState('settings', ['language']),
 		defaultHeaders() {
@@ -395,6 +401,16 @@ export default {
 					unit: 'boolean'
 				}
 			];
+		},
+		canHome() {
+			return !this.uiFrozen && (
+				this.state.status !== StatusType.pausing &&
+				this.state.status !== StatusType.processing &&
+				this.state.status !== StatusType.resuming
+			);
+		},
+		canCompensate() {
+			return this.isCompensating === 0 && this.canHome
 		},
 		colorScheme: {
 			get() {
@@ -472,10 +488,10 @@ export default {
 			},
 			sortBy: 'lastModified',
 			sortDesc: false,
-			s_count: 0,
-			s_repeat: 0,
-			s_radius: 0,
-
+			s_spacing: this.default_spacing,
+			s_repeat: this.default_repeat,
+			s_radius: this.default_radius,
+			max_s_spacing: String(Math.floor(this.s_radius/(2*Math.sqrt(2)))),
 			t1x: default_x,
 			t1y: -default_y,
 			t1z: default_z,
@@ -500,8 +516,32 @@ export default {
 			this.refresh();
 		},
 		async createNewHeightMap() {
-			//TODO how to give s_count parameters ...
-			this.sendCode(`M98 P"/macros/HONEYPRINT/Compensation_Start`);
+			await this.sendCode('M991'); // stops infinite extrusion
+
+			var today = new Date();
+			var dd = String(today.getDate()).padStart(2, '0');
+			var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+			var yyyy = today.getFullYear();
+			var hh = today.getHours();
+			var minutes = today.getMinutes();
+			var ss = today.getSeconds();
+
+			today = mm + '-' + dd + '-' + yyyy + '-' + hh + '-' + minutes + '-' + ss;
+
+			var spacing = this.s_spacing;
+			var repeat = this.s_repeat;
+			var radius = this.s_radius;
+			if (typeof spacing !== "number"){
+				spacing = this.default_spacing;
+			}
+			if (typeof repeat !== "number"){
+				repeat = this.default_repeat;
+			}
+			if (typeof radius !== "number"){
+				radius = this.default_radius;
+			}
+
+			this.sendCode(`M98 P"/macros/HONEYPRINT/Compensation_Start" H"heightmap-${today}.csv" C${spacing} R${repeat} S${radius}`);
 		},
 		async saveParameters(){
 			if (this.tools[1] !== null) {
@@ -513,26 +553,14 @@ export default {
 			if (this.tools[3] !== null) {
 				await this.sendCode(`M98 P"/macros/HONEYPRINT/Tool_Offset_Save" T3 X${this.t3x} Y${this.t3y} Z${this.t3z}`);
 			}
-			if (this.tools[4] !== null) {default_x
+			if (this.tools[4] !== null) {
 				await this.sendCode(`M98 P"/macros/HONEYPRINT/Tool_Offset_Save" T4 X${this.t4x} Y${this.t4y} Z${this.t4z}`);
 			}
 			this.refreshOffsets();
 		},
-		restoreDefault() {
-			this.t1x = -default_x;
-			this.t2x = default_x;
-			this.t3x = default_x;
-			this.t4x = default_x;
-
-			this.t1y = -default_y;
-			this.t2y = default_y;
-			this.t3y = default_y;
-			this.t4y = default_y;
-
-			this.t1z = default_z;
-			this.t2z = default_z;
-			this.t3z = default_z;
-			this.t4z = default_z;
+		async restoreDefault() {
+			await this.sendCode(`M98 P"/macros/HONEYPRINT/Tool_Offset_Restore_Defaults"`);
+			this.refreshOffsets();
 		},
 		async openHeightMap(item) {
 			const currentHeightmap = await this.download({
@@ -548,8 +576,10 @@ export default {
 			this.editDialog.content = currentHeightmap;
 		},
 		async selectHeightMap(item) {
+			this.sendCode(`echo >"/sys/pam_memory_heightmap_file.g" "global heightmap_file_name = ""${item.name}"""`);
+			this.sendCode(`set global.heightmap_file_name = "${item.name}"`); // Update the filename in the variable so that it updates the selected file in the list
 				//Download existing heighmap file
-			const currentHeightmap = await this.download({
+			/*const currentHeightmap = await this.download({
 				filename: Path.combine(this.systemDirectory, Path.heightmapFile),
 				type: 'text',
 				showProgress: false,
@@ -593,12 +623,12 @@ export default {
 				showProgress: false,
 				showSuccess: false,
 				showError: false,
-			});
+			});*/
 
 			this.selectedFile = null;
 
 			await this.sendCode({
-						code: 'G29 S1',
+						code: `G29 S1 P"/sys/${item.name}"`, // Load the newly applied heightmap file
 						log: true
 			});
 

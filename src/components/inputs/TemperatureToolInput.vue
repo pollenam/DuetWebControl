@@ -234,7 +234,6 @@ export default {
 				return;
 			}
 			if (this.isProcessing()) {
-				this.sendCode('echo "yes"');
 				return;
 			}
 			var heater = this.getHeater();

@@ -23,7 +23,7 @@
 					<v-icon class="mr-1">mdi-stop</v-icon> {{ cancelText }}
 				</code-btn>
 
-				<v-btn class="ms-0 ms-md-2" v-if="processAnotherAvailable" @click="handleProcessAnother" elevation="0" :disabled="uiFrozen">
+				<v-btn class="ms-0 ms-md-2" v-if="processAnotherAvailable" @click="processAnotherCode" elevation="0" :disabled="uiFrozen">
               		<v-icon class="mr-1">mdi-restart</v-icon> {{ processAnotherText }}
             	</v-btn>
 
