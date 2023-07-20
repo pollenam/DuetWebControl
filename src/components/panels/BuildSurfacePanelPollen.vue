@@ -123,8 +123,9 @@
           </v-row>
           <v-row>
             <v-col class="d-flex flex-wrap align-center pb-0">
-              <span class="pollen-attr-header mb-2">{{ $t('panel.buildSurfacePollen.zLimits') }}</span>
-              <v-switch :value="move.limitAxes" hide-details="auto" class="ms-1 mt-0 mb-2" :color="'success'" :disabled="uiFrozen" v-model="zlimit"></v-switch>
+              <!--<span class="pollen-attr-header mb-2">{{ $t('panel.buildSurfacePollen.zLimits') }}</span> -->
+			  <zlimits-btn-pollen></zlimits-btn-pollen>
+              <!--<v-switch :value="move.limitAxes" hide-details="auto" class="ms-1 mt-0 mb-2" @change="toggleZLimits" :color="'success'" :disabled="uiFrozen"></v-switch>-->
               <code-btn code='M98 P"/macros/HONEYPRINT/Set_Z0"' no-wait block class="mb-2" :disabled="uiFrozen || !canHome">
 								<v-icon small class="mr-1">mdi-arrow-collapse-down</v-icon>
                 {{ $t('panel.buildSurfacePollen.setZero') }}
@@ -179,7 +180,7 @@ export default {
 		...mapState('machine/model', ['move', 'state', 'heat', 'fans']),
 		...mapState('machine/settings', ['moveFeedrate']),
 		...mapState('machine/settings', ['babystepAmount']),
-		...mapState('machine/honeyprint_cache', ['zLimit']),
+		//...mapState('machine/honeyprint_cache', ['zLimit']),
 		...mapState('machine/model', {
 			machineSpeedFactor: state => state.move.speedFactor,
 			babystepping: state => (state.move.axes.length >= 3) ? state.move.axes[2].babystep : 0,
@@ -236,13 +237,13 @@ export default {
 				preset: 0
 			},
 			displayToolPosition: true,
-			zlimit: true
+			//zlimit: true
 		}
 	},
 	methods: {
 		...mapActions('machine', ['sendCode']),
 		...mapMutations('machine/settings', ['setMoveStep']),
-		...mapMutations('machine/honeyprint_cache', ['setZlimit']),
+		//...mapMutations('machine/honeyprint_cache', ['setZlimit']),
 		canMove(axis) {
 			return (axis.homed || !this.move.noMovesBeforeHoming) && this.canHome;
 		},
@@ -299,6 +300,11 @@ export default {
 		async handleHoming() {
 			await this.sendCode('M991');
 			this.sendCode('G28');
+		},
+		async toggleZLimits() {
+			await this.sendCode(`echo ${this.move.limitAxes}`);
+			await this.sendCode(`echo ${Boolean(this.move.limitAxes)}`);
+			await this.sendCode(this.move.limitAxes ? 'M98 P"/macros/HONEYPRINT/Z_Limits" S0' : 'M98 P"/macros/HONEYPRINT/Z_Limits" S1');
 		}
 	},
 	watch: {
@@ -307,7 +313,7 @@ export default {
 			this.showMeshEditDialog = false;
 			this.moveStepDialog.shown = false;
 		},
-		async zLimit(newValue) {
+		/*async zLimit(newValue) {
 			this.zlimit = newValue;
 		},
 		async zlimit(newValue) {
@@ -317,7 +323,7 @@ export default {
 				await this.sendCode(`M98 P"/macros/HONEYPRINT/Z_Limits" S0`);
 			}
 			this.setZlimit(newValue);
-		}
+		}*/
 	}
 }
 </script>

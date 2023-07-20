@@ -10,6 +10,7 @@ import UploadBtn from './UploadBtn.vue'
 
 import ATXBtnPollen from './ATXBtnPollen.vue'
 import DoorsBtnPollen from './DoorsBtnPollen.vue'
+import ZLimitsBtnPollen from './ZLimitsBtnPollen.vue'
 
 Vue.component('code-btn', CodeBtn)
 Vue.component('connect-btn', ConnectBtn)
@@ -19,3 +20,4 @@ Vue.component('upload-btn', UploadBtn)
 
 Vue.component('atx-btn-pollen', ATXBtnPollen)
 Vue.component('doors-btn-pollen', DoorsBtnPollen)
+Vue.component('zlimits-btn-pollen', ZLimitsBtnPollen)
