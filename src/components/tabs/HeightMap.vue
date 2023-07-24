@@ -83,7 +83,7 @@ input {
 	<v-col cols="12">
     <v-row dense>
       <v-col cols="12" lg="8">
-				<v-card elevation="0" class="h-100">
+				<v-card elevation="0" class="h-100 d-flex flex-column">
           <v-card-title class="v-card__title--dense">
 						<v-icon class="mr-2">mdi-dots-grid</v-icon>
 						{{ $t('plugins.heightmap.listTitle') }}
@@ -153,19 +153,22 @@ input {
 						</template>
 					</v-data-table>
 					<file-edit-dialog :shown.sync="editDialog.shown" :filename="editDialog.filename" v-model="editDialog.content" @editComplete="$emit('fileEdited', $event)"></file-edit-dialog>
-
+		  
+		  <v-spacer></v-spacer>
           <v-card-actions class="flex-wrap">
             <v-btn class="mr-3" elevation="0" @click="createNewHeightMap()" :disabled="uiFrozen || !canCompensate"> {{ $t('plugins.heightmap.create') }}</v-btn>
             <span class="mx-1">
             <label :title="$t('plugins.heightmap.tooltipSpacing')" for="count" class="pollen-attr-header">S.Spacing</label>
-            <input name="count" class="mx-1" ref="input" step="any" :placeholder="default_spacing" min="1" :max="max_s_spacing" v-model.number="s_spacing" type="number" />
+            <input name="count" class="mx-1" ref="input" step="any" :placeholder="default_spacing" :min="spacingMin" :max="spacingMax" v-model.number="s_spacing" type="number" />
             </span>
             <span class="mx-1">
             <label :title="$t('plugins.heightmap.tooltipRepeat')" for="repeat" class="pollen-attr-header">S.Repeat</label><input name="repeat" class="mx-1" ref="input" step="any" :placeholder="default_repeat" min="1" max="31" v-model.number="s_repeat" type="number" />
             </span>
             <span class="mx-1">
-            <label :title="$t('plugins.heightmap.tooltipRadius')" for="radius" class="pollen-attr-header">S.Radius</label><input name="radius" class="mx-1" ref="input" step="any" :placeholder="default_radius" min="3" max="130" v-model.number="s_radius" type="number" />
+            <label :title="$t('plugins.heightmap.tooltipRadius')" for="radius" class="pollen-attr-header">S.Radius</label><input name="radius" class="mx-1" ref="input" step="any" :placeholder="default_radius" :min="radiusMin" :max="radiusMax" v-model.number="s_radius" type="number" />
             </span>
+			<v-spacer></v-spacer>
+			<v-btn elevation="0" :disabled="uiFrozen || !canCompensate" @click="restoreSettingsFactoryDefault()">{{ $t('plugins.heightmap.defaultFactorySettings') }}</v-btn>
           </v-card-actions>
 				</v-card>
 		</v-col>
@@ -357,9 +360,12 @@ import {KinematicsName, StatusType} from '../../store/machine/modelEnums';
 import i18n from '../../i18n'
 
 let heightMapViewer;
-const default_x = 13.31
-const	default_y = 8.89
-const default_z = -10
+const default_x = 13.31;
+const default_y = 8.89;
+const default_z = -10;
+const factory_default_spacing = 25;
+const factory_default_repeat = 4;
+const factory_default_radius = 130;
 
 export default {
 	computed: {
@@ -384,6 +390,30 @@ export default {
 			isCompensating: state => state.global.COMPENSATING_SEQUENCE_RUNNING
 		}),
 		...mapState('settings', ['language']),
+		spacingMin() { 
+			if(this.s_radius > 3){
+				return Math.max(1,Math.ceil(this.s_radius/10));
+			}
+			return 1;
+		},
+		spacingMax() { 
+			if (this.s_radius > 3) {
+				return Math.min(129, Math.floor(this.s_radius - 1));
+			}
+			return 129;
+		},
+		radiusMin() {
+			if (this.s_spacing > 1){
+				return Math.max(3, Math.ceil(this.s_spacing + 1));
+			}
+			return 3;
+		},
+		radiusMax() {
+			if (this.s_spacing > 1){
+				return Math.min(130, this.s_spacing*10);
+			}
+			return 130;
+		},
 		defaultHeaders() {
 			return [
 				{
@@ -491,7 +521,6 @@ export default {
 			s_spacing: this.default_spacing,
 			s_repeat: this.default_repeat,
 			s_radius: this.default_radius,
-			max_s_spacing: String(Math.floor(this.s_radius/(2*Math.sqrt(2)))),
 			t1x: default_x,
 			t1y: -default_y,
 			t1z: default_z,
@@ -541,7 +570,10 @@ export default {
 				radius = this.default_radius;
 			}
 
-			this.sendCode(`M98 P"/macros/HONEYPRINT/Compensation_Start" H"heightmap-${today}.csv" C${spacing} R${repeat} S${radius}`);
+			await this.sendCode(`M98 P"/macros/HONEYPRINT/Compensation_Start" H"heightmap-${today}.csv" C${spacing} R${repeat} S${radius}`);
+		},
+		async restoreSettingsFactoryDefault(){
+			await this.sendCode(`M98 P"/macros/HONEYPRINT/Set_Heightmap_Settings_Default" C${factory_default_spacing} R${factory_default_repeat} S${factory_default_radius}`);
 		},
 		async saveParameters(){
 			if (this.tools[1] !== null) {
