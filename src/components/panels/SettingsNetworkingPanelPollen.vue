@@ -33,23 +33,24 @@
 <script>
 'use strict'
 
-const m552re = /^\s*M552(?: S\d| P(\d+\.\d+\.\d+\.\d+))+/gm;
-const m552reInner = /P(\d+\.\d+\.\d+\.\d+)/gm;
-const sysConfigFilename = '/macros/CONFIG/B-IP_SET.g';
+//const m552re = /^\s*M552(?: S\d| P(\d+\.\d+\.\d+\.\d+))+/gm;
+//const m552reInner = /P(\d+\.\d+\.\d+\.\d+)/gm;
+//const ipAddressInitFile = '/macros/CONFIG/IP_ADRESS_MEMORY.g';
+const ipAddressPattern = /^(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)(?:\.(?:25[0-5]|2[0-4]\d|1\d\d|[1-9]\d|\d)){3}$/;
 
 import { mapState, mapActions } from 'vuex'
 
 export default {
-  data() {
-    return {
-      formIpAddress: null
-    }
-  },
 	computed: {
-		...mapState('machine/honeyprint_cache', {
-      ipAddress: state => state.ipAddress,
+		...mapState('machine/model', {
+      ipAddress: state => state.global.PAM_IP_ADRESS,
     })
 	},
+  data() {
+    return {
+      formIpAddress: this.ipAddress
+    }
+  },
 	methods: {
 		...mapActions('machine', {
       machineSendCode: 'sendCode',
@@ -58,73 +59,20 @@ export default {
 			machineUpload: 'upload'
     }),
 		...mapState('machine/model', ['network']),
-    handleSubmit() {
-      this.setCurrentIpAddress(this.formIpAddress);
-    },
-    loadConfigIpAddress() {
-      const resultPromise = new Promise((resolve, reject) => {
-        var lastMatch = null;
-        this.machineDownload({ filename: sysConfigFilename, type: 'text', showSuccess: false })
-        .then((fileContent) => {
-          for (const match of fileContent.matchAll(m552re)) {
-            if (lastMatch == null || lastMatch.index < match.index)
-            {
-            lastMatch = match;
-            }
-          }
-
-          if (lastMatch == null)
-          {
-            reject(fileContent);
-          }
-          else
-          {
-            const execResult = m552reInner.exec(lastMatch[0]);
-            const foundIpAddress = execResult && execResult[1] || null;
-
-            resolve({ lastMatch: lastMatch, foundIpAddress: foundIpAddress });
-          }
-        },
-        () => { reject(null); });
-      });
-
-      return resultPromise;
-    },
-    setCurrentIpAddress() {
-      const newM552Command = `M552 S1 P${this.formIpAddress}`;
-      this.loadConfigIpAddress()
-      .then(
-        (data) => {
-          var lastMatch = data.lastMatch;
-          var newInput =
-            `${lastMatch.input.substring(0, lastMatch.index)}${newM552Command}${lastMatch.input.substring(lastMatch.index + lastMatch[0].length, lastMatch.input.length)}`;
-
-          this.machineUpload({ filename: sysConfigFilename, content: newInput })
-        },
-        (fileContent) => {
-          if (fileContent != null)
-          {
-            var newInput = `${fileContent}\n${newM552Command}`;
-            this.machineUpload({ filename: sysConfigFilename, content: newInput })
-          }
-        }
-      );
-
-      this.machineSendCode(newM552Command);
-    }
-	},
-  mounted() {
-    this.loadConfigIpAddress()
-    .then(
-      (data) => {
-        // var lastMatch = data.lastMatch;
-        var foundIpAddress = data.foundIpAddress;
-        this.formIpAddress = foundIpAddress;
-      },
-      () => {
-        this.formIpAddress = '0.0.0.0';
+    async handleSubmit() {
+      if (this.isValidIpAdress()){
+        await this.machineSendCode(`M98 P"/macros/CONFIG/UPDATE_IP_ADRESS.g" A"${this.formIpAddress}"`);
       }
-    );
+      else{
+        await this.machineSendCode(`echo "${this.formIpAddress} is not a valid ip adress."`);
+      }
+    },
+    isValidIpAdress(){
+      return ipAddressPattern.test(this.formIpAddress);
+    }
+  },
+  mounted() {
+    this.formIpAddress = this.ipAddress;
   }
 }
 

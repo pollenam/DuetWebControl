@@ -59,7 +59,7 @@ export default {
 
 		enabledPlugins: ['Height Map', 'G-Code Viewer'],
 		plugins: {},									    // Third-party values
-		legacyMode: true
+		legacyMode: false
 	},
 	actions: {
 		async applyDefaults({ state, dispatch }) {
