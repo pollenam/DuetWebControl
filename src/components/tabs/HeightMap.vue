@@ -382,7 +382,7 @@ export default {
 			axes: (state) => state.move.axes,
 			kinematicsName: (state) => state.move.kinematics.name,
 			tools: state => state.tools,
-			extruders: state => state.global.PAM_EXTRUDERS,
+			extruders: state => state.global.APP_EXTRUDERS,
 			appliedFile: state => state.global.heightmap_file_name,
 			default_spacing: state => state.global.DEFAULT_S_SPACING,
 			default_repeat: state => state.global.DEFAULT_S_REPEAT,
@@ -608,7 +608,7 @@ export default {
 			this.editDialog.content = currentHeightmap;
 		},
 		async selectHeightMap(item) {
-			this.sendCode(`echo >"/sys/pam_memory_heightmap_file.g" "global heightmap_file_name = ""${item.name}"""`);
+			this.sendCode(`echo >"/sys/app_memory_heightmap_file.g" "global heightmap_file_name = ""${item.name}"""`);
 			this.sendCode(`set global.heightmap_file_name = "${item.name}"`); // Update the filename in the variable so that it updates the selected file in the list
 				//Download existing heighmap file
 			/*const currentHeightmap = await this.download({

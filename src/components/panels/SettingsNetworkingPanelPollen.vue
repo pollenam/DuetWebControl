@@ -43,7 +43,7 @@ import { mapState, mapActions } from 'vuex'
 export default {
 	computed: {
 		...mapState('machine/model', {
-      ipAddress: state => state.global.PAM_IP_ADRESS,
+      ipAddress: state => state.global.APP_IP_ADRESS,
     })
 	},
   data() {

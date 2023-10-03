@@ -2,10 +2,13 @@
 	<v-row :dense="$vuetify.breakpoint.mobile">
 		<v-col cols="12">
 			<v-row dense align="stretch">
-				<v-col cols="12" lg="6" class="d-flex">
+				<v-col cols="12" lg="6" class="d-flex" v-if="showHTpanel">
 					<job-control-panel-pollen  class="w-100"></job-control-panel-pollen>
 				</v-col>
-				<v-col cols="8" md="8" lg="4" class="d-flex">
+				<v-col cols="16" lg="10" class="d-flex" v-if="!showHTpanel"> 
+					<job-control-panel-pollen  class="w-100"></job-control-panel-pollen>
+				</v-col>
+				<v-col cols="8" md="8" lg="4" class="d-flex" v-if="showHTpanel">
 					<high-temperature-panel-pollen  class="w-100"></high-temperature-panel-pollen>
 				</v-col>
 				<v-col cols="4" md="4" lg="2" class="d-flex">
@@ -40,7 +43,9 @@ export default {
 			fans: state => state.fans,
 			atxPower: state => state.state.atxPower,
 			machineMode: state => state.state.machineMode,
-      tools: state => state.tools
+			hasRadiant: state => state.global.APP_RADIANT,
+			hasChamber: state => state.global.APP_HEATED_CHAMBER,
+			tools: state => state.tools
 		}),
 		...mapGetters(['uiFrozen']),
 		...mapGetters('machine/model', ['currentTool']),
@@ -50,9 +55,12 @@ export default {
 		showFansPanel() {
 			return (this.currentTool && this.currentTool.fans.length > 0) || this.fans.some(fan => fan && !fan.thermostatic.control);
 		},
-    extruderTools() {
-      return this.tools.filter(tool => tool !== null).filter(tool => tool.extruders.length > 0).filter(tool => tool.number >= 0 && tool.number <= 4);
-    }
+    	extruderTools() {
+      		return this.tools.filter(tool => tool !== null).filter(tool => tool.extruders.length > 0).filter(tool => tool.number >= 0 && tool.number <= 4);
+    	},
+		showHTpanel() {
+			return this.hasChamber || this.hasRadiant
+		}
 	}
 }
 </script>

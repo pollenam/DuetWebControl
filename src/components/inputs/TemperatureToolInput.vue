@@ -24,7 +24,7 @@
             :value="inputValue" :search-input="inputValue" @update:search-input="change" @keyup.enter="apply" @blur="blur"
             :loading="applying" :disabled="uiFrozen || !isValid" :items="items" hide-selected>
       </v-combobox>
-      <a href="javascript:void(0)" class="black--text mt-1" @click="toolHeaterClick()"><small>({{ getStatus() }})</small></a>
+      <small class="black--text mt-1">({{ getStatus() }})</small>
     </div>
 		<reset-heater-fault-dialog :shown.sync="resetHeaterFault" :heater="faultyHeater"></reset-heater-fault-dialog>
 	</div>
