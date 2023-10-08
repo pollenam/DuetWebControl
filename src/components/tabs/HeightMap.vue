@@ -62,6 +62,10 @@ h1 {
 	pointer-events: none;
 }
 
+.slider {
+	width: 150px;
+}
+
 input[type='number'] {
 	-moz-appearance: number !important;
 	width:50px;
@@ -159,14 +163,18 @@ input {
             <v-btn class="mr-3" elevation="0" @click="createNewHeightMap()" :disabled="uiFrozen || !canCompensate"> {{ $t('plugins.heightmap.create') }}</v-btn>
             <span class="mx-1">
             <label :title="$t('plugins.heightmap.tooltipSpacing')" for="count" class="pollen-attr-header">S.Spacing</label>
-            <input name="count" class="mx-1" ref="input" step="any" :placeholder="default_spacing" :min="spacingMin" :max="spacingMax" v-model.number="s_spacing" type="number" />
+            <input name="count" class="mx-1" ref="input" step="any" :placeholder="default_spacing" v-model.number="s_spacing" type="number" />
             </span>
             <span class="mx-1">
             <label :title="$t('plugins.heightmap.tooltipRepeat')" for="repeat" class="pollen-attr-header">S.Repeat</label><input name="repeat" class="mx-1" ref="input" step="any" :placeholder="default_repeat" min="1" max="31" v-model.number="s_repeat" type="number" />
             </span>
             <span class="mx-1">
-            <label :title="$t('plugins.heightmap.tooltipRadius')" for="radius" class="pollen-attr-header">S.Radius</label><input name="radius" class="mx-1" ref="input" step="any" :placeholder="default_radius" :min="radiusMin" :max="radiusMax" v-model.number="s_radius" type="number" />
+				<label :title="$t('plugins.heightmap.tooltipXRange')" for="x_range" class="pollen-attr-header">S.X_Range</label><v-range-slider name="x_range" class="mx-1 slider" v-model="s_x_range" step="1" min=0 max=780 thumb-label dense></v-range-slider>
+            <!-- <label :title="$t('plugins.heightmap.tooltipRadius')" for="radius" class="pollen-attr-header">S.Radius</label><input name="radius" class="mx-1" ref="input" step="any" :placeholder="default_radius" :min="radiusMin" :max="radiusMax" v-model.number="s_radius" type="number" /> -->
             </span>
+			<span class="mx-1">
+				<label :title="$t('plugins.heightmap.tooltipYRange')" for="y_range" class="pollen-attr-header">S.Y_Range</label><v-range-slider name="y_range" class="mx-1 slider" v-model="s_y_range" step="1" min=0 max=780 thumb-label dense></v-range-slider>
+			</span>
 			<v-spacer></v-spacer>
 			<v-btn elevation="0" :disabled="uiFrozen || !canCompensate" @click="restoreSettingsFactoryDefault()">{{ $t('plugins.heightmap.defaultFactorySettings') }}</v-btn>
           </v-card-actions>
@@ -365,7 +373,8 @@ const default_y = 8.89;
 const default_z = -10;
 const factory_default_spacing = 25;
 const factory_default_repeat = 4;
-const factory_default_radius = 130;
+const factory_default_x_range = [0, 780];
+const factory_default_y_range = [0, 780];
 
 export default {
 	computed: {
@@ -386,34 +395,11 @@ export default {
 			appliedFile: state => state.global.heightmap_file_name,
 			default_spacing: state => state.global.DEFAULT_S_SPACING,
 			default_repeat: state => state.global.DEFAULT_S_REPEAT,
-			default_radius: state => state.global.DEFAULT_S_RADIUS,
+			default_x_range: state => state.global.DEFAULT_S_X_RANGE,
+			default_y_range: state => state.global.DEFAULT_S_Y_RANGE,
 			isCompensating: state => state.global.COMPENSATING_SEQUENCE_RUNNING
 		}),
 		...mapState('settings', ['language']),
-		spacingMin() { 
-			if(this.s_radius > 3){
-				return Math.max(1,Math.ceil(this.s_radius/10));
-			}
-			return 1;
-		},
-		spacingMax() { 
-			if (this.s_radius > 3) {
-				return Math.min(129, Math.floor(this.s_radius - 1));
-			}
-			return 129;
-		},
-		radiusMin() {
-			if (this.s_spacing > 1){
-				return Math.max(3, Math.ceil(this.s_spacing + 1));
-			}
-			return 3;
-		},
-		radiusMax() {
-			if (this.s_spacing > 1){
-				return Math.min(130, this.s_spacing*10);
-			}
-			return 130;
-		},
 		defaultHeaders() {
 			return [
 				{
@@ -520,7 +506,8 @@ export default {
 			sortDesc: false,
 			s_spacing: this.default_spacing,
 			s_repeat: this.default_repeat,
-			s_radius: this.default_radius,
+			s_x_range: this.default_x_range,
+			s_y_range: this.default_y_range,
 			t1x: default_x,
 			t1y: -default_y,
 			t1z: default_z,
@@ -559,21 +546,26 @@ export default {
 
 			var spacing = this.s_spacing;
 			var repeat = this.s_repeat;
-			var radius = this.s_radius;
+			var x_range = this.s_x_range;
+			var y_range = this.s_y_range;
+
 			if (typeof spacing !== "number"){
 				spacing = this.default_spacing;
 			}
 			if (typeof repeat !== "number"){
 				repeat = this.default_repeat;
 			}
-			if (typeof radius !== "number"){
-				radius = this.default_radius;
+			if (!Array.isArray(x_range) || x_range.length != 2 || x_range.some(item => typeof item !== 'number' || isNaN(item))){
+				x_range = this.default_x_range;
+			}
+			if (!Array.isArray(y_range) || y_range.length != 2 || y_range.some(item => typeof item !== 'number' || isNaN(item))){
+				y_range = this.default_y_range;
 			}
 
-			await this.sendCode(`M98 P"/macros/HONEYPRINT/Compensation_Start" H"heightmap-${today}.csv" C${spacing} R${repeat} S${radius}`);
+			await this.sendCode(`M98 P"/macros/HONEYPRINT/Compensation_Start" H"heightmap-${today}.csv" S${spacing} R${repeat} X{${x_range[0]},${x_range[1]}} Y{${y_range[0]},${y_range[1]}}`);
 		},
 		async restoreSettingsFactoryDefault(){
-			await this.sendCode(`M98 P"/macros/HONEYPRINT/Set_Heightmap_Settings_Default" C${factory_default_spacing} R${factory_default_repeat} S${factory_default_radius}`);
+			await this.sendCode(`M98 P"/macros/HONEYPRINT/Set_Heightmap_Settings_Default" S${factory_default_spacing} R${factory_default_repeat} X{${factory_default_x_range[0]},${factory_default_x_range[1]}} Y{${factory_default_y_range[0]},${factory_default_y_range[1]}}`);
 		},
 		async saveParameters(){
 			if (this.tools[1] !== null) {
