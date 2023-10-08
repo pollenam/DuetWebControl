@@ -509,6 +509,9 @@ export default {
 			on: 'On',
 			off: 'Off'
 		},
+		motors: {
+			caption: 'Moteurs'
+		},
     doors: {
       caption: 'Portes'
     },

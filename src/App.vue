@@ -72,6 +72,7 @@ textarea {
         </div>
 				<div class="ma-2 d-flex justify-space-around">
           <atx-btn-pollen class="mt-2"></atx-btn-pollen>
+		  <mot-status-btn-pollen class="mt-2"></mot-status-btn-pollen>
           <doors-btn-pollen class="mt-2"></doors-btn-pollen>
         </div>
 			</div>
@@ -101,9 +102,10 @@ textarea {
 				<v-icon>mdi-menu</v-icon>
 			</v-app-bar-nav-icon>
       <router-link class="px-1" to="/" id="title">{{ name }}</router-link>
-			<connect-btn v-if="showConnectButton" class="hidden-xs-only ml-3"/>
+			<!-- <connect-btn v-if="showConnectButton" class="hidden-xs-only ml-3"/> -->
 
       <atx-btn-pollen class="hidden-xs-only ml-12"></atx-btn-pollen>
+	  <mot-status-btn-pollen class="hidden-xs-only"></mot-status-btn-pollen>
       <doors-btn-pollen class="hidden-xs-only"></doors-btn-pollen>
       <a href="https://pollenam.zendesk.com/" target="_blank" rel="nooperner" class="hidden-xs-only ml-5 text-white">Support</a>
 

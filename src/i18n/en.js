@@ -596,6 +596,9 @@ export default {
 			on: 'On',
 			off: 'Off'
 		},
+		motors: {
+			caption: 'Motors'
+		},
     doors: {
       caption: 'Doors'
     },
