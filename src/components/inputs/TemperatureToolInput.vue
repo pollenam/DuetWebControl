@@ -120,6 +120,9 @@ export default {
 				this.applying = true;
 				try {
 					if (this.inputValue >= -273.15 && this.inputValue <= 1999) {
+						if (!this.state.atxPower && this.inputValue > 0){
+							this.$log('warning', this.$t('notification.turnOnVPower'));
+						}
 						if (this.tool) {
               // We decided to diable standby mode. Old implementation here down
               // const currentTemps = this.tool[this.active ? 'active' : 'standby'];

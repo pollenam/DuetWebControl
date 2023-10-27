@@ -21,8 +21,6 @@ export default {
 	methods: {
 		...mapActions('machine', ['sendCode']),
 		async toggleZLimits() {
-			//await this.sendCode(`echo ${this.move.limitAxes}`);
-			//await this.sendCode(`echo ${Boolean(this.move.limitAxes)}`);
 			await this.sendCode(this.move.limitAxes ? 'M98 P"/macros/HONEYPRINT/Z_Limits" S0' : 'M98 P"/macros/HONEYPRINT/Z_Limits" S1');
 		}
 	}

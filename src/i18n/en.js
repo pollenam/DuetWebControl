@@ -568,6 +568,7 @@ export default {
 			errorStillLoaded: 'This filament is still loaded. Please unload it before you proceed'
 		},
 		responseTooLong: 'Response too long, see Console',
+		turnOnVPower: 'Please turn on VPower to enable heating',
 		upload: {
 			title: 'Uploading {0} @ {1}, {2}% complete',
 			message: 'Please stand by while the file is being uploaded...',

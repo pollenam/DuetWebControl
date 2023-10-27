@@ -70,7 +70,7 @@ textarea {
 				<div class="ma-2">
         <v-btn block href="https://pollenam.zendesk.com/" target="_blank" rel="nooperner">Support</v-btn>
         </div>
-				<div class="ma-2 d-flex justify-space-around">
+		<div class="ma-2 d-flex justify-space-around">
           <atx-btn-pollen class="mt-2"></atx-btn-pollen>
           <doors-btn-pollen class="mt-2"></doors-btn-pollen>
         </div>
@@ -237,7 +237,7 @@ export default {
 		},
 		showBottomNavigation() {
 			return this.$vuetify.breakpoint.mobile && !this.$vuetify.breakpoint.xsOnly && this.bottomNavigation;
-		}
+		},
 	},
 	data() {
 		return {
