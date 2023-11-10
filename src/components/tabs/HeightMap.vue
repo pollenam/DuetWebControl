@@ -596,7 +596,7 @@ export default {
 		},
 		async openHeightMap(item) {
 			const currentHeightmap = await this.download({
-				filename: Path.combine(this.systemDirectory, Path.heightmapFile),
+				filename: Path.combine(this.systemDirectory, item.name),
 				type: 'text',
 				showProgress: false,
 				showSuccess: false,
