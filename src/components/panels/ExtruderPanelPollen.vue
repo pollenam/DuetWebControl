@@ -59,10 +59,10 @@
           <v-col cols="6">
             <v-btn block @click="temperatureMemory()" elevation="0" :disabled="this.isProcessing()">
               <v-icon class="mr-1">mdi-restore</v-icon>
-              <span class="hidden-lg-only">
+              <span class="hidden-sm-only hidden-lg-only">
                 {{ $t('panel.extruderPollen.memory') }}
               </span>
-              <span class="hidden-md-and-down hidden-xl-only">
+              <span class="hidden-xs-only hidden-md-only hidden-xl-only">
                 {{ $t('panel.extruderPollen.memoryShort') }}
               </span>
             </v-btn>
@@ -70,10 +70,10 @@
           <v-col cols="6">
             <v-btn block @click="temperatureStop()" elevation="0" :disabled="this.isProcessing()">
               <v-icon class="mr-1">mdi-power</v-icon>
-              <span class="hidden-lg-only">
+              <span class="hidden-sm-only hidden-lg-only">
                 {{ $t('panel.extruderPollen.stopheat') }}
               </span>
-              <span class="hidden-md-and-down hidden-xl-only">
+              <span class="hidden-xs-only hidden-md-only hidden-xl-only">
                 {{ $t('panel.extruderPollen.stopheatShort') }}
               </span>
             </v-btn>

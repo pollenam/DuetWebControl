@@ -137,9 +137,27 @@
           <v-row :key="`bed-title-${firstBedIndex()}-0`">
             <v-col class="d-flex flex-column">
               <span class="pollen-attr-header">{{ $t('panel.buildSurfacePollen.bed') }}</span>
-              <temperature-tool-input :bed="firstBedHeater()" :bedHeaterIndex="firstBedIndex()" active class="mt-3 mb-0"></temperature-tool-input>
             </v-col>
           </v-row>
+		  <v-row class="row--highlighted" dense>
+			<v-col cols="4">
+			  <v-btn block @click="bedTemperatureMemory()" elevation="0" :disabled="this.isProcessing()" class="mb-1">
+				<v-icon small class="mr-1">mdi-restore</v-icon>
+				<span class="hidden-xs-only hidden-md-only hidden-lg-only">
+					{{ $t('panel.extruderPollen.memoryShort') }}
+				</span>
+              </v-btn>
+			  <v-btn block @click="bedTemperatureStop()" elevation="0" :disabled="this.isProcessing()">
+				<v-icon small class="mr-1 hidden-xs-only hidden-md-only hidden-lg-only">mdi-power</v-icon>
+				<span>
+					{{ $t('panel.extruderPollen.stopheatShort') }}
+				</span>
+              </v-btn>
+            </v-col>
+			<v-col cols="8">
+			  <temperature-tool-input :bed="firstBedHeater()" :bedHeaterIndex="firstBedIndex()" active class="mt-3 mb-0"></temperature-tool-input>
+			</v-col>
+		  </v-row>
           <hr class="hr--separated-rows" />
           <v-row>
             <v-col class="d-flex flex-column">
@@ -244,6 +262,9 @@ export default {
 		...mapActions('machine', ['sendCode']),
 		...mapMutations('machine/settings', ['setMoveStep']),
 		//...mapMutations('machine/honeyprint_cache', ['setZlimit']),
+		isProcessing() {
+      		return this.state.status ===  StatusType.processing
+    	},
 		canMove(axis) {
 			return (axis.homed || !this.move.noMovesBeforeHoming) && this.canHome;
 		},
@@ -303,6 +324,13 @@ export default {
 		},
 		async toggleZLimits() {
 			await this.sendCode(this.move.limitAxes ? 'M98 P"/macros/HONEYPRINT/Z_Limits" S0' : 'M98 P"/macros/HONEYPRINT/Z_Limits" S1');
+		},
+		async bedTemperatureMemory() {
+			await this.sendCode("M98 P\"/sys/pam_memory_BED.g\"");
+		},
+		async bedTemperatureStop() {
+			await this.sendCode("M140 S-273.1"); //Bed off
+			await this.sendCode("M140 S0"); //Bed set to 0°C
 		}
 	},
 	watch: {
