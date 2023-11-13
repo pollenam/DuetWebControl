@@ -269,7 +269,7 @@ export default {
 		filelistRequestFailed: 'Impossible d\'obtenir la liste des fichiers',
 		fileinfoRequestFailed: 'Impossible d\'obtenir les informations du fichier pour {0}',
 		filamentsLoadFailed: 'Impossible de charger le filament',
-		move: 'Impossible de déplacer {0} à {1}'
+		move: 'Impossible de déplacer {0} à {1}',
 	},
 	events: {
 		connected: 'Connecté à {0}',
@@ -480,6 +480,7 @@ export default {
 			errorStillLoaded: 'Ce filament est toujours chargé. Merci de le décharger avant de procéder'
 		},
 		responseTooLong: 'Réponse trop longue, voir la Console',
+		turnOnVPower: 'Veuillez activer le VPower pour permettre la chauffe',
 		upload: {
 			title: 'Envoi {0} @ {1}, {2}% complet',
 			message: 'Veuillez patienter pendant que le fichier est envoyé...',

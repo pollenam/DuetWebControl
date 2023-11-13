@@ -268,7 +268,7 @@
     "fileinfoRequestFailed":"Impossible d'obtenir les informations du fichier pour {0}",
     "filamentsLoadFailed":"Impossible de charger le filament",
     "move":"Impossible de déplacer {0} à {1}"
-  },
+    },
   "events":{
     "connected":"Connecté à {0}",
     "connectionLost":"N'a pas réussi à maintenir la connexion à {0}",
@@ -478,6 +478,7 @@
       "errorStillLoaded":"Ce filament est toujours chargé. Merci de le décharger avant de procéder"
     },
     "responseTooLong":"Réponse trop longue, voir la Console",
+    "turnOnVPower": "Veuillez activer le VPower pour permettre la chauffe",
     "upload":{
       "title":"Envoi {0} @ {1}, {2}% complet",
       "message":"Veuillez patienter pendant que le fichier est envoyé...",

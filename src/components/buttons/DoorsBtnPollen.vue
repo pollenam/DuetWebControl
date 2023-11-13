@@ -1,11 +1,11 @@
 <template>
-  <div class="v-toolbar-pollen-item">
+  <div v-if="doorsPresent" class="v-toolbar-pollen-item">
     <v-icon small class="mr-1">mdi-lock-outline</v-icon>
     <span class="hidden-md-and-down">
       {{ $t('panel.doors.caption') }}
     </span>
 
-    <v-switch :value="doors" hide-details="'auto'" :loading="sendingCode" :color="'success'" :dark="!hidedoors || homingSequence" @change="togglePower" class="ml-2" :disabled="uiFrozen || !hidedoors || homingSequence">
+    <v-switch :value="doors" hide-details="'auto'" :loading="sendingCode" :color="'success'" :dark="!doorsPresent || homingSequence" @change="togglePower" class="ml-2" :disabled="uiFrozen || !doorsPresent || homingSequence">
     </v-switch>
   </div>
 </template>
@@ -21,7 +21,7 @@ export default {
 		...mapState('machine/model', ['state']),
 		...mapState('machine/model', {
       		doors: state => state.global.DOORS_CLOSED,
-			hidedoors: state => state.global.DOORS_PRESENT,
+			doorsPresent: state => state.global.DOORS_PRESENT,
 			homingSequence: state => state.global.HOMING_SEQUENCE_RUNNING,
 		}),
 	},
