@@ -5,7 +5,7 @@
       {{ $t('panel.motors.caption') }}
     </span>
 
-    <v-switch :value="motors" hide-details="'auto'" :loading="sendingCode" :dark="homingSequence" :color="'success'" @change="toggleMotor" class="ml-2" :disabled="uiFrozen || homingSequence">
+    <v-switch :value="motors" hide-details="'auto'" :loading="sendingCode" :dark="homingSequence || !state.atxPower" :color="'success'" @change="toggleMotor" class="ml-2" :disabled="uiFrozen || homingSequence || !state.atxPower">
     </v-switch>
   </div>
 </template>
