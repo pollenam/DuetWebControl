@@ -198,7 +198,8 @@ export default {
     },
     shouldAllowSelect() {
       return !this.shouldShowExtruderFactor || 
-      this.state.status === StatusType.processing;
+      this.state.status === StatusType.processing ||
+      this.state.status === StatusType.changingTool;
     },
     isSelected2(value) {
       if (value == 1){
