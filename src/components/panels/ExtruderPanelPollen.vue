@@ -152,72 +152,67 @@ const EXTRUSION_SPEED_MAX = 12;
 
 export default {
 	computed: {
-		...mapGetters(['uiFrozen']),
+	  ...mapGetters(['uiFrozen']),
     ...mapState('machine/model', ['move']),
     ...mapState('machine/model', ['state']),
-		...mapState('machine/settings', ['displayedExtruders']),
+	  ...mapState('machine/settings', ['displayedExtruders']),
     ...mapState('machine/model', ['global', 'heat', 'tools']),
     ...mapState('machine/honeyprint_cache', ['extrudersAvailableMaterials', 'extrudersSelectedMaterials', 'selectedPid', 'infiniteExtrusionRate']),
-		...mapState('machine/model', {
-			macrosDirectory: state => state.directories.macros,
-      tools: state => state.tools,
-			infiniteExtrusionStatus: state => state.infiniteExtrusionStatus,
-      infiniteStatus: state => state.infiniteStatus,
-      T1Selected: state => state.global.T1_Selected,
-      T2Selected: state => state.global.T2_Selected,
-      T3Selected: state => state.global.T3_Selected,
-      T4Selected: state => state.global.T4_Selected,
-		}),
+	  ...mapState('machine/model', {
+	  macrosDirectory: state => state.directories.macros,
+	  tools: state => state.tools,
+	  infiniteExtrusionStatus: state => state.infiniteExtrusionStatus,
+    infiniteStatus: state => state.infiniteStatus,
+    T1Selected: state => state.global.T1_Selected,
+    T2Selected: state => state.global.T2_Selected,
+    T3Selected: state => state.global.T3_Selected,
+    T4Selected: state => state.global.T4_Selected,
+	}),
     shouldShowInfinite() {
-      if (this.infiniteExtrusionStatus === null || this.infiniteExtrusionStatus === undefined)
-      {
-        return false;
-      }
-
-      return this.infiniteExtrusionStatus[this.toolIndex] === 'stopped'
+		if (this.infiniteExtrusionStatus === null || this.infiniteExtrusionStatus === undefined)
+		{
+			return false;
+		}
+		return this.infiniteExtrusionStatus[this.toolIndex] === 'stopped'
     },
-    shouldShowStop()
-    {
-      if (this.infiniteExtrusionStatus === null || this.infiniteExtrusionStatus === undefined)
-      {
-        return false;
-      }
-
-      return this.infiniteExtrusionStatus[this.toolIndex] !== 'stopped'
+    shouldShowStop() {
+		if (this.infiniteExtrusionStatus === null || this.infiniteExtrusionStatus === undefined)
+		{
+			return false;
+		}
+		return this.infiniteExtrusionStatus[this.toolIndex] !== 'stopped'
     },
     shouldShowExtruderFactor() {
-      if (this.infiniteExtrusionStatus === null || this.infiniteExtrusionStatus === undefined)
-      {
-        return false;
-      }
-
-      return this.infiniteExtrusionStatus[0] === 'stopped' &&
-        this.infiniteExtrusionStatus[1]  === 'stopped' &&
+		if (this.infiniteExtrusionStatus === null || this.infiniteExtrusionStatus === undefined)
+		{
+			return false;
+		}
+		return this.infiniteExtrusionStatus[0] === 'stopped' &&
+		this.infiniteExtrusionStatus[1]  === 'stopped' &&
         this.infiniteExtrusionStatus[2]  === 'stopped' &&
         this.infiniteExtrusionStatus[3] === 'stopped'
     },
     shouldAllowSelect() {
-      return !this.shouldShowExtruderFactor || 
-      this.state.status === StatusType.processing ||
-      this.state.status === StatusType.changingTool;
+		return !this.shouldShowExtruderFactor || 
+		this.state.status === StatusType.processing ||
+    this.state.status === StatusType.changingTool;
     },
     isSelected2(value) {
-      if (value == 1){
-        return this.T1Selected === '1';
-      }
-      else if (value == 2){
-        return this.T2Selected === '1';
-      }
-      else if (value == 3){
-        return this.T3Selected === '1';
-      }
-      else if (value == 4){
-        return this.T4Selected === '1';
-      }
-      else {
-        return this.tool.state === 'active';
-      }
-      
+		if (value == 1){
+			return this.T1Selected === '1';
+		}
+		else if (value == 2){
+			return this.T2Selected === '1';
+		}
+		else if (value == 3){
+			return this.T3Selected === '1';
+		}
+		else if (value == 4){
+			return this.T4Selected === '1';
+		}
+		else {
+			return this.tool.state === 'active';
+		}
       //return this.tool.state === 'active';
     },
     isSelected() {
@@ -251,7 +246,7 @@ export default {
 		...mapActions('machine', ['sendCode', 'getFileList', 'sendInfinite']),
 		...mapMutations('machine/settings', ['toggleExtruderVisibility']),
 		...mapMutations('machine/honeyprint_cache', ['selectedExtruderMaterial', 'selectSelectedPid', 'selectInfiniteExtrusionRate']),
-		getExtrusionFactor() {
+    getExtrusionFactor() {
       if(this.move.extruders[this.toolIndex * 2] != null) {
         return Math.round(this.move.extruders[this.toolIndex * 2].factor * 100);
       }
@@ -274,9 +269,18 @@ export default {
       }
       return 0;
     },
-    setMixerExtrusionFactor(value) {
+    async setMixerExtrusionFactor(value) {
       if(this.move.extruders[(this.toolIndex * 2) + 1] != null) {
-        this.sendCode(`M221 D${(this.toolIndex * 2) + 1} S${value}`);
+        await this.sendCode(`M221 D${(this.toolIndex * 2) + 1} S${value}`);
+        if (this.infiniteExtrusionStatus[this.toolIndex] === "extrude") {
+          try {
+            await this.sendCode("M98 P\"/macros/HONEYPRINT/Set_Extrusion_Rate\" X1 " + this.getRPMForInfinite(true));
+          } catch (e) {
+            if (!(e instanceof DisconnectedError)) {
+              console.warn(e);
+            }
+          }
+        }
       }
     },
     getMixerMaxExtrusionFactor() {

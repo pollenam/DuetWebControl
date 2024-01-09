@@ -329,8 +329,8 @@ export default {
 			await this.sendCode("M98 P\"/sys/pam_memory_BED.g\"");
 		},
 		async bedTemperatureStop() {
-			await this.sendCode("M140 S-273.1"); //Bed off
 			await this.sendCode("M140 S0"); //Bed set to 0°C
+			await this.sendCode("M140 S-273.1"); //Bed off
 		}
 	},
 	watch: {
