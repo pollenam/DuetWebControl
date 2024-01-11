@@ -477,7 +477,7 @@
       "errorTitle":"Échec du renommage du filament",
       "errorStillLoaded":"Ce filament est toujours chargé. Merci de le décharger avant de procéder"
     },
-    "responseTooLong":"Réponse trop longue, voir la Console",
+    "responseTooLong":"Information disponible, consulter la Console",
     "turnOnVPower": "Veuillez activer le VPower pour permettre la chauffe",
     "upload":{
       "title":"Envoi {0} @ {1}, {2}% complet",
