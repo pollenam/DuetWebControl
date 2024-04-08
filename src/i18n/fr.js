@@ -432,6 +432,8 @@ export default {
 		}
 	},
 	notification: {
+		brakesEngaged: 'Les freins des servos de l\'axe Z sont toujours engagés, veuillez vérifier le câblage',
+		checkEd1sAlarm: 'L\'un des drivers ED1S signale une erreur, veuillez vérifier les drivers ED1S.',
 		compress: {
 			title: 'Compression des fichiers...',
 			message: 'Merci de vous tenir prêt pendant que vos fichiers se font compresser...',
@@ -480,6 +482,7 @@ export default {
 			errorStillLoaded: 'Ce filament est toujours chargé. Merci de le décharger avant de procéder'
 		},
 		responseTooLong: 'Réponse trop longue, voir la Console',
+		turnOnMotors: 'Veuillez activer les moteurs avant de lancer une impression',
 		turnOnVPower: 'Veuillez activer le VPower pour permettre la chauffe',
 		upload: {
 			title: 'Envoi {0} @ {1}, {2}% complet',
@@ -487,7 +490,10 @@ export default {
 			success: 'Envoi de {0} réussi après {1}',
 			successMulti: 'Envoi de {0} fichiers réusssi',
 			error: 'Échec de l\'envoi de {0}'
-		}
+		},
+		xNotReady: 'Le moteurs X n\'est pas prêt, veuillez vérifier le câblage',
+		yNotReady: 'Les moteurs Y ne sont pas prêts, veuillez vérifier le câblage',
+		ed1sNotReady: 'Les drivers ED1S ne sont pas prêts, veuillez vérifier le câblage'
 	},
 	panel: {
     extruderPollen: {

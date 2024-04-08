@@ -43,7 +43,7 @@ export default {
 		cacheSaveDelay: 1000,							// ms - how long to wait before cache updates are saved
 
         notifications: {
-			errorsPersistent: true,
+			errorsPersistent: false,
 			timeout: 5000								// ms
 		},
 

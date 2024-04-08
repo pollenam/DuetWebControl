@@ -508,6 +508,8 @@ export default {
 		}
 	},
 	notification: {
+		brakesEngaged: 'Brakes of Z servos are still engaged, please check the wiring',
+		checkEd1sAlarm: 'One of the ED1S drivers is reporting an error, please check ED1S drivers',
 		compress: {
 			title: 'Compressing files...',
 			message: 'Please stand by while your files are being compressed...',
@@ -568,13 +570,17 @@ export default {
 			errorStillLoaded: 'This filament is still loaded. Please unload it before you proceed'
 		},
 		responseTooLong: 'Response too long, see Console',
+		turnOnMotors: 'Please enable motors before printing',
 		turnOnVPower: 'Please turn on VPower to enable heating',
 		upload: {
 			title: 'Uploading {0} @ {1}, {2}% complete',
 			message: 'Please stand by while the file is being uploaded...',
 			success: 'Upload of {0} successful after {1}',
 			error: 'Failed to upload {0}'
-		}
+		},
+		xNotReady: 'X motor is not ready, please check the wiring',
+		yNotReady: 'Y motors are not ready, please check the wiring',
+		ed1sNotReady: 'ED1S drivers are not ready, please check the wiring'
 	},
 	panel: {
     extruderPollen: {

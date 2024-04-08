@@ -114,7 +114,13 @@ export default {
 			gCodesDirectory: state => state.directories.gCodes,
 			lastJobFile: state => state.job.lastFileName,
 			status: state => state.state.status,
-			volumes: state => state.volumes
+			volumes: state => state.volumes,
+			motors: state => state.global.MOTORS_ENABLED,
+			ed1sAlarm: state => state.global.ALARM_ED1S,
+			xReady: state => state.global.RDY_X,
+			yReady: state => state.global.RDY_Y,
+			zReady: state => state.global.RDY_Z,
+			ed1sReady: state => state.global.RDY_ED1S
 		}),
 		...mapState('settings', ['language']),
 		...mapState('uiInjection', ['contextMenuItems']),
@@ -325,8 +331,27 @@ export default {
 		start(item) {
       const targetPath = Path.combine(this.directory, (item && item.name) ? item.name : this.selection[0].name);
 			//this.addLastPrintedJobDate(targetPath);
-			this.sendCode(`M991`);
-			this.sendCode(`M32 "${targetPath}"`);
+			//if there's an alarm on one of the drivers, do not start print and warn the user
+			if(this.ed1sAlarm) {
+				this.$log('error', this.$t('notification.checkEd1sAlarm'));
+			}
+			//if motors are disabled, do not start print and ask the user to enable them first
+			else if (!this.motors) {
+				this.$log('warning', this.$t('notification.turnOnMotors'));
+			}
+			else if (!this.ed1sReady) {
+				this.$log('error', this.$t('notification.ed1sNotReady'));
+			}
+			else if (!this.xReady) {
+				this.$log('error', this.$t('notification.xNotReady'));
+			}
+			else if (!this.yReady) {
+				this.$log('error', this.$t('notification.yNotReady'));
+			}
+			else {
+				this.sendCode(`M991`);
+				this.sendCode(`M32 "${targetPath}"`);
+			}
 		},
 		simulate(item) {
 			this.sendCode(`M37 P"${Path.combine(this.directory, (item && item.name) ? item.name : this.selection[0].name)}"`);

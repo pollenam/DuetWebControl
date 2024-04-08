@@ -23,6 +23,11 @@
 					<macro-list-pollen></macro-list-pollen>
 				</v-col>
 			</v-row>
+			<!-- <v-row dense>
+				<v-col cols="12">
+					<motors-pollen-panel></motors-pollen-panel>
+				</v-col>
+			</v-row> -->
 			<v-row dense>
         <v-col cols="12" md="6" lg="3" sm="6" v-for="(tool, toolIndex) in extruderTools" :key=toolIndex>
           <extruder-panel-pollen :tool="tool" :toolIndex="toolIndex"></extruder-panel-pollen>

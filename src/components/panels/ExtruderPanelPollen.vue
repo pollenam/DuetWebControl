@@ -464,6 +464,9 @@ export default {
     async temperatureMemory() {
       await this.sendCode("M98 P\"/sys/app_memory_T" + this.tool.number +".g\"");
       await this.sendCode("M568 P" + this.tool.number +" A2");
+      if (!this.state.atxPower){
+				this.$log('warning', this.$t('notification.turnOnVPower'));
+			}
     },
     async temperatureStop() {
       await this.sendCode("G10 P" + this.tool.number +" S65:0:0 R65:0:0");

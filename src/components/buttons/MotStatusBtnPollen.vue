@@ -5,7 +5,7 @@
       {{ $t('panel.motors.caption') }}
     </span>
 
-    <v-switch :value="motors" hide-details="'auto'" :loading="sendingCode" :dark="homingSequence || !state.atxPower" :color="'success'" @change="toggleMotor" class="ml-2" :disabled="uiFrozen || homingSequence || !state.atxPower">
+    <v-switch :value="motors" hide-details="'auto'" :loading="sendingCode" :dark="homingSequence || !state.atxPower || !allDriversReady()" :color="'success'" @change="toggleMotor" class="ml-2" :disabled="uiFrozen || homingSequence || !state.atxPower || !allDriversReady()">
     </v-switch>
   </div>
 </template>
@@ -21,6 +21,7 @@ export default {
 		...mapState('machine/model', {
 			homingSequence: state => state.global.HOMING_SEQUENCE_RUNNING,
 			motors: state => state.global.MOTORS_ENABLED,
+			driversReady: state => state.global.RDY_ED1S,
 		}),
 		...mapState('machine/model', ['state']),
 	},
@@ -41,6 +42,9 @@ export default {
 				}
 				this.sendingCode = false;
 			}
+		},
+		allDriversReady(){
+			return this.driversReady === 1
 		}
 	}
 }

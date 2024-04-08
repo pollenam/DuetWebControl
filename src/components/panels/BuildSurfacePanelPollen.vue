@@ -16,6 +16,10 @@
   border: 1px solid #f8a531;
 }
 
+.status {
+	border-radius: 5px;
+}
+
 .axes-movements-wrapper {
   button.move-btn.theme--light.v-btn.v-btn--has-bg {
     border: 0px;
@@ -47,9 +51,9 @@
       <v-icon class="mr-2">mdi-axis-arrow</v-icon>
 			{{ $t('panel.buildSurfacePollen.title') }}
       <v-div class="ms-5 grey--text" v-if="!uiFrozen">
-        <v-span v-for="(axis, index) in visibleAxes" :key="index" class="ms-3">
-          {{ axis.letter }}:
-          {{ displayAxisPosition(axis, index) }}
+		<v-span v-for="(axis, index) in visibleAxes" :key="index" class="ms-3 status px-2 subtitle-2" :class="axisStatusClass(axis)">
+			{{ axis.letter }}:
+			{{ displayAxisPosition(axis, index) }}	
         </v-span>
       </v-div>
 
@@ -147,8 +151,8 @@
 					{{ $t('panel.extruderPollen.memoryShort') }}
 				</span>
               </v-btn>
-			  <temperature-tool-input :bed="this.heat.heaters[this.heat.bedHeaters[0]]" :bedHeaterIndex="this.heat.bedHeaters[0]" active class="mt-3 mb-0"></temperature-tool-input>
-			  <temperature-tool-input :bed="this.heat.heaters[this.heat.bedHeaters[2]]" :bedHeaterIndex="this.heat.bedHeaters[1]" active class="mt-3 mb-0"></temperature-tool-input>
+			  <temperature-tool-input :bed="this.heat.heaters[this.heat.bedHeaters[0]]" :bedHeaterIndex="0" active class="mt-3 mb-0"></temperature-tool-input>
+			  <temperature-tool-input :bed="this.heat.heaters[this.heat.bedHeaters[2]]" :bedHeaterIndex="2" active class="mt-3 mb-0"></temperature-tool-input>
 			</v-col>
 			<v-col cols="6">
 				<v-btn block @click="bedTemperatureStop()" elevation="0" :disabled="this.isProcessing()">
@@ -157,8 +161,8 @@
 					{{ $t('panel.extruderPollen.stopheatShort') }}
 				</span>
               </v-btn>
-			  <temperature-tool-input :bed="this.heat.heaters[this.heat.bedHeaters[1]]" :bedHeaterIndex="this.heat.bedHeaters[2]" active class="mt-3 mb-0"></temperature-tool-input>
-			  <temperature-tool-input :bed="this.heat.heaters[this.heat.bedHeaters[3]]" :bedHeaterIndex="this.heat.bedHeaters[3]" active class="mt-3 mb-0"></temperature-tool-input>
+			  <temperature-tool-input :bed="this.heat.heaters[this.heat.bedHeaters[1]]" :bedHeaterIndex="1" active class="mt-3 mb-0"></temperature-tool-input>
+			  <temperature-tool-input :bed="this.heat.heaters[this.heat.bedHeaters[3]]" :bedHeaterIndex="3" active class="mt-3 mb-0"></temperature-tool-input>
 			</v-col>
 		  </v-row>
           <hr class="hr--separated-rows" />
@@ -205,7 +209,17 @@ export default {
 		...mapState('machine/model', {
 			machineSpeedFactor: state => state.move.speedFactor,
 			babystepping: state => (state.move.axes.length >= 3) ? state.move.axes[2].babystep : 0,
-			isCompensating: state => state.global.COMPENSATING_SEQUENCE_RUNNING
+			isCompensating: state => state.global.COMPENSATING_SEQUENCE_RUNNING,
+			motors: state => state.global.MOTORS_ENABLED,
+			xReady: state => state.global.RDY_X,
+			aReady: state => state.global.RDY_A,
+			bReady: state => state.global.RDY_B,
+			dReady: state => state.global.RDY_D,
+			yReady: state => state.global.RDY_Y,
+			cReady: state => state.global.RDY_C,
+			ed1sDriversReady: state => state.global.RDY_ED1S,
+			ed1sAlarm: state => state.global.ALARM_ED1S,
+			zReady: state => state.global.RDY_Z,
 		}),
 		speedFactor: {
 			get() { return (this.machineSpeedFactor !== null) ? (this.machineSpeedFactor * 100): 100; },
@@ -230,21 +244,20 @@ export default {
 		},
 		isCompensationEnabled() { return this.move.compensation.type.toLowerCase() !== 'none' },
 		visibleAxes() {
-			return this.move.axes.filter(axis => axis.visible && (axis.letter === "X" || axis.letter === "Y" || axis.letter === "Z"));
+			return this.move.axes.filter(axis => axis.visible && Object.keys(this.motorStatus()).includes(axis.letter));
 		},
 		isDelta() {
 			return (this.move.kinematics.name === KinematicsName.delta ||
 					this.move.kinematics.name === KinematicsName.rotaryDelta);
 		},
 		canHome() {
-			return !this.uiFrozen && (
-				this.state.status !== StatusType.pausing &&
-				this.state.status !== StatusType.processing &&
-				this.state.status !== StatusType.resuming
-			);
+			return (!this.uiFrozen && !this.jobInProgress() && this.state.atxPower && this.allMotorsReady);
 		},
 		canCompensate() {
-			return this.isCompensating === 0 && this.canHome
+			return (this.isCompensating === 0 && this.canHome && !this.jobInProgress());
+		},
+		allMotorsReady(){
+			return this.visibleAxes.every(axis => this.motorStatus(axis.letter)[2] == 1);
 		},
 		unhomedAxes() { return this.move.axes.filter(axis => axis.visible && !axis.homed); }
 	},
@@ -265,11 +278,44 @@ export default {
 		...mapActions('machine', ['sendCode']),
 		...mapMutations('machine/settings', ['setMoveStep']),
 		//...mapMutations('machine/honeyprint_cache', ['setZlimit']),
+		motorStatus(axisLetter){
+			// returns only the status of the motor if "axisLetter" parameter exists, returns the whole object if no parameter is provided
+			let status = {
+				'X': [this.xReady && !this.motors, !this.xReady && this.motors, this.xReady && this.motors],
+				'A': [this.aReady && !this.motors, !this.aReady && this.motors, this.aReady && this.motors],
+				'B': [this.bReady && !this.motors, !this.bReady && this.motors, this.bReady && this.motors],
+				'D': [this.dReady && !this.motors, !this.dReady && this.motors, this.dReady && this.motors],
+				'Y': [this.yReady && !this.motors, !this.yReady && this.motors, this.yReady && this.motors],
+				'C': [this.cReady && !this.motors, !this.cReady && this.motors, this.cReady && this.motors],
+				'Z': [this.ed1sDriversReady && !this.motors, this.ed1sAlarm, this.ed1sDriversReady && this.motors]
+				//'Z': [this.ed1sDriversReady, this.ed1sAlarm, this.zReady]
+			};
+			if (axisLetter !== undefined){
+				return status[`${axisLetter}`];
+			} else{
+				return status;
+			}	
+		},
 		isProcessing() {
       		return this.state.status ===  StatusType.processing
     	},
+		jobInProgress() {
+      		return (this.state.status === StatusType.pausing || this.state.status === StatusType.processing || this.state.status === StatusType.resuming);
+    	},
+		axisStatusClass(axis) {
+			let axisStatus = this.motorStatus(axis.letter);
+			if (axisStatus[1]) {
+				return 'red darken-2 white--text';
+			} else if (axisStatus[2]) {
+				return 'green white--text';
+			} else if (axisStatus[0]) {
+				return 'amber darken-2 white--text';
+			} else {
+				return 'grey darken-3';
+			}
+		},
 		canMove(axis) {
-			return (axis.homed || !this.move.noMovesBeforeHoming) && this.canHome;
+			return (axis.homed || !this.move.noMovesBeforeHoming) && this.canHome && this.motorStatus(axis.letter)[2] && this.state.atxPower;
 		},
 		getHomeCode(axis) {
 			return `G28 ${/[a-z]/.test(axis.letter) ? '\'' : ''}${axis.letter.toUpperCase()}`;
@@ -332,8 +378,14 @@ export default {
 			await this.sendCode("M98 P\"/sys/app_memory_BED.g\"");
 		},
 		async bedTemperatureStop() {
-			await this.sendCode("M140 S-273.1"); //Bed off
-			await this.sendCode("M140 S0"); //Bed set to 0°C
+			this.sendCode("M140 S0"); //Bed set to 0°C
+			this.sendCode("M140 P1 S0"); //Bed set to 0°C
+			this.sendCode("M140 P2 S0"); //Bed set to 0°C
+			await this.sendCode("M140 P3 S0"); //Bed set to 0°C
+			this.sendCode("M140 S-273.1"); //Bed off
+			this.sendCode("M140 P1 S-273.1"); //Bed off
+			this.sendCode("M140 P2 S-273.1"); //Bed off
+			await this.sendCode("M140 P3 S-273.1"); //Bed off	
 		}
 	},
 	watch: {

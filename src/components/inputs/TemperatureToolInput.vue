@@ -130,11 +130,17 @@ export default {
               // await this.sendCode(`M568 P${this.tool.number} ${this.active ? 'S' : 'R'}${newTemps}`);
 
 							// Set tool temps
-              const currentTemps = this.tool['active'];
-              const newTemps = currentTemps.map((temp, i) => (i === this.toolHeaterIndex) ? this.inputValue : temp, this).join(':');
-              await this.sendCode(`M568 P${this.tool.number} S${newTemps} R${newTemps}`);
+              				const currentTemps = this.tool['active'];
+              				const newTemps = currentTemps.map((temp, i) => (i === this.toolHeaterIndex) ? this.inputValue : temp, this).join(':');
+              				await this.sendCode(`M568 P${this.tool.number} S${newTemps} R${newTemps}`);
+
+							// Make tool active if set temperature is in allowed range
+							const min_temp = this.heat.heaters[this.toolHeaterIndex].min;
+							const max_temp = this.heat.heaters[this.toolHeaterIndex].max;
+							if (this.inputValue > min_temp && this.inputValue < max_temp)
+								await this.sendCode(`M568 P${this.tool.number} A2`);
 						} else if (this.bed) {
-							// Set bed temp
+							// Set bed temp, makes it active automatically
 							await this.sendCode(`M140 P${this.bedHeaterIndex} S${this.inputValue} R${this.inputValue}`);
 						} else if (this.chamber) {
 							// Set chamber temp
