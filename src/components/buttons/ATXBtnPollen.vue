@@ -35,7 +35,7 @@ export default {
 				this.sendingCode = true;
 				try {
 					await this.runFile(state ? '/macros/HONEYPRINT/VPower_On' : '/macros/HONEYPRINT/VPower_Off');
-					await this.sendCode(state ? '' : 'M991');
+					//await this.sendCode(state ? '' : 'M991');
 				} catch (e) {
 					// handled before we get here
 				}

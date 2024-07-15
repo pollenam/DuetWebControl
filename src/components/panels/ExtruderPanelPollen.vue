@@ -155,7 +155,7 @@
 
 import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
 import Path from '@/utils/path.js'
-import { DisconnectedError } from '@/utils/errors'
+//import { DisconnectedError } from '@/utils/errors'
 import { StatusType } from '../../store/machine/modelEnums.js'
 
 const EXTRUSION_SPEED_MIN = 1;
@@ -270,7 +270,8 @@ export default {
 	methods: {
 		...mapActions('machine', ['sendCode', 'getFileList', 'sendInfinite']),
 		...mapMutations('machine/settings', ['toggleExtruderVisibility']),
-		...mapMutations('machine/honeyprint_cache', ['selectedExtruderMaterial', 'selectSelectedPid', 'selectInfiniteExtrusionRate']),
+    ...mapMutations('machine/honeyprint_cache', ['selectedExtruderMaterial', 'selectSelectedPid']),
+		//...mapMutations('machine/honeyprint_cache', ['selectedExtruderMaterial', 'selectSelectedPid', 'selectInfiniteExtrusionRate']),
     getExtrusionFactor() {
       if(this.move.extruders[this.toolIndex] != null) {
         return Math.round(this.move.extruders[this.toolIndex].factor * 100);
@@ -349,7 +350,8 @@ export default {
         newValue: newValue
       });
     },
-    async setExtrusionSpeed(value) {
+
+    /* async setExtrusionSpeed(value) {
       this.extrusionSpeed = value;
 
       if (this.infiniteExtrusionStatus[this.toolIndex] !== "stopped") {
@@ -369,7 +371,7 @@ export default {
       }
 
       this.selectInfiniteExtrusionRate({ index: this.toolIndex, value: this.extrusionSpeed });
-    },
+    }, */
     async PIDComboBoxChange(newValue) {
 			await this.sendCode(`M98 P"${Path.combine(this.macrosDirectory, "PID", newValue)}" B${this.tool.number}`);
       this.selectSelectedPid({
@@ -472,9 +474,9 @@ export default {
     async temperatureStop() {
       await this.sendCode("G10 P" + this.tool.number +" S65:0:0 R65:0:0");
       await this.sendCode("M568 P" + this.tool.number +" A0");
-      await this.sendCode("M991");
+      //await this.sendCode("M991");
     },
-    async infiniteExtrude() {
+    /* async infiniteExtrude() {
       try {
         await this.sendCode("M98 P\"/macros/SELECT/Select\" T" + this.getSelectedTools());
         await this.sendCode("M98 P\"/macros/HONEYPRINT/Set_Extrusion_Rate\" X1 " + this.getRPMForInfinite(true));
@@ -490,8 +492,6 @@ export default {
         await this.sendCode("M98 P\"/macros/SELECT/Select\" T" + this.getSelectedTools());
         await this.sendCode("M98 P\"/macros/HONEYPRINT/Set_Extrusion_Rate\" X1 " + this.getRPMForInfinite(false));
         await this.sendInfinite({code: "startRetract", toolNumber:this.tool.number});
-
-
       } catch (e) {
         if (!(e instanceof DisconnectedError)) {
           console.warn(e);
@@ -510,7 +510,7 @@ export default {
           console.warn(e);
         }
       }
-    }
+    } */
   },
   async mounted() {
     this.pidItems = [];

@@ -288,7 +288,7 @@ export default {
       return this.heat.heaters[this.firstBedIndex()];
     },
 		async handleCompensation() {
-			await this.sendCode('M991');
+			//await this.sendCode('M991');
 			var today = new Date();
 			var dd = String(today.getDate()).padStart(2, '0');
 			var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
@@ -302,7 +302,7 @@ export default {
 			this.sendCode(`M98 P"/macros/HONEYPRINT/Compensation_Start" H"heightmap-${today}.csv"`);
 		},
 		async handleHoming() {
-			await this.sendCode('M991');
+			//await this.sendCode('M991');
 			this.sendCode('G28');
 		},
 		async toggleZLimits() {

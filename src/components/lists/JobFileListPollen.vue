@@ -325,7 +325,7 @@ export default {
 		start(item) {
       const targetPath = Path.combine(this.directory, (item && item.name) ? item.name : this.selection[0].name);
 			//this.addLastPrintedJobDate(targetPath);
-			this.sendCode(`M991`);
+			//this.sendCode(`M991`);
 			this.sendCode(`M32 "${targetPath}"`);
 		},
 		simulate(item) {

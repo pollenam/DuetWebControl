@@ -197,7 +197,7 @@ export default {
 		}, */
 		async stopInfiniteThenResume() {
 			try {
-				await this.sendCode('M991');
+				//await this.sendCode('M991');
 				await this.sendCode('M24');
 			} catch (e) {
 				if (!(e instanceof DisconnectedError)) {
@@ -219,7 +219,7 @@ export default {
 					this.sendCode(`M37 P"${this.lastFileName}"`);
 				}
 				else {
-					await this.sendCode('M991');
+					//await this.sendCode('M991');
 					this.sendCode(`M32 "${this.lastFileName}"`);
 				}
 			}

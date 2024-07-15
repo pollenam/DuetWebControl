@@ -545,7 +545,7 @@ export default {
 			this.refresh();
 		},
 		async createNewHeightMap() {
-			await this.sendCode('M991'); // stops infinite extrusion
+			//await this.sendCode('M991'); // stops infinite extrusion
 
 			var today = new Date();
 			var dd = String(today.getDate()).padStart(2, '0');
