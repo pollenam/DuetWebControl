@@ -29,13 +29,13 @@
 		<v-card-text class="d-flex flex-column v-card__text--with-rows-highlighted">
 			<v-row dense class="row--highlighted">
         <v-col cols="12 d-flex flex-column">
-          <div class="center-label">{{ extrusionSpeed }} {{ $t('generic.rpm') }}</div>
+          <div class="center-label">{{ extrusionSpeed }} {{ $t('generic.mmPerSec') }}</div>
           <percentage-input-pollen :value="extrusionSpeed" :min="getExtrusionSpeedMin()" :max="getExtrusionSpeedMax()" :step="0.1" @input="setExtrusionSpeed($event)" :disabled="uiFrozen"></percentage-input-pollen>
         </v-col>
       </v-row>
       <v-row class="row--highlighted" dense>
         <template v-if="shouldShowInfinite">
-          <v-col cols="12">
+          <v-col cols="6">
             <v-btn block @click="infiniteExtrude()" elevation="0" :disabled="uiFrozen || this.isProcessing()">
               <v-icon class="mr-1">mdi-arrow-down-bold</v-icon>
               <span class="hidden-lg-only">
@@ -43,6 +43,17 @@
               </span>
               <span class="hidden-md-and-down hidden-xl-only">
                 {{ $t('panel.extruderPollen.extrudeShort') }}
+              </span>
+            </v-btn>
+          </v-col>
+          <v-col cols="6">
+            <v-btn block @click="infiniteRetract()" elevation="0" :disabled="uiFrozen || this.isProcessing()">
+              <v-icon class="mr-1">mdi-arrow-up-bold</v-icon>
+              <span class="hidden-lg-only">
+                {{ $t('panel.extruderPollen.retract') }}
+              </span>
+              <span class="hidden-md-and-down hidden-xl-only">
+                {{ $t('panel.extruderPollen.retractShort') }}
               </span>
             </v-btn>
           </v-col>
@@ -81,13 +92,13 @@
       </v-row>
       <v-row class="row--highlighted" dense>
         <v-col cols="3 d-flex align-center">
-          <span class="pollen-attr-header">{{ $t('panel.extruderPollen.mixer') }}</span>
+          <span class="pollen-attr-header">{{ $t('panel.buildSurfacePollen.fan') }}</span>
         </v-col>
         <v-col cols="9 d-flex align-center">
-          <percentage-input-pollen :value="getMixerExtrusionFactor()" @input="setMixerExtrusionFactor($event)" :max="getMixerMaxExtrusionFactor()" :step="1"></percentage-input-pollen>
+          <percentage-input-pollen v-model="fanValue" :step="1" :disabled="uiFrozen"></percentage-input-pollen>
         </v-col>
       </v-row>
-			<v-row dense>
+			<!-- <v-row dense>
         <v-col cols="3 d-flex align-center">
           <span class="pollen-attr-header">{{ $t('panel.extruderPollen.feeder') }}</span>
         </v-col>
@@ -102,13 +113,13 @@
         <v-col cols="9 d-flex align-center">
           <temperature-tool-input :tool="tool" :toolHeaterIndex="1" active></temperature-tool-input>
         </v-col>
-			</v-row>
+			</v-row> -->
       <v-row dense>
         <v-col cols="3 d-flex align-center">
           <span class="pollen-attr-header">{{ $t('panel.extruderPollen.nozzle') }}</span>
         </v-col>
         <v-col cols="9 d-flex align-center">
-          <temperature-tool-input :tool="tool" :toolHeaterIndex="2" active></temperature-tool-input>
+          <temperature-tool-input :tool="tool" :toolHeaterIndex="0" active></temperature-tool-input>
         </v-col>
 			</v-row>
 			<v-row dense class="row--highlighted">
@@ -147,14 +158,13 @@ import Path from '@/utils/path.js'
 import { DisconnectedError } from '@/utils/errors'
 import { StatusType } from '../../store/machine/modelEnums.js'
 
-const EXTRUSION_SPEED_MIN = 0.4;
-const EXTRUSION_SPEED_MAX = 12;
+const EXTRUSION_SPEED_MIN = 1;
+const EXTRUSION_SPEED_MAX = 50;
 
 export default {
 	computed: {
 	  ...mapGetters(['uiFrozen']),
-    ...mapState('machine/model', ['move']),
-    ...mapState('machine/model', ['state']),
+    ...mapState('machine/model', ['move', 'state', 'fans']),
 	  ...mapState('machine/settings', ['displayedExtruders']),
     ...mapState('machine/model', ['global', 'heat', 'tools']),
     ...mapState('machine/honeyprint_cache', ['extrudersAvailableMaterials', 'extrudersSelectedMaterials', 'selectedPid', 'infiniteExtrusionRate']),
@@ -168,6 +178,21 @@ export default {
     T3Selected: state => state.global.T3_Selected,
     T4Selected: state => state.global.T4_Selected,
 	}),
+    fanValue: {
+			get() {
+				// Even though RRF allows multiple fans to be assigned to a tool,
+				// we assume they all share the same fan value if such a config is set
+				let fanIndex = this.tools[this.toolIndex].fans[0]
+        if(this.fans[fanIndex]) {
+					return this.fans[fanIndex].requestedValue * 100;
+				}
+				return 0;
+			},
+			set(value) {
+				value = Math.min(100, Math.max(0, value)) / 100;
+				this.sendCode(`M106 S${value.toFixed(2)}`);
+			}
+		},
     shouldShowInfinite() {
 		if (this.infiniteExtrusionStatus === null || this.infiniteExtrusionStatus === undefined)
 		{
@@ -228,7 +253,7 @@ export default {
 	data() {
 		return {
         currentPid: "",
-        extrusionSpeed: 1.2,
+        extrusionSpeed: 5,
         pidItems:[]
     }
 	},
@@ -247,45 +272,19 @@ export default {
 		...mapMutations('machine/settings', ['toggleExtruderVisibility']),
 		...mapMutations('machine/honeyprint_cache', ['selectedExtruderMaterial', 'selectSelectedPid', 'selectInfiniteExtrusionRate']),
     getExtrusionFactor() {
-      if(this.move.extruders[this.toolIndex * 2] != null) {
-        return Math.round(this.move.extruders[this.toolIndex * 2].factor * 100);
+      if(this.move.extruders[this.toolIndex] != null) {
+        return Math.round(this.move.extruders[this.toolIndex].factor * 100);
       }
       return 0;
 		},
 		setExtrusionFactor(value) {
-      if(this.move.extruders[this.toolIndex * 2] != null) {
-        this.sendCode(`M221 D${this.toolIndex * 2} S${value}`);
+      if(this.move.extruders[this.toolIndex] != null) {
+        this.sendCode(`M221 D${this.toolIndex} S${value}`);
       }
 		},
 		getMaxExtrusionFactor() {
-      if(this.move.extruders[this.toolIndex * 2] != null) {
-        return Math.max(150, this.move.extruders[this.toolIndex * 2].factor * 100 + 50);
-      }
-      return 0;
-    },
-    getMixerExtrusionFactor() {
-      if(this.move.extruders[(this.toolIndex * 2) + 1] != null) {
-        return Math.round(this.move.extruders[(this.toolIndex * 2) + 1].factor * 100);
-      }
-      return 0;
-    },
-    async setMixerExtrusionFactor(value) {
-      if(this.move.extruders[(this.toolIndex * 2) + 1] != null) {
-        await this.sendCode(`M221 D${(this.toolIndex * 2) + 1} S${value}`);
-        if (this.infiniteExtrusionStatus[this.toolIndex] === "extrude") {
-          try {
-            await this.sendCode("M98 P\"/macros/HONEYPRINT/Set_Extrusion_Rate\" X1 " + this.getRPMForInfinite(true));
-          } catch (e) {
-            if (!(e instanceof DisconnectedError)) {
-              console.warn(e);
-            }
-          }
-        }
-      }
-    },
-    getMixerMaxExtrusionFactor() {
-      if(this.move.extruders[(this.toolIndex * 2) + 1] != null) {
-        return Math.max(150, this.move.extruders[(this.toolIndex * 2) + 1].factor * 100 + 50);
+      if(this.move.extruders[this.toolIndex] != null) {
+        return Math.max(150, this.move.extruders[this.toolIndex].factor * 100 + 50);
       }
       return 0;
     },
@@ -448,7 +447,7 @@ export default {
       if(isExtruding)
         rpmCommand = rpmCommand +  this.extrusionSpeed;
       else
-      rpmCommand = rpmCommand + "-" + this.extrusionSpeed;
+        rpmCommand = rpmCommand + "-" + this.extrusionSpeed;
 
       return rpmCommand;
     },
@@ -467,7 +466,7 @@ export default {
       }
     },
     async temperatureMemory() {
-      await this.sendCode("M98 P\"/sys/pam_memory_T" + this.tool.number +".g\"");
+      await this.sendCode("M98 P\"/sys/memory_T" + this.tool.number +".g\"");
       await this.sendCode("M568 P" + this.tool.number +" A2");
     },
     async temperatureStop() {

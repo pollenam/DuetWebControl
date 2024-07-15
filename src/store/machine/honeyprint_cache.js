@@ -11,10 +11,10 @@ export default function(connector) {
 		state: {
 			showed_macros: [],
       extrudersAvailableMaterials: ['ABS', 'PLA', 'TPU'],
-      extrudersSelectedMaterials: ['ABS', 'ABS', 'ABS', 'ABS'],
+      extrudersSelectedMaterials: ['PLA', 'PLA', 'PLA', 'PLA'],
 			selectedPid: ['','','',''],
 			lastPrintedJob: [],
-			infiniteExtrusionRate: [1.2, 1.2, 1.2, 1.2],
+			infiniteExtrusionRate: [5, 5, 5, 5],
 			zLimit: true
     },
 		actions: {

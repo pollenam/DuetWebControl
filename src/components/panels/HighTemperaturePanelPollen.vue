@@ -7,7 +7,7 @@
 
 		<v-card-text>
 			<v-row dense class="row--separated-cols">
-				<v-col class="d-flex flex-column" cols="6">
+				<v-col class="d-flex flex-column" cols="12">
 					<v-row>
 						<span class="pollen-attr-header ml-3 mt-3">
 							Room
@@ -36,7 +36,7 @@
 					</v-row>
 				</v-col>
 
-				<v-col class="d-flex flex-column" cols="6">
+				<!-- <v-col class="d-flex flex-column" cols="6">
 					<v-row>
 						<span class="pollen-attr-header ml-3 mt-3">
 							Radiant
@@ -63,7 +63,7 @@
 							</span>
 						</v-col>
 					</v-row>
-				</v-col>
+				</v-col> -->
 			</v-row>
 		</v-card-text>
 	</v-card>
@@ -79,8 +79,8 @@ export default {
 	computed: {
 		...mapState('machine/model', ['heat', 'state']),
 		...mapState('machine/model', {
-			hasRadiant: state => state.global.PAM_RADIANT,
-			hasChamber: state => state.global.PAM_HEATED_CHAMBER,
+			hasRadiant: state => state.global.HAS_RADIANT,
+			hasChamber: state => state.global.HAS_HEATED_CHAMBER,
 		}),
 		chamberHeaters() {
 			return this.heat.chamberHeaters
@@ -97,15 +97,15 @@ export default {
 		isProcessing() {
       		return this.state.status ===  StatusType.processing
     	},
-		async radiantTemperatureMemory() {
+		/* async radiantTemperatureMemory() {
 			await this.sendCode("M98 P\"/sys/pam_memory_RADIANT.g\"");
-		},
-		async radiantTemperatureStop() {
+		}, */
+		/* async radiantTemperatureStop() {
 			await this.sendCode("M141 P1 S0"); //Radiant set to 0°C
 			await this.sendCode("M141 P1 S-273.1"); //Radiant off
-		},
+		}, */
 		async chamberTemperatureMemory() {
-			await this.sendCode("M98 P\"/sys/pam_memory_CHAMBER.g\"");
+			await this.sendCode("M98 P\"/sys/memory_CHAMBER.g\"");
 		},
 		async chamberTemperatureStop() {
 			await this.sendCode("M141 S0"); //Chamber set to 0°C

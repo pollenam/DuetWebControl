@@ -24,7 +24,7 @@
 				</v-col>
 			</v-row>
 			<v-row dense>
-        <v-col cols="12" md="6" lg="3" sm="6" v-for="(tool, toolIndex) in extruderTools" :key=toolIndex>
+        <v-col cols="12" md="6" lg="3" sm="6" v-for="(tool, toolIndex) in extruderOrCNCTools" :key=toolIndex>
           <extruder-panel-pollen :tool="tool" :toolIndex="toolIndex"></extruder-panel-pollen>
         </v-col>
 			</v-row>
@@ -55,11 +55,11 @@ export default {
 		showFansPanel() {
 			return (this.currentTool && this.currentTool.fans.length > 0) || this.fans.some(fan => fan && !fan.thermostatic.control);
 		},
-    	extruderTools() {
-      		return this.tools.filter(tool => tool !== null).filter(tool => tool.extruders.length > 0).filter(tool => tool.number >= 0 && tool.number <= 4);
+    	extruderOrCNCTools() {
+      		return this.tools.filter(tool => tool !== null).filter(tool => tool.extruders.length > 0 || tool.spindle != -1).filter(tool => tool.number >= 0 && tool.number <= 4);
     	},
 		showHTpanel() {
-			return this.hasChamber || this.hasRadiant
+			return this.hasChamber /* || this.hasRadiant */
 		}
 	}
 }

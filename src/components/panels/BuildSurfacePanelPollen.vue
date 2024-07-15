@@ -140,31 +140,28 @@
             </v-col>
           </v-row>
 		  <v-row class="row--highlighted" dense>
-			<v-col cols="4">
+			<v-col cols="6">
 			  <v-btn block @click="bedTemperatureMemory()" elevation="0" :disabled="this.isProcessing()" class="mb-1">
 				<v-icon small class="mr-1">mdi-restore</v-icon>
 				<span class="hidden-xs-only hidden-md-only hidden-lg-only">
 					{{ $t('panel.extruderPollen.memoryShort') }}
 				</span>
               </v-btn>
-			  <v-btn block @click="bedTemperatureStop()" elevation="0" :disabled="this.isProcessing()">
-				<v-icon small class="mr-1 hidden-xs-only hidden-md-only hidden-lg-only">mdi-power</v-icon>
-				<span>
-					{{ $t('panel.extruderPollen.stopheatShort') }}
-				</span>
-              </v-btn>
             </v-col>
-			<v-col cols="8">
-			  <temperature-tool-input :bed="firstBedHeater()" :bedHeaterIndex="firstBedIndex()" active class="mt-3 mb-0"></temperature-tool-input>
+			<v-col cols="6">
+				<v-btn block @click="bedTemperatureStop()" elevation="0" :disabled="this.isProcessing()">
+					<v-icon small class="mr-1 hidden-xs-only hidden-md-only hidden-lg-only">mdi-power</v-icon>
+					<span>
+						{{ $t('panel.extruderPollen.stopheatShort') }}
+					</span>
+				</v-btn>
 			</v-col>
 		  </v-row>
-          <hr class="hr--separated-rows" />
-          <v-row>
-            <v-col class="d-flex flex-column">
-              <span class="pollen-attr-header">{{ $t('panel.buildSurfacePollen.fan') }}</span>
-              <percentage-input-pollen v-model="fanValue" :step="1" :disabled="uiFrozen"></percentage-input-pollen>
-            </v-col>
-          </v-row>
+		  <v-row class="row--highlighted" dense>
+			<v-col cols="12">
+				<temperature-tool-input :bed="firstBedHeater()" :bedHeaterIndex="firstBedIndex()" active class="mt-3 mb-0"></temperature-tool-input>
+			</v-col>
+		  </v-row>          
 				</v-col>
 			</v-row>
 		</v-card-text>
@@ -211,20 +208,6 @@ export default {
 		speedFactorMin() { return Math.max(1, Math.min(100, this.speedFactor - 50)); },
 		speedFactorMax() { return Math.max(150, this.speedFactor + 50); },
 		...mapGetters('machine/settings', ['moveSteps', 'numMoveSteps']),
-			fanValue: {
-			get() {
-				// Even though RRF allows multiple fans to be assigned to a tool,
-				// we assume they all share the same fan value if such a config is set
-				if(this.fans[2]) {
-					return this.fans[2].requestedValue * 100;
-				}
-				return 0;
-			},
-			set(value) {
-				value = Math.min(100, Math.max(0, value)) / 100;
-				this.sendCode(`M106 S${value.toFixed(2)}`);
-			}
-		},
 		isCompensationEnabled() { return this.move.compensation.type.toLowerCase() !== 'none' },
 		visibleAxes() {
 			return this.move.axes.filter(axis => axis.visible && (axis.letter === "X" || axis.letter === "Y" || axis.letter === "Z"));
@@ -326,7 +309,7 @@ export default {
 			await this.sendCode(this.move.limitAxes ? 'M98 P"/macros/HONEYPRINT/Z_Limits" S0' : 'M98 P"/macros/HONEYPRINT/Z_Limits" S1');
 		},
 		async bedTemperatureMemory() {
-			await this.sendCode("M98 P\"/sys/pam_memory_BED.g\"");
+			await this.sendCode("M98 P\"/sys/memory_BED.g\"");
 		},
 		async bedTemperatureStop() {
 			await this.sendCode("M140 S0"); //Bed set to 0°C

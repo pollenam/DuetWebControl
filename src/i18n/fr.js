@@ -316,6 +316,7 @@ export default {
 			unknown: 'Inconnu'
 		},
 		rpm: 'tr/min',
+		mmPerSec: 'mm/s',
 		sdCard: 'Carte SD {0}',
 		mounted: 'monté',
 		notMounted: 'non monté',
