@@ -109,8 +109,8 @@ textarea {
 
 			<div style="-webkit-box-flex: 1 !important; -ms-flex-positive: 1 !important; flex-grow: 0.6 !important;">
 			</div>
-      <v-img src="./assets/honeyprint-sx2-logo.png" aspect-ratio="1" contain height="30px" class="hidden-md-and-down"></v-img>
-      <v-img src="./assets/honeyprint-sx2-logo-small.png" aspect-ratio="1" contain height="30px" class="hidden-lg-and-up"></v-img>
+      <!-- <v-img src="./assets/honeyprint-sx2-logo.png" aspect-ratio="1" contain height="30px" class="hidden-md-and-down"></v-img> -->
+      <v-img src="./assets/honeyprint-sx2-logo-small.png" aspect-ratio="1" contain height="30px"></v-img>
 
 			<div style="-webkit-box-flex: 1 !important; -ms-flex-positive: 1 !important; flex-grow: 0.6 !important;">
 			</div>

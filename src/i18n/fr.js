@@ -791,6 +791,8 @@ export default {
 			tooltipSpacing:"Distance en mm entre chaque point à palper.",
 			tooltipRepeat:"Nombre maximum de fois qu'un point peut être palpé. Si, pour un même point, 2 mesures consécutives donnent des résultats dont la différence est inférieure à 0.1mm, on passe au point suivant.",
 			tooltipRadius:"Rayon de la zone à palper.",
+			tooltipXRange:"Zone de l'axe X du plateau à sonder.",
+			tooltipYRange:"Zone de l'axe Y du plateau à sonder.",
 			open: "Ouvrir",
 			parameters: "Paramètres",
 			offset: "Offset",

@@ -195,7 +195,7 @@ export default {
 			}
 			return '';
 		}, */
-		async stopInfiniteThenResume() {
+		async resume() {
 			try {
 				//await this.sendCode('M991');
 				await this.sendCode('M24');
@@ -207,7 +207,7 @@ export default {
 		},
 		handlePauseResume(){
 			if (this.isPaused) {
-				this.stopInfiniteThenResume();
+				this.resume();
 			}
 			else {
 				this.sendCode('M25');

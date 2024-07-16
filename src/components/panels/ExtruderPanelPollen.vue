@@ -5,6 +5,12 @@
     }
   }
 
+  .amount-btn {
+    /* padding-left: 0 !important; */
+    /* padding-right: 0 !important; */
+    min-width: 0;
+  }
+
   .center-label {
     text-align: center;
   }
@@ -33,10 +39,22 @@
           <percentage-input-pollen :value="feedrate" :min="getExtrusionSpeedMin()" :max="getExtrusionSpeedMax()" :step="0.1" @input="setExtrusionSpeed($event)" :disabled="uiFrozen"></percentage-input-pollen>
         </v-col>
       </v-row>
-      <v-row class="row--highlighted" dense>
+      <v-row dense>
+        <v-col>
+          <span class="pollen-attr-header">
+          {{ $t('panel.extrude.amount', ['mm']) }}
+          </span>
+          <v-btn-toggle v-model="amount" mandatory class="d-flex">
+            <v-btn v-for="(savedAmount, index) in extruderAmounts" :key="index" :value="savedAmount" :disabled="uiFrozen" @contextmenu.prevent="editAmount(index)" tile class="flex-grow-1 amount-btn">
+              {{ savedAmount }}
+            </v-btn>
+          </v-btn-toggle>
+        </v-col>
+      </v-row>
+      <v-row dense>
         <template>
           <v-col cols="6">
-            <v-btn block @click="buttonCLicked(true)" elevation="0" :disabled="uiFrozen || this.isProcessing()">
+            <v-btn block @click="buttonClicked(true)" :loading="busy" elevation="0" :disabled="uiFrozen || this.isProcessing()">
               <v-icon class="mr-1">mdi-arrow-down-bold</v-icon>
               <span class="hidden-lg-only">
                 {{ $t('panel.extruderPollen.extrude') }}
@@ -47,7 +65,7 @@
             </v-btn>
           </v-col>
           <v-col cols="6">
-            <v-btn block @click="buttonClicked(false)" elevation="0" :disabled="uiFrozen || this.isProcessing()">
+            <v-btn block @click="buttonClicked(false)" :loading="busy" elevation="0" :disabled="uiFrozen || this.isProcessing()">
               <v-icon class="mr-1">mdi-arrow-up-bold</v-icon>
               <span class="hidden-lg-only">
                 {{ $t('panel.extruderPollen.retract') }}
@@ -67,7 +85,7 @@
             </v-btn>
           </v-col>
         </template> -->
-          <v-col cols="6">
+          <!-- <v-col cols="6">
             <v-btn block @click="temperatureMemory()" elevation="0" :disabled="this.isProcessing()">
               <v-icon class="mr-1">mdi-restore</v-icon>
               <span class="hidden-sm-only hidden-lg-only">
@@ -77,8 +95,8 @@
                 {{ $t('panel.extruderPollen.memoryShort') }}
               </span>
             </v-btn>
-          </v-col>
-          <v-col cols="6">
+          </v-col> -->
+          <v-col cols="12">
             <v-btn block @click="temperatureStop()" elevation="0" :disabled="this.isProcessing()">
               <v-icon class="mr-1">mdi-power</v-icon>
               <span class="hidden-sm-only hidden-lg-only">
@@ -147,6 +165,8 @@
         </v-col>
 			</v-row>
 		</v-card-text>
+
+    <input-dialog :shown.sync="editAmountDialog.shown" :title="$t('dialog.editExtrusionAmount.title')" :prompt="$t('dialog.editExtrusionAmount.prompt')" :preset="editAmountDialog.preset" is-numeric-value @confirmed="setAmount"></input-dialog>
 	</v-card>
 </template>
 
@@ -165,7 +185,7 @@ export default {
 	computed: {
 	  ...mapGetters(['uiFrozen']),
     ...mapState('machine/model', ['move', 'state', 'fans']),
-	  ...mapState('machine/settings', ['displayedExtruders']),
+	  ...mapState('machine/settings', ['displayedExtruders', 'extruderAmounts']),
     ...mapState('machine/model', ['global', 'heat', 'tools']),
     ...mapState('machine/honeyprint_cache', ['extrudersAvailableMaterials', 'extrudersSelectedMaterials', 'selectedPid', 'extrusionRate']),
 	  ...mapState('machine/model', {
@@ -208,14 +228,15 @@ export default {
 		return this.infiniteExtrusionStatus[this.toolIndex] !== 'stopped'
     }, */
     shouldShowExtruderFactor() {
-		if (this.infiniteExtrusionStatus === null || this.infiniteExtrusionStatus === undefined)
+      return true
+      /* if (this.infiniteExtrusionStatus === null || this.infiniteExtrusionStatus === undefined)
 		{
 			return false;
 		}
 		return this.infiniteExtrusionStatus[0] === 'stopped' &&
 		this.infiniteExtrusionStatus[1]  === 'stopped' &&
         this.infiniteExtrusionStatus[2]  === 'stopped' &&
-        this.infiniteExtrusionStatus[3] === 'stopped'
+        this.infiniteExtrusionStatus[3] === 'stopped' */
     },
     shouldAllowSelect() {
 		return !this.shouldShowExtruderFactor || 
@@ -252,10 +273,16 @@ export default {
 	},
 	data() {
 		return {
-        currentPid: "",
-        amount: 10,
-        feedrate: 5,
-        pidItems:[]
+      busy: false,
+      currentPid: "",
+      amount: 10,
+      feedrate: 5,
+      editAmountDialog: {
+        shown: false,
+        index: 0,
+        preset: 0
+      },
+      pidItems:[]
     }
 	},
   props: {
@@ -368,7 +395,7 @@ export default {
 					if (!(e instanceof DisconnectedError)) {
 						console.warn(e);
 					}
-				}
+				}  
       }
 
       this.selectInfiniteExtrusionRate({ index: this.toolIndex, value: this.extrusionSpeed });
@@ -468,12 +495,17 @@ export default {
         return  "D";
       }
     }, */
-    async temperatureMemory() {
-      await this.sendCode("M98 P\"/sys/memory_T" + this.tool.number +".g\"");
-      await this.sendCode("M568 P" + this.tool.number +" A2");
-    },
+    /* async temperatureMemory() {
+      if (this.state.atxPower){
+        await this.sendCode("M98 P\"/sys/memory_T" + this.tool.number +".g\"");
+        await this.sendCode("M568 P" + this.tool.number +" A2");
+			}
+      else{
+        this.$log('warning', this.$t('notification.turnOnVPower'));
+      }
+    }, */
     async temperatureStop() {
-      await this.sendCode("G10 P" + this.tool.number +" S65:0:0 R65:0:0");
+      await this.sendCode("G10 P" + this.tool.number +" S0");
       await this.sendCode("M568 P" + this.tool.number +" A0");
       //await this.sendCode("M991");
     },
@@ -481,24 +513,22 @@ export default {
 			if (!this.currentTool.extruders.length) {
 				return;
 			}
-
-			let amounts;
-			if (this.mixValue[0] === 'mix') {
-				// Split total amount to extrude evenly
-				amounts = [this.amount];
-			} else {
-				// Extrude given amount via each selected extruder drive
-				amounts = this.currentTool.extruders.map(extruder => (this.mix.indexOf(extruder) !== -1) ? this.amount : 0);
-			}
-
 			this.busy = true;
 			try {
-				const amount = amounts.map(amount => extrude ? amount : -amount).join(':');
-				await this.sendCode(`M120\nM83\nG1 E${amount} F${this.feedrate * 60}\nM121`);
+				await this.sendCode(`M120\nM83\nG1 E${extrude ? this.amount : -this.amount} F${this.feedrate * 60}\nM121`);
 			} catch (e) {
 				// handled before we get here
 			}
 			this.busy = false;
+		},
+    editAmount(index) {
+			this.editAmountDialog.index = index;
+			this.editAmountDialog.preset = this.extruderAmounts[index];
+			this.editAmountDialog.shown = true;
+		},
+		setAmount(value) {
+			this.setExtrusionAmount({ index: this.editAmountDialog.index, value });
+			this.amount = value;
 		},
     /* async infiniteExtrude() {
       try {

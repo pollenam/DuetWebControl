@@ -120,9 +120,6 @@ export default {
 				this.applying = true;
 				try {
 					if (this.inputValue >= -273.15 && this.inputValue <= 1999) {
-						if (!this.state.atxPower && this.inputValue > 0){
-							this.$log('warning', this.$t('notification.turnOnVPower'));
-						}
 						if (this.tool) {
               // We decided to diable standby mode. Old implementation here down
               // const currentTemps = this.tool[this.active ? 'active' : 'standby'];
@@ -134,6 +131,9 @@ export default {
               const newTemps = currentTemps.map((temp, i) => (i === this.toolHeaterIndex) ? this.inputValue : temp, this).join(':');
               await this.sendCode(`M568 P${this.tool.number} S${newTemps} R${newTemps}`);
 						} else if (this.bed) {
+							if (!this.state.atxPower && this.inputValue > 0){
+								this.$log('warning', this.$t('notification.turnOnVPower'));
+							}
 							// Set bed temp
 							await this.sendCode(`M140 P${this.bedHeaterIndex} S${this.inputValue} R${this.inputValue}`);
 						} else if (this.chamber) {

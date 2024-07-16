@@ -66,7 +66,7 @@ export class MachineModel {
 		coldRetractTemperature: 90,
 		heaters: []
 	}
-	infiniteExtrusionStatus = ['stopped', 'stopped', 'stopped', 'stopped']
+	//infiniteExtrusionStatus = ['stopped', 'stopped', 'stopped', 'stopped']
 	httpEndpoints = []							// *** missing in RRF (only applicable for Duet 3 in SBC mode)
 	inputs = [
 		new InputChannel({ name: InputChannelName.http }),
@@ -272,7 +272,7 @@ export const DefaultMachineModel = new MachineModel({
 			new Heater()
 		]
 	},
-	infiniteExtrusionStatus: ['stopped', 'stopped', 'stopped', 'stopped'],
+	//infiniteExtrusionStatus: ['stopped', 'stopped', 'stopped', 'stopped'],
 	move: {
 		axes: [
 			new Axis({
@@ -415,7 +415,7 @@ export class MachineModelModule {
 				}
 			}
 
-			if( state.infiniteExtrusionStatus === null || state.infiniteExtrusionStatus === undefined) {
+			/* if( state.infiniteExtrusionStatus === null || state.infiniteExtrusionStatus === undefined) {
 				state.infiniteExtrusionStatus = ['stopped', 'stopped', 'stopped', 'stopped'];
 			}
 
@@ -484,8 +484,8 @@ export class MachineModelModule {
 						state.infiniteExtrusionStatus[3] = "stopped";
 						Vue.set(state.infiniteExtrusionStatus, 3, "stopped");
 					}
-				}
-			}
+				} 
+			}*/
 
 			// Update global variables
 			if (payload.global !== undefined) {

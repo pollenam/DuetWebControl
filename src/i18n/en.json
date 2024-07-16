@@ -1058,6 +1058,8 @@
       "tooltipSpacing":"Distance in mm between each probe point.",
       "tooltipRepeat":"Maximum number of times to probe each point. Probing is repeated until 2 consecutive probe attempts produce results that differ by no more than the 0.1 mm.",
       "tooltipRadius":"Radius to probe.",
+      "tooltipXRange":"X-axis area of the bed to be probed.",
+			"tooltipYRange":"Y-axis area of the bed to be probed.",
       "defaultFactorySettings":"Restore factory default",
       "open":"Open",
       "parameters":"Parameters",

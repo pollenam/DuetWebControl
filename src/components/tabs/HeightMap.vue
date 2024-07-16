@@ -157,16 +157,17 @@ input {
 		  <v-spacer></v-spacer>
           <v-card-actions class="flex-wrap">
             <v-btn class="mr-3" elevation="0" @click="createNewHeightMap()" :disabled="uiFrozen || !canCompensate"> {{ $t('plugins.heightmap.create') }}</v-btn>
-            <span class="mx-1">
+            <span class="mx-3">
             <label :title="$t('plugins.heightmap.tooltipSpacing')" for="count" class="pollen-attr-header">S.Spacing</label>
             <input name="count" class="mx-1" ref="input" step="any" :placeholder="default_spacing" :min="spacingMin" :max="spacingMax" v-model.number="s_spacing" type="number" />
             </span>
-            <span class="mx-1">
+            <span class="mx-3">
             <label :title="$t('plugins.heightmap.tooltipRepeat')" for="repeat" class="pollen-attr-header">S.Repeat</label><input name="repeat" class="mx-1" ref="input" step="any" :placeholder="default_repeat" min="1" max="31" v-model.number="s_repeat" type="number" />
             </span>
-            <span class="mx-1">
-            <label :title="$t('plugins.heightmap.tooltipRadius')" for="radius" class="pollen-attr-header">S.Radius</label><input name="radius" class="mx-1" ref="input" step="any" :placeholder="default_radius" :min="radiusMin" :max="radiusMax" v-model.number="s_radius" type="number" />
-            </span>
+			<label :title="$t('plugins.heightmap.tooltipXRange')" for="x_range" class="pollen-attr-header">S.X_Range</label>
+			<v-range-slider name="x_range" class="mx-1 slider" v-model="s_x_range" step="1" :min="xRangeMin()" :max="xRangeMax()" thumb-label dense></v-range-slider>
+			<label :title="$t('plugins.heightmap.tooltipYRange')" for="y_range" class="pollen-attr-header">S.Y_Range</label>
+			<v-range-slider name="y_range" class="mx-1 slider" v-model="s_y_range" step="1" :min="yRangeMin()" :max="yRangeMax()" thumb-label dense></v-range-slider>
 			<v-spacer></v-spacer>
 			<v-btn elevation="0" :disabled="uiFrozen || !canCompensate" @click="restoreSettingsFactoryDefault()">{{ $t('plugins.heightmap.defaultFactorySettings') }}</v-btn>
           </v-card-actions>
@@ -392,30 +393,6 @@ export default {
 			isCompensating: state => state.global.COMPENSATING_SEQUENCE_RUNNING
 		}),
 		...mapState('settings', ['language']),
-		spacingMin() { 
-			if(this.s_radius > 3){
-				return Math.max(1,Math.ceil(this.s_radius/10));
-			}
-			return 1;
-		},
-		spacingMax() { 
-			if (this.s_radius > 3) {
-				return Math.min(129, Math.floor(this.s_radius - 1));
-			}
-			return 129;
-		},
-		radiusMin() {
-			if (this.s_spacing > 1){
-				return Math.max(3, Math.ceil(this.s_spacing + 1));
-			}
-			return 3;
-		},
-		radiusMax() {
-			if (this.s_spacing > 1){
-				return Math.min(130, this.s_spacing*10);
-			}
-			return 130;
-		},
 		defaultHeaders() {
 			return [
 				{
@@ -484,7 +461,7 @@ export default {
 		return {
 			files: [],
 			selectedFile: null,
-
+			range:[0, 420],
 			isActive: true,
 			ready: false,
 			loading: false,
@@ -542,6 +519,27 @@ export default {
 		...mapActions('machine', ['download', 'upload', 'getFileList', 'sendCode', 'delete', 'sendCode']),
 		onItemClick(props) {
 			this.selectedFile = props.item.name;
+		},
+		spacingMin() { 
+			return 1;
+		},
+		spacingMax() { 
+			if(this.s_x_range.length == 2 && this.s_y_range.length == 2){
+				return Math.floor(Math.max(this.s_x_range[1]-this.s_x_range[0], this.s_y_range[1]-this.s_y_range[0]) / 2 - 1);
+			}
+			return 100
+		},
+		xRangeMax(){
+			return 600;
+		},
+		xRangeMin(){
+			return 0;
+		},
+		yRangeMax(){
+			return 420;
+		},
+		yRangeMin(){
+			return 0;
 		},
 		async removeHeightMap(item) {
 			await this.delete(Path.combine(this.systemDirectory, item.name));
