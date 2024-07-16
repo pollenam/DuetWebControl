@@ -94,10 +94,10 @@ export default function(connector, pluginCacheFields = {}, pluginSettingFields =
 					throw e;
 				}
 			},
-			async sendInfinite(context, code) {
+			/* async sendInfinite(context, code) {
 				const reply = await connector.sendInfinite(code.code, code.toolNumber);
 				return reply;
-			},
+			}, */
       async runFile({ dispatch }, fileNameOrPath) {
         if (this.uiFrozen) {
           return;

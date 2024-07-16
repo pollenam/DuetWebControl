@@ -43,8 +43,8 @@ export default {
 			fans: state => state.fans,
 			atxPower: state => state.state.atxPower,
 			machineMode: state => state.state.machineMode,
-			hasRadiant: state => state.global.PAM_RADIANT,
-			hasChamber: state => state.global.PAM_HEATED_CHAMBER,
+			//hasRadiant: state => state.global.HAS_RADIANT,
+			hasChamber: state => state.global.HAS_HEATED_CHAMBER,
 			tools: state => state.tools
 		}),
 		...mapGetters(['uiFrozen']),

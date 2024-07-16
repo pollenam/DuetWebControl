@@ -3,7 +3,7 @@
 // import { FileNotFoundError } from '@/utils/errors.js'
 import patch from '@/utils/patch.js'
 import Path from '@/utils/path.js'
-import Vue from 'vue'
+//import Vue from 'vue'
 
 export default function(connector) {
 	return {
@@ -14,7 +14,7 @@ export default function(connector) {
       extrudersSelectedMaterials: ['PLA', 'PLA', 'PLA', 'PLA'],
 			selectedPid: ['','','',''],
 			lastPrintedJob: [],
-			infiniteExtrusionRate: [5, 5, 5, 5],
+			extrusionRate: [5, 5, 5, 5],
 			zLimit: true
     },
 		actions: {
@@ -101,10 +101,10 @@ export default function(connector) {
 			removeFileToShowedMacro(state, filename) {
 				state.showed_macros = state.showed_macros.filter(item => item !== filename);
 			},
-			selectInfiniteExtrusionRate(state, data) {
-				state.infiniteExtrusionRate[data.index] = data.value;
-				Vue.set(state.infiniteExtrusionRate, data.index, data.value);
-			},
+			/* selectInfiniteExtrusionRate(state, data) {
+				state.extrusionRate[data.index] = data.value;
+				Vue.set(state.extrusionRate, data.index, data.value);
+			}, */
 			setZlimit(state, data) {
 				state.zLimit = data;
 			},

@@ -29,14 +29,14 @@
 		<v-card-text class="d-flex flex-column v-card__text--with-rows-highlighted">
 			<v-row dense class="row--highlighted">
         <v-col cols="12 d-flex flex-column">
-          <div class="center-label">{{ extrusionSpeed }} {{ $t('generic.mmPerSec') }}</div>
-          <percentage-input-pollen :value="extrusionSpeed" :min="getExtrusionSpeedMin()" :max="getExtrusionSpeedMax()" :step="0.1" @input="setExtrusionSpeed($event)" :disabled="uiFrozen"></percentage-input-pollen>
+          <div class="center-label">{{ feedrate }} {{ $t('generic.mmPerSec') }}</div>
+          <percentage-input-pollen :value="feedrate" :min="getExtrusionSpeedMin()" :max="getExtrusionSpeedMax()" :step="0.1" @input="setExtrusionSpeed($event)" :disabled="uiFrozen"></percentage-input-pollen>
         </v-col>
       </v-row>
       <v-row class="row--highlighted" dense>
-        <template v-if="shouldShowInfinite">
+        <template>
           <v-col cols="6">
-            <v-btn block @click="infiniteExtrude()" elevation="0" :disabled="uiFrozen || this.isProcessing()">
+            <v-btn block @click="buttonCLicked(true)" elevation="0" :disabled="uiFrozen || this.isProcessing()">
               <v-icon class="mr-1">mdi-arrow-down-bold</v-icon>
               <span class="hidden-lg-only">
                 {{ $t('panel.extruderPollen.extrude') }}
@@ -47,7 +47,7 @@
             </v-btn>
           </v-col>
           <v-col cols="6">
-            <v-btn block @click="infiniteRetract()" elevation="0" :disabled="uiFrozen || this.isProcessing()">
+            <v-btn block @click="buttonClicked(false)" elevation="0" :disabled="uiFrozen || this.isProcessing()">
               <v-icon class="mr-1">mdi-arrow-up-bold</v-icon>
               <span class="hidden-lg-only">
                 {{ $t('panel.extruderPollen.retract') }}
@@ -58,7 +58,7 @@
             </v-btn>
           </v-col>
         </template>
-        <template  v-if="shouldShowStop">
+        <!-- <template  v-if="shouldShowStop">
           <v-col cols="12">
             <v-btn block @click="stopInfinite()" elevation="0" :disabled="uiFrozen">
               <v-icon class="mr-1">mdi-stop</v-icon>
@@ -66,7 +66,7 @@
               <v-progress-circular indeterminate class="ml-5" size="15"></v-progress-circular>
             </v-btn>
           </v-col>
-        </template>
+        </template> -->
           <v-col cols="6">
             <v-btn block @click="temperatureMemory()" elevation="0" :disabled="this.isProcessing()">
               <v-icon class="mr-1">mdi-restore</v-icon>
@@ -167,16 +167,16 @@ export default {
     ...mapState('machine/model', ['move', 'state', 'fans']),
 	  ...mapState('machine/settings', ['displayedExtruders']),
     ...mapState('machine/model', ['global', 'heat', 'tools']),
-    ...mapState('machine/honeyprint_cache', ['extrudersAvailableMaterials', 'extrudersSelectedMaterials', 'selectedPid', 'infiniteExtrusionRate']),
+    ...mapState('machine/honeyprint_cache', ['extrudersAvailableMaterials', 'extrudersSelectedMaterials', 'selectedPid', 'extrusionRate']),
 	  ...mapState('machine/model', {
 	  macrosDirectory: state => state.directories.macros,
 	  tools: state => state.tools,
-	  infiniteExtrusionStatus: state => state.infiniteExtrusionStatus,
+	  /* infiniteExtrusionStatus: state => state.infiniteExtrusionStatus,
     infiniteStatus: state => state.infiniteStatus,
     T1Selected: state => state.global.T1_Selected,
     T2Selected: state => state.global.T2_Selected,
     T3Selected: state => state.global.T3_Selected,
-    T4Selected: state => state.global.T4_Selected,
+    T4Selected: state => state.global.T4_Selected, */
 	}),
     fanValue: {
 			get() {
@@ -193,20 +193,20 @@ export default {
 				this.sendCode(`M106 S${value.toFixed(2)}`);
 			}
 		},
-    shouldShowInfinite() {
+    /* shouldShowInfinite() {
 		if (this.infiniteExtrusionStatus === null || this.infiniteExtrusionStatus === undefined)
 		{
 			return false;
 		}
 		return this.infiniteExtrusionStatus[this.toolIndex] === 'stopped'
-    },
-    shouldShowStop() {
+    }, */
+    /* shouldShowStop() {
 		if (this.infiniteExtrusionStatus === null || this.infiniteExtrusionStatus === undefined)
 		{
 			return false;
 		}
 		return this.infiniteExtrusionStatus[this.toolIndex] !== 'stopped'
-    },
+    }, */
     shouldShowExtruderFactor() {
 		if (this.infiniteExtrusionStatus === null || this.infiniteExtrusionStatus === undefined)
 		{
@@ -222,7 +222,7 @@ export default {
 		this.state.status === StatusType.processing ||
     this.state.status === StatusType.changingTool;
     },
-    isSelected2(value) {
+    /* isSelected2(value) {
 		if (value == 1){
 			return this.T1Selected === '1';
 		}
@@ -239,7 +239,7 @@ export default {
 			return this.tool.state === 'active';
 		}
       //return this.tool.state === 'active';
-    },
+    }, */
     isSelected() {
       return this.tool.state === 'active';
     },
@@ -253,7 +253,8 @@ export default {
 	data() {
 		return {
         currentPid: "",
-        extrusionSpeed: 5,
+        amount: 10,
+        feedrate: 5,
         pidItems:[]
     }
 	},
@@ -268,8 +269,8 @@ export default {
     }
   },
 	methods: {
-		...mapActions('machine', ['sendCode', 'getFileList', 'sendInfinite']),
-		...mapMutations('machine/settings', ['toggleExtruderVisibility']),
+		...mapActions('machine', ['sendCode', 'getFileList']),
+		...mapMutations('machine/settings', ['setExtrusionAmount', 'setExtrusionFeedrate']),
     ...mapMutations('machine/honeyprint_cache', ['selectedExtruderMaterial', 'selectSelectedPid']),
 		//...mapMutations('machine/honeyprint_cache', ['selectedExtruderMaterial', 'selectSelectedPid', 'selectInfiniteExtrusionRate']),
     getExtrusionFactor() {
@@ -290,10 +291,10 @@ export default {
       return 0;
     },
     getExtruderRate() {
-      return this.extrusionSpeed;
+      return this.feedrate;
     },
     getExtrusionSpeedMax() {
-      var candidateValue = this.extrusionSpeed + this.extrusionSpeed * 0.5;
+      var candidateValue = this.feedrate + this.feedrate * 0.5;
       if (candidateValue >= EXTRUSION_SPEED_MAX)
       {
         return EXTRUSION_SPEED_MAX;
@@ -304,7 +305,7 @@ export default {
       }
     },
     getExtrusionSpeedMin() {
-      var candidateValue = this.extrusionSpeed - this.extrusionSpeed * 0.5;
+      var candidateValue = this.feedrate - this.feedrate * 0.5;
       if (candidateValue <= EXTRUSION_SPEED_MIN)
       {
         return EXTRUSION_SPEED_MIN;
@@ -380,7 +381,7 @@ export default {
       });
     },
 
-    getSelectedTools() {
+    /* getSelectedTools() {
       var selectedTools = "";
       if(this.infiniteExtrusionStatus[0] !== 'stopped') {
         selectedTools = selectedTools + "1";
@@ -400,8 +401,8 @@ export default {
 
       selectedTools = selectedTools + (this.tool.number);
       return selectedTools;
-    },
-    getSelectedToolsForStop() {
+    }, */
+    /* getSelectedToolsForStop() {
       var selectedTools = "";
       if(this.infiniteExtrusionStatus[0] !== 'stopped' && this.tool.number !== 1) {
         selectedTools = selectedTools + "1";
@@ -419,8 +420,8 @@ export default {
         selectedTools = selectedTools + "4";
       }
       return selectedTools;
-    },
-    numberOfToolsExtruding() {
+    }, */
+    /* numberOfToolsExtruding() {
       var i = 0;
       this.infiniteExtrusionStatus.forEach((e) => {
         if(e !== "stopped") {
@@ -428,8 +429,8 @@ export default {
         }
       });
       return i;
-    },
-    getRPMForInfinite(isExtruding) {
+    }, */
+    /* getRPMForInfinite(isExtruding) {
       var rpmCommand = "";
 
       if(this.tool.number === 1) {
@@ -452,8 +453,8 @@ export default {
         rpmCommand = rpmCommand + "-" + this.extrusionSpeed;
 
       return rpmCommand;
-    },
-    getToolNumberLetterForExtrusionRate() {
+    }, */
+    /* getToolNumberLetterForExtrusionRate() {
       if(this.tool.number === 1) {
         return "A";
       }
@@ -466,7 +467,7 @@ export default {
       if (this.tool.number === 4) {
         return  "D";
       }
-    },
+    }, */
     async temperatureMemory() {
       await this.sendCode("M98 P\"/sys/memory_T" + this.tool.number +".g\"");
       await this.sendCode("M568 P" + this.tool.number +" A2");
@@ -476,6 +477,29 @@ export default {
       await this.sendCode("M568 P" + this.tool.number +" A0");
       //await this.sendCode("M991");
     },
+    async buttonClicked(extrude) {
+			if (!this.currentTool.extruders.length) {
+				return;
+			}
+
+			let amounts;
+			if (this.mixValue[0] === 'mix') {
+				// Split total amount to extrude evenly
+				amounts = [this.amount];
+			} else {
+				// Extrude given amount via each selected extruder drive
+				amounts = this.currentTool.extruders.map(extruder => (this.mix.indexOf(extruder) !== -1) ? this.amount : 0);
+			}
+
+			this.busy = true;
+			try {
+				const amount = amounts.map(amount => extrude ? amount : -amount).join(':');
+				await this.sendCode(`M120\nM83\nG1 E${amount} F${this.feedrate * 60}\nM121`);
+			} catch (e) {
+				// handled before we get here
+			}
+			this.busy = false;
+		},
     /* async infiniteExtrude() {
       try {
         await this.sendCode("M98 P\"/macros/SELECT/Select\" T" + this.getSelectedTools());
@@ -520,11 +544,11 @@ export default {
       this.pidItems = files;
     }
 
-    this.extrusionSpeed = this.infiniteExtrusionRate[this.toolIndex];
+    this.feedrate = this.extrusionRate[this.toolIndex];
   },
   watch: {
-    infiniteExtrusionRate(to) {
-      this.extrusionSpeed = to[this.toolIndex];
+    extrusionRate(to) {
+      this.feedrate = to[this.toolIndex];
     }
   }
 }

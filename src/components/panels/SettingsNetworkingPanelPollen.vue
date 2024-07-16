@@ -43,7 +43,7 @@ import { mapState, mapActions } from 'vuex'
 export default {
 	computed: {
 		...mapState('machine/model', {
-      ipAddress: state => state.global.PAM_IP_ADRESS,
+      ipAddress: state => state.global.IP_ADRESS,
     })
 	},
   data() {
@@ -61,7 +61,7 @@ export default {
 		...mapState('machine/model', ['network']),
     async handleSubmit() {
       if (this.isValidIpAdress()){
-        await this.machineSendCode(`M98 P"/macros/CONFIG/UPDATE_IP_ADRESS.g" A"${this.formIpAddress}"`);
+        await this.machineSendCode(`M98 P"/macros/HONEYPRINT/UPDATE_IP_ADRESS" A"${this.formIpAddress}"`);
       }
       else{
         await this.machineSendCode(`echo "${this.formIpAddress} is not a valid ip adress."`);

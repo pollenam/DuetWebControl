@@ -1,11 +1,11 @@
 <template>
-  <div v-if="doorsPresent" class="v-toolbar-pollen-item">
+  <div v-if="doors" class="v-toolbar-pollen-item">
     <v-icon small class="mr-1">mdi-lock-outline</v-icon>
     <span class="hidden-md-and-down">
       {{ $t('panel.doors.caption') }}
     </span>
 
-    <v-switch :value="doors" hide-details="'auto'" :loading="sendingCode" :color="'success'" :dark="!doorsPresent || homingSequence" @change="togglePower" class="ml-2" :disabled="uiFrozen || !doorsPresent || homingSequence">
+    <v-switch :value="doorsClosed" hide-details="'auto'" :loading="sendingCode" :color="'success'" :dark="!doors || homingSequence" @change="toggleDoors" class="ml-2" :disabled="uiFrozen || !doors || homingSequence">
     </v-switch>
   </div>
 </template>
@@ -20,8 +20,8 @@ export default {
 		...mapGetters(['uiFrozen']),
 		...mapState('machine/model', ['state']),
 		...mapState('machine/model', {
-      		doors: state => state.global.DOORS_CLOSED,
-			doorsPresent: state => state.global.DOORS_PRESENT,
+      		doorsClosed: state => state.global.DOORS_CLOSED,
+			doors: state => state.global.DOORS_PRESENT,
 			homingSequence: state => state.global.HOMING_SEQUENCE_RUNNING,
 		}),
 	},
@@ -30,13 +30,9 @@ export default {
 			sendingCode: false
 		}
 	},
-	shouldShowDoors() {
-		return "'off disabled'";
-
-    },
 	methods: {
 		...mapActions('machine', ['runFile']),
-		async togglePower(state) {
+		async toggleDoors(state) {
 			if (!this.sendingCode) {
 				this.sendingCode = true;
 				try {

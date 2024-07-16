@@ -360,12 +360,13 @@ import {KinematicsName, StatusType} from '../../store/machine/modelEnums';
 import i18n from '../../i18n'
 
 let heightMapViewer;
-const default_x = 13.31;
-const default_y = 8.89;
-const default_z = -10;
-const factory_default_spacing = 25;
+const default_x = 0;
+const default_y = 0;
+const default_z = 10;
+const factory_default_spacing = 50;
 const factory_default_repeat = 4;
-const factory_default_radius = 130;
+const factory_default_x_range = [100,500];
+const factory_default_y_range = [100,320];
 
 export default {
 	computed: {
@@ -382,11 +383,12 @@ export default {
 			axes: (state) => state.move.axes,
 			kinematicsName: (state) => state.move.kinematics.name,
 			tools: state => state.tools,
-			extruders: state => state.global.PAM_EXTRUDERS,
+			//extruders: state => state.global.PAM_EXTRUDERS,
 			appliedFile: state => state.global.heightmap_file_name,
 			default_spacing: state => state.global.DEFAULT_S_SPACING,
 			default_repeat: state => state.global.DEFAULT_S_REPEAT,
-			default_radius: state => state.global.DEFAULT_S_RADIUS,
+			default_x_range: state => state.global.DEFAULT_S_X_RANGE,
+			default_y_range: state => state.global.DEFAULT_S_Y_RANGE,
 			isCompensating: state => state.global.COMPENSATING_SEQUENCE_RUNNING
 		}),
 		...mapState('settings', ['language']),
@@ -520,14 +522,15 @@ export default {
 			sortDesc: false,
 			s_spacing: this.default_spacing,
 			s_repeat: this.default_repeat,
-			s_radius: this.default_radius,
+			s_x_range: this.default_x_range,
+			s_y_range: this.default_y_range,
 			t1x: default_x,
-			t1y: -default_y,
+			t1y: default_y,
 			t1z: default_z,
-			t2x: -default_x,
-			t2y: -default_y,
+			t2x: default_x,
+			t2y: default_y,
 			t2z: default_z,
-			t3x: -default_x,
+			t3x: default_x,
 			t3y: default_y,
 			t3z: default_z,
 			t4x: default_x,
@@ -559,21 +562,26 @@ export default {
 
 			var spacing = this.s_spacing;
 			var repeat = this.s_repeat;
-			var radius = this.s_radius;
+			var x_range = this.s_x_range;
+			var y_range = this.s_y_range;
+
 			if (typeof spacing !== "number"){
 				spacing = this.default_spacing;
 			}
 			if (typeof repeat !== "number"){
 				repeat = this.default_repeat;
 			}
-			if (typeof radius !== "number"){
-				radius = this.default_radius;
+			if (!Array.isArray(x_range) || x_range.length != 2 || x_range.some(item => typeof item !== 'number' || isNaN(item))){
+				x_range = this.default_x_range;
+			}
+			if (!Array.isArray(y_range) || y_range.length != 2 || y_range.some(item => typeof item !== 'number' || isNaN(item))){
+				y_range = this.default_y_range;
 			}
 
-			await this.sendCode(`M98 P"/macros/HONEYPRINT/Compensation_Start" H"heightmap-${today}.csv" C${spacing} R${repeat} S${radius}`);
+			await this.sendCode(`M98 P"/macros/HONEYPRINT/Compensation_Start" H"heightmap-${today}.csv" S${spacing} R${repeat} X{${x_range[0]},${x_range[1]}} Y{${y_range[0]},${y_range[1]}}`);
 		},
 		async restoreSettingsFactoryDefault(){
-			await this.sendCode(`M98 P"/macros/HONEYPRINT/Set_Heightmap_Settings_Default" C${factory_default_spacing} R${factory_default_repeat} S${factory_default_radius}`);
+			await this.sendCode(`M98 P"/macros/HONEYPRINT/Set_Heightmap_Settings_Default" S${factory_default_spacing} R${factory_default_repeat} X{${factory_default_x_range[0]},${factory_default_x_range[1]}} Y{${factory_default_y_range[0]},${factory_default_y_range[1]}}`);
 		},
 		async saveParameters(){
 			if (this.tools[1] !== null) {
@@ -809,9 +817,11 @@ export default {
 			heightMapViewer.resetCamera();
 		},
 		refreshOffsets() {
-			this.t1x = this.tools[1].offsets[0];
-			this.t1y = this.tools[1].offsets[1];
-			this.t1z = this.tools[1].offsets[2];
+			if(this.tools[2] !== null) {
+				this.t1x = this.tools[1].offsets[0];
+				this.t1y = this.tools[1].offsets[1];
+				this.t1z = this.tools[1].offsets[2];
+			}
 
 			if(this.tools[2] !== null) {
 				this.t2x = this.tools[2].offsets[0];

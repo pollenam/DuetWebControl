@@ -198,7 +198,7 @@ export default {
 		//...mapState('machine/honeyprint_cache', ['zLimit']),
 		...mapState('machine/model', {
 			machineSpeedFactor: state => state.move.speedFactor,
-			babystepping: state => (state.move.axes.length >= 3) ? state.move.axes[2].babystep : 0,
+			//babystepping: state => (state.move.axes.length >= 3) ? state.move.axes[2].babystep : 0,
 			isCompensating: state => state.global.COMPENSATING_SEQUENCE_RUNNING
 		}),
 		speedFactor: {
@@ -210,7 +210,7 @@ export default {
 		...mapGetters('machine/settings', ['moveSteps', 'numMoveSteps']),
 		isCompensationEnabled() { return this.move.compensation.type.toLowerCase() !== 'none' },
 		visibleAxes() {
-			return this.move.axes.filter(axis => axis.visible && (axis.letter === "X" || axis.letter === "Y" || axis.letter === "Z"));
+			return this.move.axes.filter(axis => axis.visible);
 		},
 		isDelta() {
 			return (this.move.kinematics.name === KinematicsName.delta ||
