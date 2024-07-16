@@ -140,15 +140,15 @@
             </v-col>
           </v-row>
 		  <v-row class="row--highlighted" dense>
-			<v-col cols="6">
+			<!-- <v-col cols="6">
 			  <v-btn block @click="bedTemperatureMemory()" elevation="0" :disabled="this.isProcessing()" class="mb-1">
 				<v-icon small class="mr-1">mdi-restore</v-icon>
 				<span class="hidden-xs-only hidden-md-only hidden-lg-only">
 					{{ $t('panel.extruderPollen.memoryShort') }}
 				</span>
               </v-btn>
-            </v-col>
-			<v-col cols="6">
+            </v-col> -->
+			<v-col cols="2">
 				<v-btn block @click="bedTemperatureStop()" elevation="0" :disabled="this.isProcessing()">
 					<v-icon small class="mr-1 hidden-xs-only hidden-md-only hidden-lg-only">mdi-power</v-icon>
 					<span>
@@ -156,12 +156,15 @@
 					</span>
 				</v-btn>
 			</v-col>
+			<v-col cols="10">
+				<temperature-tool-input :bed="firstBedHeater()" :bedHeaterIndex="firstBedIndex()" active class="mt-3 mb-0"></temperature-tool-input>
+			</v-col>
 		  </v-row>
-		  <v-row class="row--highlighted" dense>
+		  <!-- <v-row class="row--highlighted" dense>
 			<v-col cols="12">
 				<temperature-tool-input :bed="firstBedHeater()" :bedHeaterIndex="firstBedIndex()" active class="mt-3 mb-0"></temperature-tool-input>
 			</v-col>
-		  </v-row>          
+		  </v-row> -->          
 				</v-col>
 			</v-row>
 		</v-card-text>

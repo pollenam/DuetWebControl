@@ -183,59 +183,23 @@ input {
 					</v-card-title>
 					<v-card-text>
             <v-simple-table class="v-data-table--no-bg heightmap-offsets-table">
-              <tbody>
-                <tr>
-                  <th class="px-0 font-size-0875 pollen-attr-header">T1</th>
-                  <td>
-                    <label for="T1X">X</label>
-                    <input name="T1X" class="ml-2 mr-1 heightmap-offsets-input" ref="input" step="0.01" v-model.number="t1x" type="number" />
-                  </td>
-                  <td>
-                    <label for="T1Y">Y</label>
-                    <input name="T1Y" class="ml-2 mr-1 heightmap-offsets-input" ref="input" step="0.01" v-model.number="t1y" type="number" />
-                  </td>
-                  <td>
-                    <label for="T1Z">Z</label>
-                    <input name="T1Z" class="ml-2 mr-1 heightmap-offsets-input" ref="input" step="0.01" v-model.number="t1z" type="number" />
-                  </td>
-                </tr>
-                <tr v-if="tools[2] !== null">
-                  <th class="px-0 font-size-0875 pollen-attr-header">T2</th>
-                  <td>
-												<label for="T2X">X</label><input name="T2X" class="ml-2 mr-1 heightmap-offsets-input" ref="input" step="0.01" v-model.number="t2x" type="number" />
-                  </td>
-                  <td>
-												<label for="T2Y">Y</label><input name="T2Y" class="ml-2 mr-1 heightmap-offsets-input" ref="input" step="0.01" v-model.number="t2y" type="number" />
-                  </td>
-                  <td>
-												<label for="T2Z">Z</label><input name="T2Z" class="ml-2 mr-1 heightmap-offsets-input" ref="input" step="0.01" v-model.number="t2z" type="number" />
-                  </td>
-                </tr>
-                <tr v-if="tools[3] !== null">
-                  <th class="px-0 font-size-0875 pollen-attr-header">T3</th>
-                  <td>
-												<label for="T3X">X</label><input name="T3X" class="ml-2 mr-1 heightmap-offsets-input" ref="input" step="0.01" v-model.number="t3x" type="number" />
-                  </td>
-                  <td>
-												<label for="T3Y">Y</label><input name="T3Y" class="ml-2 mr-1 heightmap-offsets-input" ref="input" step="0.01" v-model.number="t3y" type="number" />
-                  </td>
-                  <td>
-												<label for="T3Z">Z</label><input name="T3Z" class="ml-2 mr-1 heightmap-offsets-input" ref="input" step="0.01" v-model.number="t3z" type="number" />
-                  </td>
-                </tr>
-                <tr v-if="tools[4] !== null">
-                  <th class="px-0 font-size-0875 pollen-attr-header">T4</th>
-                  <td>
-												<label for="T4X">X</label><input name="T4X" class="ml-2 mr-1 heightmap-offsets-input" ref="input" step="0.01" v-model.number="t4x" type="number" />
-                  </td>
-                  <td>
-												<label for="T4Y">Y</label><input name="T4Y" class="ml-2 mr-1 heightmap-offsets-input" ref="input" step="0.01" v-model.number="t4y" type="number" />
-                  </td>
-                  <td>
-												<label for="T4Z">Z</label><input name="T4Z" class="ml-2 mr-1 heightmap-offsets-input" ref="input" step="0.01" v-model.number="t4z" type="number" />
-                  </td>
-                </tr>
-              </tbody>
+				<tbody>
+					<tr v-for="tool in visibleTools" :key="tool.number">
+						<th class="px-0 font-size-0875 pollen-attr-header">T{{ tool.number }}</th>
+						<td>
+							<label :for="'T' + tool.number + 'X'">X</label>
+							<input :name="'T' + tool.number + 'X'" class="ml-2 mr-1 heightmap-offsets-input" ref="input" step="0.01" v-model.number="toolOffsets[tool.number].x" type="number" />
+						</td>
+						<td>
+							<label :for="'T' + tool.number + 'Y'">Y</label>
+							<input :name="'T' + tool.number + 'Y'" class="ml-2 mr-1 heightmap-offsets-input" ref="input" step="0.01" v-model.number="toolOffsets[tool.number].y" type="number" />
+						</td>
+						<td>
+							<label :for="'T' + tool.number + 'Z'">Z</label>
+							<input :name="'T' + tool.number + 'Z'" class="ml-2 mr-1 heightmap-offsets-input" ref="input" step="0.01" v-model.number="toolOffsets[tool.number].z" type="number" />
+						</td>
+					</tr>
+				</tbody>
             </v-simple-table>
 					</v-card-text>
 					<v-card-actions class="flex-wrap">
@@ -363,7 +327,7 @@ import i18n from '../../i18n'
 let heightMapViewer;
 const default_x = 0;
 const default_y = 0;
-const default_z = 10;
+const default_z = 0;
 const factory_default_spacing = 50;
 const factory_default_repeat = 4;
 const factory_default_x_range = [100,500];
@@ -377,13 +341,13 @@ export default {
 			pluginCache: (state) => state.plugins.HeightMap
 
 		}),
-		...mapState('machine/model', ['state']),
+		...mapState('machine/model', ['state', 'tools']),
 		...mapState('machine/model', {
 			heightmapFile: (state) => state.move.compensation.file,
 			systemDirectory: (state) => state.directories.system,
 			axes: (state) => state.move.axes,
 			kinematicsName: (state) => state.move.kinematics.name,
-			tools: state => state.tools,
+			//tools: state => state.tools,
 			//extruders: state => state.global.PAM_EXTRUDERS,
 			appliedFile: state => state.global.heightmap_file_name,
 			default_spacing: state => state.global.DEFAULT_S_SPACING,
@@ -410,6 +374,9 @@ export default {
 					unit: 'boolean'
 				}
 			];
+		},
+		visibleTools() {
+			return this.tools.filter(tool => tool !== null);
 		},
 		canHome() {
 			return !this.uiFrozen && (
@@ -461,7 +428,6 @@ export default {
 		return {
 			files: [],
 			selectedFile: null,
-			range:[0, 420],
 			isActive: true,
 			ready: false,
 			loading: false,
@@ -501,22 +467,16 @@ export default {
 			s_repeat: this.default_repeat,
 			s_x_range: this.default_x_range,
 			s_y_range: this.default_y_range,
-			t1x: default_x,
-			t1y: default_y,
-			t1z: default_z,
-			t2x: default_x,
-			t2y: default_y,
-			t2z: default_z,
-			t3x: default_x,
-			t3y: default_y,
-			t3z: default_z,
-			t4x: default_x,
-			t4y: default_y,
-			t4z: default_z,
+			toolOffsets: {0: {}},
 		};
 	},
 	methods: {
-		...mapActions('machine', ['download', 'upload', 'getFileList', 'sendCode', 'delete', 'sendCode']),
+		...mapActions('machine', ['download', 'upload', 'getFileList', 'sendCode', 'delete']),
+		initializeToolOffsets() {
+			this.visibleTools.forEach(tool => {
+				this.toolOffsets[tool.number] = { x: default_x, y: default_y, z: default_z };
+			});
+		},
 		onItemClick(props) {
 			this.selectedFile = props.item.name;
 		},
@@ -582,17 +542,11 @@ export default {
 			await this.sendCode(`M98 P"/macros/HONEYPRINT/Set_Heightmap_Settings_Default" S${factory_default_spacing} R${factory_default_repeat} X{${factory_default_x_range[0]},${factory_default_x_range[1]}} Y{${factory_default_y_range[0]},${factory_default_y_range[1]}}`);
 		},
 		async saveParameters(){
-			if (this.tools[1] !== null) {
-				await this.sendCode(`M98 P"/macros/HONEYPRINT/Tool_Offset_Save" T1 X${this.t1x} Y${this.t1y} Z${this.t1z}`);
-			}
-			if (this.tools[2] !== null) {
-				await this.sendCode(`M98 P"/macros/HONEYPRINT/Tool_Offset_Save" T2 X${this.t2x} Y${this.t2y} Z${this.t2z}`);
-			}
-			if (this.tools[3] !== null) {
-				await this.sendCode(`M98 P"/macros/HONEYPRINT/Tool_Offset_Save" T3 X${this.t3x} Y${this.t3y} Z${this.t3z}`);
-			}
-			if (this.tools[4] !== null) {
-				await this.sendCode(`M98 P"/macros/HONEYPRINT/Tool_Offset_Save" T4 X${this.t4x} Y${this.t4y} Z${this.t4z}`);
+			for (const tool of this.visibleTools) {
+				const offsets = this.toolOffsets[tool.number];
+				if (offsets) {
+					await this.sendCode(`M98 P"/macros/HONEYPRINT/Tool_Offset_Save" T${tool.number} X${offsets.x} Y${offsets.y} Z${offsets.z}`);
+				}
 			}
 			this.refreshOffsets();
 		},
@@ -815,29 +769,12 @@ export default {
 			heightMapViewer.resetCamera();
 		},
 		refreshOffsets() {
-			if(this.tools[2] !== null) {
-				this.t1x = this.tools[1].offsets[0];
-				this.t1y = this.tools[1].offsets[1];
-				this.t1z = this.tools[1].offsets[2];
-			}
-
-			if(this.tools[2] !== null) {
-				this.t2x = this.tools[2].offsets[0];
-				this.t2y = this.tools[2].offsets[1];
-				this.t2z = this.tools[2].offsets[2];
-			}
-
-			if(this.tools[3] !== null) {
-				this.t3x = this.tools[3].offsets[0];
-				this.t3y = this.tools[3].offsets[1];
-				this.t3z = this.tools[3].offsets[2];
-			}
-
-			if(this.tools[4] !== null) {
-				this.t4x = this.tools[4].offsets[0];
-				this.t4y = this.tools[4].offsets[1];
-				this.t4z = this.tools[4].offsets[2];
-			}
+			this.visibleTools.forEach(tool => {
+				const offsets = tool.offsets;
+				if (offsets) {
+					this.toolOffsets[tool.number] = { x: offsets[0], y: offsets[1], z: offsets[2] };
+				}
+			});
 		},
 		async refresh() {
 			if (!this.isConnected) {
@@ -973,6 +910,8 @@ export default {
 		this.isActive = false;
 	},
 	async mounted() {
+		this.initializeToolOffsets()
+		
 		const size = this.resize();
 		if (size.height <= 0) {
 			size.height = 1;

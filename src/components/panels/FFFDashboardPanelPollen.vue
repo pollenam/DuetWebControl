@@ -39,13 +39,14 @@ import { mapState, mapGetters } from 'vuex'
 
 export default {
 	computed: {
+		...mapState('machine/model', ['tools']),
 		...mapState('machine/model', {
 			fans: state => state.fans,
 			atxPower: state => state.state.atxPower,
 			machineMode: state => state.state.machineMode,
 			//hasRadiant: state => state.global.HAS_RADIANT,
 			hasChamber: state => state.global.HAS_HEATED_CHAMBER,
-			tools: state => state.tools
+			//tools: state => state.tools
 		}),
 		...mapGetters(['uiFrozen']),
 		...mapGetters('machine/model', ['currentTool']),

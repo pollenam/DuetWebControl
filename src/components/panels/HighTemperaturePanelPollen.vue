@@ -15,12 +15,12 @@
 					</v-row>
 					<v-row>
 						<v-col cols="5">
-							<v-btn small block @click="chamberTemperatureMemory()" elevation="0" :disabled="this.isProcessing() || !hasChamber" class="mb-1">
+							<!-- <v-btn small block @click="chamberTemperatureMemory()" elevation="0" :disabled="this.isProcessing() || !hasChamber" class="mb-1">
 								<v-icon small class="mr-0">mdi-restore</v-icon>
 								<span class="hidden-sm-and-down hidden-lg-only">
 									{{ $t('panel.extruderPollen.memoryShort') }}
 								</span>
-							</v-btn>
+							</v-btn> -->
 							<v-btn small block @click="chamberTemperatureStop()" elevation="0" :disabled="this.isProcessing() || !hasChamber">
 								<v-icon small class="hidden-sm-and-down hidden-lg-only">mdi-power</v-icon>
 								<span>
@@ -104,9 +104,9 @@ export default {
 			await this.sendCode("M141 P1 S0"); //Radiant set to 0°C
 			await this.sendCode("M141 P1 S-273.1"); //Radiant off
 		}, */
-		async chamberTemperatureMemory() {
+		/* async chamberTemperatureMemory() {
 			await this.sendCode("M98 P\"/sys/memory_CHAMBER.g\"");
-		},
+		}, */
 		async chamberTemperatureStop() {
 			await this.sendCode("M141 S0"); //Chamber set to 0°C
 			await this.sendCode("M141 S-273.1"); //Chamber off

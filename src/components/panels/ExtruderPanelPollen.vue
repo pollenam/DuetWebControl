@@ -4,11 +4,17 @@
       width: 1px;
     }
   }
-
+  .v-btn-toggle {
+    display: flex;
+    //grid-template-columns: repeat(6, minmax(50px, 1fr)); /* Adjust the min-width to control the button width */
+    flex-wrap: wrap;
+  }
   .amount-btn {
     /* padding-left: 0 !important; */
     /* padding-right: 0 !important; */
-    min-width: 0;
+    min-width: 50px;
+    flex: 1 0 30%; /* Adjust the percentage to control the button width */
+    //margin: 1%; /* Adjust the margin to control the spacing between buttons */
   }
 
   .center-label {
@@ -45,7 +51,7 @@
           {{ $t('panel.extrude.amount', ['mm']) }}
           </span>
           <v-btn-toggle v-model="amount" mandatory class="d-flex">
-            <v-btn v-for="(savedAmount, index) in extruderAmounts" :key="index" :value="savedAmount" :disabled="uiFrozen" @contextmenu.prevent="editAmount(index)" tile class="flex-grow-1 amount-btn">
+            <v-btn v-for="(savedAmount, index) in extruderAmounts.slice().sort((a, b) => a - b)" :key="index" :value="savedAmount" :disabled="uiFrozen" @contextmenu.prevent="editAmount(index)" tile class="flex-grow-1 amount-btn">
               {{ savedAmount }}
             </v-btn>
           </v-btn-toggle>
@@ -190,7 +196,7 @@ export default {
     ...mapState('machine/honeyprint_cache', ['extrudersAvailableMaterials', 'extrudersSelectedMaterials', 'selectedPid', 'extrusionRate']),
 	  ...mapState('machine/model', {
 	  macrosDirectory: state => state.directories.macros,
-	  tools: state => state.tools,
+	  //tools: state => state.tools,
 	  /* infiniteExtrusionStatus: state => state.infiniteExtrusionStatus,
     infiniteStatus: state => state.infiniteStatus,
     T1Selected: state => state.global.T1_Selected,
@@ -510,16 +516,22 @@ export default {
       //await this.sendCode("M991");
     },
     async buttonClicked(extrude) {
-			if (!this.currentTool.extruders.length) {
+			await this.sendCode(`echo "Button Click"`);
+      if (!this.currentTool.extruders.length) {
 				return;
 			}
+      await this.sendCode(`echo "extruders present in tool"`);
 			this.busy = true;
+      await this.sendCode(`echo "busy = true"`);
 			try {
+        await this.sendCode(`echo "try"`);
 				await this.sendCode(`M120\nM83\nG1 E${extrude ? this.amount : -this.amount} F${this.feedrate * 60}\nM121`);
+        await this.sendCode(`echo "extrusion command sent"`);
 			} catch (e) {
 				// handled before we get here
 			}
 			this.busy = false;
+      await this.sendCode(`echo "busy = false"`);
 		},
     editAmount(index) {
 			this.editAmountDialog.index = index;
