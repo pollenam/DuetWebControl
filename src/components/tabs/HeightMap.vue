@@ -341,13 +341,13 @@ export default {
 			pluginCache: (state) => state.plugins.HeightMap
 
 		}),
-		...mapState('machine/model', ['state', 'tools']),
+		...mapState('machine/model', ['state']),
 		...mapState('machine/model', {
 			heightmapFile: (state) => state.move.compensation.file,
 			systemDirectory: (state) => state.directories.system,
 			axes: (state) => state.move.axes,
 			kinematicsName: (state) => state.move.kinematics.name,
-			//tools: state => state.tools,
+			tools: state => state.tools,
 			//extruders: state => state.global.PAM_EXTRUDERS,
 			appliedFile: state => state.global.heightmap_file_name,
 			default_spacing: state => state.global.DEFAULT_S_SPACING,
