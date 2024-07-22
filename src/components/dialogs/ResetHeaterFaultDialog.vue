@@ -52,7 +52,8 @@ export default {
 		...mapActions('machine', ['sendCode']),
 		async resetFault() {
 			try {
-				await this.sendCode(`M562 P${this.heater}`);
+				await this.sendCode(`M98 P"/macros/HONEYPRINT/Reset_Fault" H${this.heater}`)
+				//await this.sendCode(`M562 P${this.heater}`);
 			} finally {
 				this.hide();
 			}

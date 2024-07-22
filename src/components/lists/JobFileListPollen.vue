@@ -326,10 +326,13 @@ export default {
       const targetPath = Path.combine(this.directory, (item && item.name) ? item.name : this.selection[0].name);
 			//this.addLastPrintedJobDate(targetPath);
 			this.sendCode(`M991`);
-			this.sendCode(`M32 "${targetPath}"`);
+			this.sendCode(`M98 P"/macros/HONEYPRINT/Start_GCode" S"${targetPath}"`);
+			//this.sendCode(`M32 "${targetPath}"`);
 		},
 		simulate(item) {
-			this.sendCode(`M37 P"${Path.combine(this.directory, (item && item.name) ? item.name : this.selection[0].name)}"`);
+			const targetPath = Path.combine(this.directory, (item && item.name) ? item.name : this.selection[0].name)
+			this.sendCode(`M98 P"/macros/HONEYPRINT/Simulate_GCode" S"${targetPath}"`);
+			//this.sendCode(`M37 P"${Path.combine(this.directory, (item && item.name) ? item.name : this.selection[0].name)}"`);
 		},
 		contextMenuAction(menuItem){
 			let path = Path.combine(this.directory, this.selection[0].name);

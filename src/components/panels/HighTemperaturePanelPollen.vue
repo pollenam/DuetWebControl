@@ -101,15 +101,17 @@ export default {
 			await this.sendCode("M98 P\"/sys/pam_memory_RADIANT.g\"");
 		},
 		async radiantTemperatureStop() {
-			await this.sendCode("M141 P1 S0"); //Radiant set to 0°C
-			await this.sendCode("M141 P1 S-273.1"); //Radiant off
+			await this.sendCode(`M98 P"/macros/HONEYPRINT/Radiant_Off"`)
+			//await this.sendCode("M141 P1 S0"); //Radiant set to 0°C
+			//await this.sendCode("M141 P1 S-273.1"); //Radiant off
 		},
 		async chamberTemperatureMemory() {
 			await this.sendCode("M98 P\"/sys/pam_memory_CHAMBER.g\"");
 		},
 		async chamberTemperatureStop() {
-			await this.sendCode("M141 S0"); //Chamber set to 0°C
-			await this.sendCode("M141 S-273.1"); //Chamber off
+			await this.sendCode(`M98 P"/macros/HONEYPRINT/Chamber_Off"`)
+			//await this.sendCode("M141 S0"); //Chamber set to 0°C
+			//await this.sendCode("M141 S-273.1"); //Chamber off
 		}
 	},
 	mounted() {

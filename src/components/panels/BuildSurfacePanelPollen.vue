@@ -206,7 +206,10 @@ export default {
 		}),
 		speedFactor: {
 			get() { return (this.machineSpeedFactor !== null) ? (this.machineSpeedFactor * 100): 100; },
-			set(value) { this.sendCode(`M220 S${value}`); }
+			set(value) {
+				this.sendCode(`M98 P"/macros/HONEYPRINT/Set_Speed_Factor" S${value}`);
+				//this.sendCode(`M220 S${value}`); 
+			}
 		},
 		speedFactorMin() { return Math.max(1, Math.min(100, this.speedFactor - 50)); },
 		speedFactorMax() { return Math.max(150, this.speedFactor + 50); },
@@ -222,7 +225,8 @@ export default {
 			},
 			set(value) {
 				value = Math.min(100, Math.max(0, value)) / 100;
-				this.sendCode(`M106 S${value.toFixed(2)}`);
+				this.sendCode(`M98 P"/macros/HONEYPRINT/Set_Fan_Value" S${value.toFixed(2)}`);
+				//this.sendCode(`M106 S${value.toFixed(2)}`);
 			}
 		},
 		isCompensationEnabled() { return this.move.compensation.type.toLowerCase() !== 'none' },
@@ -320,7 +324,8 @@ export default {
 		},
 		async handleHoming() {
 			await this.sendCode('M991');
-			this.sendCode('G28');
+			this.sendCode(`M98 P"/macros/HONEYPRINT/Home_Btn"`)
+			//this.sendCode('G28');
 		},
 		async toggleZLimits() {
 			await this.sendCode(this.move.limitAxes ? 'M98 P"/macros/HONEYPRINT/Z_Limits" S0' : 'M98 P"/macros/HONEYPRINT/Z_Limits" S1');
@@ -329,8 +334,9 @@ export default {
 			await this.sendCode("M98 P\"/sys/pam_memory_BED.g\"");
 		},
 		async bedTemperatureStop() {
-			await this.sendCode("M140 S0"); //Bed set to 0°C
-			await this.sendCode("M140 S-273.1"); //Bed off
+			this.sendCode(`M98 P"/macros/HONEYPRINT/Bed_Off"`)
+			//await this.sendCode("M140 S0"); //Bed set to 0°C
+			//await this.sendCode("M140 S-273.1"); //Bed off
 		}
 	},
 	watch: {

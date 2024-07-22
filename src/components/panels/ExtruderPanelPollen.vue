@@ -254,7 +254,8 @@ export default {
 		},
 		setExtrusionFactor(value) {
       if(this.move.extruders[this.toolIndex * 2] != null) {
-        this.sendCode(`M221 D${this.toolIndex * 2} S${value}`);
+        this.sendCode(`M98 P"/macros/HONEYPRINT/Set_Extrusion_Factor" D${this.toolIndex * 2} S${value}`)
+        //this.sendCode(`M221 D${this.toolIndex * 2} S${value}`);
       }
 		},
 		getMaxExtrusionFactor() {
@@ -271,7 +272,8 @@ export default {
     },
     async setMixerExtrusionFactor(value) {
       if(this.move.extruders[(this.toolIndex * 2) + 1] != null) {
-        await this.sendCode(`M221 D${(this.toolIndex * 2) + 1} S${value}`);
+        await this.sendCode(`M98 P"/macros/HONEYPRINT/Set_Mixer_Factor" D${(this.toolIndex * 2) + 1} S${value}`)
+        //await this.sendCode(`M221 D${(this.toolIndex * 2) + 1} S${value}`);
         if (this.infiniteExtrusionStatus[this.toolIndex] === "extrude") {
           try {
             await this.sendCode("M98 P\"/macros/HONEYPRINT/Set_Extrusion_Rate\" X1 " + this.getRPMForInfinite(true));
@@ -471,8 +473,9 @@ export default {
       await this.sendCode("M568 P" + this.tool.number +" A2");
     },
     async temperatureStop() {
-      await this.sendCode("G10 P" + this.tool.number +" S65:0:0 R65:0:0");
-      await this.sendCode("M568 P" + this.tool.number +" A0");
+      await this.sendCode(`M98 P"/macros/HONEYPRINT/Temperature_Stop" P${this.tool.number}`)
+      //await this.sendCode("G10 P" + this.tool.number +" S65:0:0 R65:0:0");
+      //await this.sendCode("M568 P" + this.tool.number +" A0");
       await this.sendCode("M991");
     },
     async infiniteExtrude() {

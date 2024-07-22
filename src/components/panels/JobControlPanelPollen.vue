@@ -216,11 +216,13 @@ export default {
 		async processAnotherCode(){
 			if (this.lastFileName) {
 				if (this.lastFileSimulated) {
-					this.sendCode(`M37 P"${this.lastFileName}"`);
+					await this.sendCode(`M98 P"/macros/HONEYPRINT/Simulate_GCode_Again" S"${this.lastFileName}"`)
+					//this.sendCode(`M37 P"${this.lastFileName}"`);
 				}
 				else {
 					await this.sendCode('M991');
-					this.sendCode(`M32 "${this.lastFileName}"`);
+					await this.sendCode(`M98 P"/macros/HONEYPRINT/Start_GCode_Again" S"${this.lastFileName}"`)
+					//this.sendCode(`M32 "${this.lastFileName}"`);
 				}
 			}
 		}
