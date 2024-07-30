@@ -612,6 +612,7 @@ export default {
 						const to = Path.combine(directory, item.name, data.items[i].name);
 						try {
 							await this.machineMove({ from, to });
+							this.renameJobHistory({oldFilePath:from, newFilePath:to}) // updates key in jobsHistory if a file is moved to another directory
 						} catch (e) {
 							this.$makeNotification('error', `Failed to move ${data.items[i].name} to ${directory}`, e.message);
 							break;

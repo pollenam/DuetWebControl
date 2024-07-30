@@ -30,7 +30,7 @@
 <script>
 'use strict'
 
-import { mapState, mapActions } from 'vuex'
+import { mapState, mapActions, mapMutations } from 'vuex'
 
 import Path from '../../utils/path.js'
 
@@ -135,6 +135,7 @@ export default {
 	},
 	methods: {
 		...mapActions('machine', ['move']),
+		...mapMutations('machine/honeyprint_cache', ['renameJobHistory']),
 		changeDirectory(directory) {
 			this.$emit('input', directory);
 		},
@@ -163,6 +164,7 @@ export default {
 						const to = Path.combine(directory, data.items[i].name);
 						try {
 							await this.move({ from, to });
+							this.renameJobHistory({oldFilePath:from, newFilePath:to}) // updates key in jobsHistory if a file is moved to the parent directory via directory breadcrumbs
 						} catch (e) {
 							this.$log('error', this.$t('error.move', [data.items[i].name, directory]), e.message);
 							break;
