@@ -387,13 +387,29 @@ export default {
 			layerHeight: 'Hauteur de Couche',
 			filament: 'Utilisation de Filament',
 			printTime: 'Temps d\'Impression',
-			lastPrint: 'Dernière impression',
 			simulatedTime: 'Temps Simulé',
 			generatedBy: 'Généré par',
-
 			noJobs: 'Aucun Travail',
 			start: 'Lancer Fichier',
-			simulate: 'Simuler Fichier'
+			simulate: 'Simuler Fichier',
+			status:{
+				cancelledByUser:'Annulé par un utilisateur',
+				cancelled:'Annulé par le système',
+				success:'Succès',
+				halted:'Interrompu',
+				ongoing:'En cours'
+			},
+			history:{
+				lastModified:'Dernière modification',
+				duration: 'Durée',
+				status: 'Statut',
+				type: 'Type',
+				printDate: 'Date de lancement'
+			},
+			type:{
+				print:'Impression',
+				simulation: 'Simulation'
+			},
 		},
 		system: {
 			noFiles: 'Aucun Fichiers Système',
