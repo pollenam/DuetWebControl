@@ -338,16 +338,22 @@ export default {
 			}
 		},
 		start(item) {
-			const printDetails = {printDate: new Date().toLocaleString(), type: this.$t('list.jobs.type.print'), status: this.$t('list.jobs.status.ongoing'), duration: 0, lastModified: this.selection[0].lastModified.toLocaleString()}
-			const targetPath = Path.combine(this.directory, (item && item.name) ? item.name : this.selection[0].name);
+			// if right click on job then click on "Start" -> this.selection[0]
+			// if click on job, then "Yes" on the dialog window -> item
+			const obj = (item && item.name) ? item : this.selection[0];
+			const printDetails = {printDate: new Date().toLocaleString(), type: this.$t('list.jobs.type.print'), status: this.$t('list.jobs.status.ongoing'), duration: 0, lastModified: obj.lastModified.toLocaleString()}
+			const targetPath = Path.combine(this.directory, obj.name);
 			this.addJobHistory({filePath:targetPath, printDetails:printDetails});
 			this.sendCode(`M991`);
 			this.sendCode(`M98 P"/macros/HONEYPRINT/Start_GCode" S"${targetPath}"`);
 			//this.sendCode(`M32 "${targetPath}"`);
 		},
 		simulate(item) {
-			const printDetails = {printDate: new Date().toLocaleString(), type: this.$t('list.jobs.type.simulation'), status: this.$t('list.jobs.status.ongoing'), duration: 0, lastModified: this.selection[0].lastModified.toLocaleString()}
-			const targetPath = Path.combine(this.directory, (item && item.name) ? item.name : this.selection[0].name)
+			// if right click on job then click on "Simulate" -> this.selection[0]
+			// no other options actually
+			const obj = (item && item.name) ? item : this.selection[0];
+			const printDetails = {printDate: new Date().toLocaleString(), type: this.$t('list.jobs.type.simulation'), status: this.$t('list.jobs.status.ongoing'), duration: 0, lastModified: obj.lastModified.toLocaleString()}
+			const targetPath = Path.combine(this.directory, obj.name)
 			this.addJobHistory({filePath:targetPath, printDetails:printDetails});
 			this.sendCode(`M98 P"/macros/HONEYPRINT/Simulate_GCode" S"${targetPath}"`);
 			//this.sendCode(`M37 P"${Path.combine(this.directory, (item && item.name) ? item.name : this.selection[0].name)}"`);
