@@ -1,12 +1,12 @@
 <style lang="scss">
 .temperature-tool-component {
-  display: inline-block;
-  text-align: right;
+	display: inline-block;
+	text-align: right;
 
-  input[type="number"] {
-    color: rgba(44, 34, 33, 0.7);
-    width: 1px;
-  }
+	input[type="number"] {
+	color: rgba(44, 34, 33, 0.7);
+	width: 1px;
+	}
 }
 
 .temperature-row {
@@ -16,17 +16,22 @@
 </style>
 
 <template>
-  <div class="temperature-row w-100 d-flex align-baseline justify-space-between">
-    <span class="temperature-tool-component flex-grow-1" style="font-weight: 600">{{ getHeaterValue() }}</span>
-    <span class="gray--text flex-grow-0 mx-1">/</span>
-    <div class="d-flex flex-column flex-grow-1">
-      <v-combobox hide-details="auto" ref="input" type="number" min="-273" max="1999" step="any" class="temperature-tool-component pt-0 mt-0" :label="label" :menu-props="{ maxHeight: '50%' }"
-            :value="inputValue" :search-input="inputValue" @update:search-input="change" @keyup.enter="apply" @blur="blur"
-            :loading="applying" :disabled="uiFrozen || !isValid" :items="items" hide-selected>
-      </v-combobox>
-      <small class="black--text mt-1">({{ getStatus() }})</small>
-    </div>
-		<reset-heater-fault-dialog :shown.sync="resetHeaterFault" :heater="faultyHeater"></reset-heater-fault-dialog>
+	<div class="temperature-row w-100 d-flex align-baseline justify-space-between">
+	<span class="temperature-tool-component flex-grow-1" style="font-weight: 600">{{ getHeaterValue() }}</span>
+	<span class="gray--text flex-grow-0 mx-1">/</span>
+	<div class="d-flex flex-column flex-grow-1">
+		<v-combobox hide-details="auto" ref="input" type="number" min="-273" max="1999" step="any" class="temperature-tool-component pt-0 mt-0" :label="label" :menu-props="{ maxHeight: '50%' }"
+		:value="inputValue" :search-input="inputValue" @update:search-input="change" @keyup.enter="apply" @blur="blur"
+		:loading="applying" :disabled="uiFrozen || !isValid" :items="items" hide-selected>
+	</v-combobox>
+		<small class="black--text mt-1">
+			({{ getStatus() }})
+			<a v-if="getStatus() == 'fault'" href="javascript:void(0)" @click="askForResetFault()">
+				<v-icon small class="ml-1">mdi-restore-alert</v-icon>
+			</a>
+		</small>
+	</div>
+	<reset-heater-fault-dialog :shown.sync="resetHeaterFault" :heater="faultyHeater"></reset-heater-fault-dialog>
 	</div>
 </template>
 
@@ -34,7 +39,7 @@
 'use strict'
 
 import { mapState, mapGetters, mapActions } from 'vuex'
-import { AnalogSensorType, HeaterState, StatusType } from '@/store/machine/modelEnums'
+import { AnalogSensorType, StatusType } from '@/store/machine/modelEnums'
 
 export default {
 	computed: {
@@ -121,16 +126,21 @@ export default {
 				try {
 					if (this.inputValue >= -273.15 && this.inputValue <= 1999) {
 						if (this.tool) {
-              // We decided to diable standby mode. Old implementation here down
-              // const currentTemps = this.tool[this.active ? 'active' : 'standby'];
-              // const newTemps = currentTemps.map((temp, i) => (i === this.toolHeaterIndex) ? this.inputValue : temp, this).join(':');
-              // await this.sendCode(`M568 P${this.tool.number} ${this.active ? 'S' : 'R'}${newTemps}`);
+				// We decided to diable standby mode. Old implementation here down
+				// const currentTemps = this.tool[this.active ? 'active' : 'standby'];
+				// const newTemps = currentTemps.map((temp, i) => (i === this.toolHeaterIndex) ? this.inputValue : temp, this).join(':');
+				// await this.sendCode(`M568 P${this.tool.number} ${this.active ? 'S' : 'R'}${newTemps}`);
 
 							// Set tool temps
-              const currentTemps = this.tool['active'];
-              const newTemps = currentTemps.map((temp, i) => (i === this.toolHeaterIndex) ? this.inputValue : temp, this).join(':');
-              await this.sendCode(`M568 P${this.tool.number} S${newTemps} R${newTemps}`);
+							const currentTemps = this.tool['active'];
+							const newTemps = currentTemps.map((temp, i) => (i === this.toolHeaterIndex) ? this.inputValue : temp, this).join(':');
+							await this.sendCode(`M568 P${this.tool.number} S${newTemps} R${newTemps}`);
+							const min_temp = this.heat.heaters[this.toolHeaterIndex].min;
+							const max_temp = this.heat.heaters[this.toolHeaterIndex].max;
+							if (this.inputValue > min_temp && this.inputValue < max_temp)
+								await this.sendCode(`M568 P${this.tool.number} A2`);
 						} else if (this.bed) {
+							// warning if vpower is not on
 							if (!this.state.atxPower && this.inputValue > 0){
 								this.$log('warning', this.$t('notification.turnOnVPower'));
 							}
@@ -223,78 +233,23 @@ export default {
 				heater = this.chamber;
 			}
 
-      if (heater && heater.state)
-      {
-        return heater.state;
-      }
-      else
-      {
-        return this.$t('generic.noValue');
-      }
+		if (heater && heater.state){
+			return heater.state;
+		}
+		else{
+			return this.$t('generic.noValue');
+		}
 		},
-		toolHeaterClick() {
+		askForResetFault() { 	// Fault -> Ask for reset
 			if (!this.isConnected) {
 				return;
 			}
 			if (this.isProcessing()) {
 				return;
 			}
-			var heater = this.getHeater();
-			switch (heater.state) {
-				case HeaterState.off:		// Off -> Active
-					if(this.tool) {
-						this.sendCode(`M568 P${this.tool.number} A2`);
-					}
-					if(this.chamber) {
-						this.sendCode(`M141 P${this.chamberHeaterIndex} S${heater.active}`);
-					}
-					if(this.bed) {
-						this.sendCode(`M140 P${this.bedHeaterIndex} S${heater.active}`);
-					}
-					break;
-
-				case HeaterState.standby:	// Standby -> Off
-					if(this.tool) {
-					this.sendCode(`M568 P${this.tool.number} A0`);
-					}
-					if(this.chamber) {
-						this.sendCode(`M141 P${this.chamberHeaterIndex} S-273.15`);
-					}
-					if(this.bed) {
-						this.sendCode(`M140 P${this.bedHeaterIndex} S-273.15`);
-					}
-					break;
-				
-				case HeaterState.active:	// Standby -> Off
-					if(this.tool) {
-					this.sendCode(`M568 P${this.tool.number} A0`);
-					}
-					if(this.chamber) {
-						this.sendCode(`M141 P${this.chamberHeaterIndex} S-273.15`);
-					}
-					if(this.bed) {
-						this.sendCode(`M140 P${this.bedHeaterIndex} S-273.15`);
-					}
-					break;
-
-        // Disabled to disabled standby mode
-				// case HeaterState.active:	// Active -> Standby
-				// 	if(this.tool) {
-				// 		this.sendCode(`M568 P${this.tool.number} A1`);
-				// 	}
-				// 	if(this.chamber) {
-				// 		this.sendCode(`M141 P${this.chamberHeaterIndex} S-273.15`);
-				// 	}
-				// 	if(this.bed) {
-				// 		this.sendCode(`M144 P${this.bedHeaterIndex}`);
-				// 	}
-				// 	break;
-
-				case HeaterState.fault:		// Fault -> Ask for reset
-					this.faultyHeater = this.heat.heaters.indexOf(heater);
-					this.resetHeaterFault = true;
-					break;
-			}
+			var heater = this.getHeater(); // get heater number
+			this.faultyHeater = this.heat.heaters.indexOf(heater); // update faulty heater with object corresponding to heater number
+			this.resetHeaterFault = true; // show reset fault dialog window
 		},
 		getHeater(){
 			var heater = null;
@@ -320,14 +275,12 @@ export default {
 		} else if (this.chamber) {
 			this.actualValue = this.chamber[this.active ? 'active' : 'standby'];
 		}
-    if (this.actualValue == undefined || this.actualValue == null)
-    {
-      this.inputValue = null;
-    }
-    else
-    {
-      this.inputValue = this.actualValue.toString();
-    }
+	if (this.actualValue == undefined || this.actualValue == null){
+		this.inputValue = null;
+	}
+	else{
+		this.inputValue = this.actualValue.toString();
+	}
 	},
 	watch: {
 		'tool.active'(to) {
