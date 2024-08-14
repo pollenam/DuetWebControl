@@ -423,11 +423,17 @@ export class Message {
 export class MessageBox {
 	constructor(initData) { quickPatch(this, initData); }
 	axisControls = 0
+	cancelButton = false
+	choices = null
+	default = null
+	max = null
+	min = null
 	mode = MessageBoxMode.okOnly
 	message = ''
 	seq = -1
 	title = ''
 	timeout = 0
+	
 }
 
 export class MinMaxCurrent {

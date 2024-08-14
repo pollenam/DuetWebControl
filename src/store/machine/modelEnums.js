@@ -173,7 +173,11 @@ export const MessageBoxMode = {
 	noButtons: 0,		// non-blocking
 	closeOnly: 1,		// non-blocking
 	okOnly: 2,			// blocking
-	okCancel: 3			// blocking, requires M292 (P1) to continue
+	okCancel: 3,		// blocking, requires M292 (P1) to continue
+	multipleChoice: 4,	// blocking, requires M292 (P1) to continue
+	intInput: 5, 		// blocking, requires M292 (P1) to continue
+	floatInput: 6,		// blocking, requires M292 (P1) to continue
+	stringInput: 7		// blocking, requires M292 (P1) to continue
 }
 
 export const MessageType = {
