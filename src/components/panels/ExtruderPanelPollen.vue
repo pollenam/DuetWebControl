@@ -24,9 +24,9 @@
 <template>
 	<v-card elevation="0" :class="{ 'v-card--highlighted': isSelected }">
 		<v-card-title class="v-card__title--dense justify-space-between">
-      <div>
+      <div :title="tool.name">
         <v-icon class="mr-1">mdi-printer-3d-nozzle</v-icon>
-        {{ $t('panel.extruderPollen.title') }} {{ extruderNumber }}
+        {{ tool.name.length > 13 ? truncatedToolName : tool.name }}
       </div>
       <v-combobox
       class="mx-2 extruder-material-combobox"
@@ -139,12 +139,12 @@
           <temperature-tool-input :tool="tool" :toolHeaterIndex="1" active></temperature-tool-input>
         </v-col>
 			</v-row> -->
-      <v-row dense>
+      <v-row v-for="heaterNumber, index in tool.heaters" dense :key="index">
         <v-col cols="3 d-flex align-center">
-          <span class="pollen-attr-header">{{ $t('panel.extruderPollen.nozzle') }}</span>
+          <span class="pollen-attr-header">{{ sensors.analog[heat.heaters[heaterNumber].sensor].name }}</span>
         </v-col>
         <v-col cols="9 d-flex align-center">
-          <temperature-tool-input :tool="tool" :toolHeaterIndex="0" active :disabled="tool.heaters.length == 0"></temperature-tool-input>
+          <temperature-tool-input :tool="tool" :toolHeaterIndex="index" active :disabled="tool.heaters.length == 0"></temperature-tool-input>
         </v-col>
 			</v-row>
 			<v-row dense class="row--highlighted">
@@ -194,7 +194,7 @@ export default {
 	  ...mapGetters(['isConnected', 'uiFrozen']),
     ...mapState('machine/model', ['move', 'state', 'fans']),
 	  ...mapState('machine/settings', ['displayedExtruders', 'extruderAmounts']),
-    ...mapState('machine/model', ['global', 'heat', 'tools']),
+    ...mapState('machine/model', ['global', 'heat', 'tools', 'sensors']),
     ...mapState('machine/honeyprint_cache', ['extrudersAvailableMaterials', 'extrudersSelectedMaterials', 'selectedPid', 'extrusionRate']),
 	  ...mapState('machine/model', {
 	  macrosDirectory: state => state.directories.macros,
@@ -206,7 +206,10 @@ export default {
     T3Selected: state => state.global.T3_Selected,
     T4Selected: state => state.global.T4_Selected, */
 	}),
-    /* fanValue: {
+  truncatedToolName(){
+    return this.tool.name.substring(0, 10) + '...';
+  },  
+  /* fanValue: {
 			get() {
 				// Even though RRF allows multiple fans to be assigned to a tool,
 				// we assume they all share the same fan value if such a config is set

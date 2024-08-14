@@ -3,7 +3,8 @@
 import Vue from 'vue'
 
 import {
-    CompensationType,
+    //AnalogSensorType,
+	CompensationType,
     InputChannelName,
     LogLevel,
     MachineMode,
@@ -13,6 +14,7 @@ import {
     isPrinting
 } from './modelEnums.js'
 import {
+	AnalogSensor,
 	Axis,
 	BeepRequest,
 	Board,
@@ -27,7 +29,7 @@ import {
 	Tool,
 	fixObjectModel,
 	overloadModelPush,
-	overloadProperty, Build
+	overloadProperty, Build,
 } from './modelItems.js'
 
 import Path from '@/utils/path.js'
@@ -267,9 +269,15 @@ export const DefaultMachineModel = new MachineModel({
 			0
 		],
 		heaters: [
-			new Heater(),
-			new Heater(),
-			new Heater()
+			new Heater({
+				sensor: 0
+			}),
+			new Heater({
+				sensor: 1
+			}),
+			new Heater({
+				sensor: 2
+			})
 		]
 	},
 	//infiniteExtrusionStatus: ['stopped', 'stopped', 'stopped', 'stopped'],
@@ -308,11 +316,23 @@ export const DefaultMachineModel = new MachineModel({
 	sensors: {
 		probes: [
 			new Probe()
+		],
+		analog: [
+			new AnalogSensor({
+				name: "Bed"
+			}),
+			new AnalogSensor({
+				name: "Nozzle"
+			}),
+			new AnalogSensor({
+				name: "Nozzle"
+			})
 		]
 	},
 	tools: [
 		new Tool({
-			number: 1,
+			name: "T0 - Hemera",
+			number: 0,
 			active: [0],
 			standby: [0],
 			heaters: [1],
@@ -321,12 +341,13 @@ export const DefaultMachineModel = new MachineModel({
 			spindleRpm: 0,
 		}),
 		new Tool({
-			number: 2,
-			active: [],
-			standby: [],
-			heaters: [],
-			extruders: [],
-			spindle: 0,
+			name: "T1 - Mahor",
+			number: 1,
+			active: [0],
+			standby: [0],
+			heaters: [2],
+			extruders: [1],
+			spindle: -1,
 			spindleRpm: 0,
 		})
 	]
