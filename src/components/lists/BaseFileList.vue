@@ -9,6 +9,11 @@ td {
 .loading-cursor td {
 	cursor: wait;
 }
+
+.status {
+	border-radius: 5px;
+}
+
 </style>
 
 <style>
@@ -61,11 +66,19 @@ td {
 								</slot>
 							</div>
 						</template>
+						<template v-else-if="header.value === 'expand' && props.item.isDirectory === false">
+							<v-icon @click.stop="toggleExpandedRow(props.item)" class="mt-n1" tabindex="-1">
+								{{ expandedRows.includes(props.item.name) ? 'mdi-chevron-up' : 'mdi-chevron-down' }}
+							</v-icon>
+						</template>
 						<template v-else-if="header.unit === 'bytes'">
 							{{ (props.item[header.value] !== null) ? $displaySize(props.item[header.value]) : '' }}
 						</template>
 						<template v-else-if="header.unit === 'date'">
-							{{ props.item[header.value] ? props.item[header.value].toLocaleString() : $t('generic.noValue') }}
+							{{ props.item.lastModified ? props.item.lastModified.toLocaleString() : $t('generic.noValue') }}
+						</template>
+						<template v-else-if="header.unit === 'boolean' && props.item.isDirectory === false">
+							<v-simple-checkbox  v-model="props.item.checked" @input="onDashboardItemClick(props)" class="mt-n1"></v-simple-checkbox>
 						</template>
 						<template v-else-if="header.unit === 'filaments'">
 							<v-tooltip bottom :disabled="!props.item[header.value] || props.item[header.value].length <= 1">
@@ -86,6 +99,33 @@ td {
 						</template>
 					</td>
 				</tr>
+				<!-- Expanded row -->
+				<tr v-if="expandedRows.includes(props.item.name)" class="expanded-row">
+					<td :colspan="props.headers.length">
+					  <slot name="expanded-row" :item="props.item">
+						<!-- Default expanded row content -->
+						<div class="default-expanded-content">
+						  <!-- History Information -->
+						  <v-data-table
+						  	disable-pagination
+							hide-default-footer
+							:headers="historyHeaders"
+							:items="jobsHistory[combinePath(innerDirectory, props.item.name)]"
+							class="file-history-table">
+							<template #item="{ item }">
+								<tr>
+								<td >{{ item.printDate }}</td>
+								<td>{{ item.lastModified }}</td>
+								<td>{{ displayJobDuration(item.duration) }}</td>
+								<td><span class="ms-3 status px-2 " :class="jobHistoryStatusClass(item.status)">{{ item.status }}</span></td>
+								<td>{{ item.type }}</td>
+								</tr>
+							</template>
+							</v-data-table>
+						</div>
+					  </slot>
+					</td>
+				  </tr>
 			</template>
 		</v-data-table>
 
@@ -163,7 +203,8 @@ export default {
 			default: ''
 		},
 		noRename: Boolean,
-		noDelete: Boolean
+		noDelete: Boolean,
+		enableExpandedRow: Boolean // New prop for controlling expanded row
 	},
 	computed: {
 		...mapState(['selectedMachine']),
@@ -171,6 +212,10 @@ export default {
 		...mapState('machine', ['isReconnecting']),
 		...mapState('machine/cache', ['sorting']),
 		...mapState('machine/model', ['volumes']),
+		...mapState('machine/honeyprint_cache', ['jobsHistory']),
+		...mapState('machine/honeyprint_cache', {
+			showed_macros: state => state.showed_macros,
+		}),
 		isMounted() {
 			const volume = Path.getVolume(this.innerDirectory);
 			return (volume >= 0) && (volume < this.volumes.length) && this.volumes[volume].mounted;
@@ -192,6 +237,11 @@ export default {
 					text: i18n.t('list.baseFileList.lastModified'),
 					value: 'lastModified',
 					unit: 'date'
+				},
+				{
+					text: i18n.t('list.baseFileList.showInDashboard'),
+					value: 'show in dashboard',
+					unit: 'boolean'
 				}
 			];
 		},
@@ -248,7 +298,16 @@ export default {
 				shown: false,
 				directory: '',
 				item: null
-			}
+			},
+			expandedRows: [],  // Array to track expanded rows
+			fileHistory: [], // Array to store history of the selected file
+			historyHeaders: [
+				{ text: i18n.t('list.jobs.history.printDate'), value: 'printDate' },
+				{ text: i18n.t('list.jobs.history.lastModified'), value: 'lastModified' },
+				{ text: i18n.t('list.jobs.history.duration'), value: 'duration' },
+				{ text: i18n.t('list.jobs.history.status'), value: 'status' },
+				{ text: i18n.t('list.jobs.history.type'), value: 'type' }
+			]
 		}
 	},
 	extends: VDataTable,
@@ -260,6 +319,35 @@ export default {
 			getFileList: 'getFileList'
 		}),
 		...mapMutations('machine/cache', ['setSorting']),
+		...mapMutations('machine/honeyprint_cache', ['addFileToShowedMacro', 'removeFileToShowedMacro', 'deleteJobHistory', 'renameJobHistory']),
+		jobHistoryStatusClass(jobStatus) {
+			if (jobStatus === i18n.t('list.jobs.status.success')) {
+				return 'green white--text';
+			} else if (jobStatus === i18n.t('list.jobs.status.ongoing')) {
+				return 'amber darken-2 white--text';
+			} else {
+				return 'red darken-2 white--text';
+			}
+		},
+		combinePath(directory, filename){
+			return Path.combine(directory, filename);
+		},
+		displayJobDuration(duration) {
+			if (duration == 0) {
+				return 'n/a';
+			}
+			return Vue.prototype.$displayTime(duration);
+		},
+		toggleExpandedRow(item) {
+			const index = this.expandedRows.indexOf(item.name);
+			if (index > -1) {
+				// Item is already expanded, collapse it
+				this.expandedRows.splice(index, 1);
+			} else {
+				// Item is not expanded, expand it
+				this.expandedRows.push(item.name);
+			}
+		},
 		toggleAll() {
 			this.innerValue = this.innerValue.length ? [] : this.innerFilelist.slice();
 		},
@@ -322,6 +410,11 @@ export default {
 			this.innerFilelistLoaded = false;
 			try {
 				const files = await this.getFileList(directory);
+				const showed_macros = this.showed_macros;
+				files.forEach(function(item) {
+					item.checked = showed_macros.indexOf(item.name) !== -1;
+					item.expanded = false;
+				});
 
 				// Create missing props if required
 				if (this.headers) {
@@ -351,7 +444,7 @@ export default {
 			} catch (e) {
 				if (!(e instanceof DisconnectedError)) {
 					console.warn(e);
-					this.$makeNotification('error', this.$t('error.filelistRequestFailed'), e.message);
+					//this.$makeNotification('error', this.$t('error.filelistRequestFailed'), e.message);
 				}
 			}
 			this.innerLoading = false;
@@ -396,6 +489,14 @@ export default {
 			if (this.contextMenu.touchTimer) {
 				clearTimeout(this.contextMenu.touchTimer);
 				this.contextMenu.touchTimer = undefined;
+			}
+		},
+		onDashboardItemClick(props) {
+
+			if(props.item.checked) {
+				this.addFileToShowedMacro(props.item.name);
+			} else {
+				this.removeFileToShowedMacro(props.item.name);
 			}
 		},
 		onItemClick(props) {
@@ -511,6 +612,7 @@ export default {
 						const to = Path.combine(directory, item.name, data.items[i].name);
 						try {
 							await this.machineMove({ from, to });
+							this.renameJobHistory({oldFilePath:from, newFilePath:to}) // updates key in jobsHistory if a file is moved to another directory
 						} catch (e) {
 							this.$makeNotification('error', `Failed to move ${data.items[i].name} to ${directory}`, e.message);
 							break;
@@ -558,9 +660,11 @@ export default {
 
 			this.innerDoingFileOperation = true;
 			try {
+				const oldFilePath = Path.combine(this.renameDialog.directory, oldFilename);
+				const newFilePath = Path.combine(this.renameDialog.directory, newFilename);
 				await this.machineMove({
-					from: Path.combine(this.renameDialog.directory, oldFilename),
-					to: Path.combine(this.renameDialog.directory, newFilename)
+					from: oldFilePath,
+					to: newFilePath
 				});
 
 				this.innerFilelist.some(function(file) {
@@ -570,6 +674,8 @@ export default {
 					}
 					return false;
 				}, this.renameDialog.item);
+
+				this.renameJobHistory({oldFilePath:oldFilePath, newFilePath:newFilePath})
 
 				this.$makeNotification('success', this.$t('notification.rename.success', [oldFilename, newFilename]));
 			} catch (e) {
@@ -592,11 +698,12 @@ export default {
 			for (let i = 0; i < items.length; i++) {
 				try {
 					const item = items[i];
-					await this.machineDelete(Path.combine(directory, item.name));
-
+					const filePath = Path.combine(directory, item.name);
+					await this.machineDelete(filePath);
 					deletedItems.push(items[i]);
 					this.innerFilelist = this.innerFilelist.filter(file => file.isDirectory !== item.isDirectory || file.name !== item.name);
 					this.innerValue = this.innerValue.filter(file => file.isDirectory !== item.isDirectory || file.name !== item.name);
+					this.deleteJobHistory(filePath);
 				} catch (e) {
 					this.$makeNotification('error', this.$t('notification.delete.errorTitle', [items[i].name]), items[i].isDirectory ? this.$t('notification.delete.errorMessageDirectory') : e.message);
 				}
@@ -720,6 +827,9 @@ export default {
 				// Restore previously selected items
 				this.innerValue = this.prevSelection;
 			}
+		},
+		showed_macros(){
+			this.refresh();
 		}
 	}
 }

@@ -206,7 +206,10 @@ export default {
 		}),
 		speedFactor: {
 			get() { return (this.machineSpeedFactor !== null) ? (this.machineSpeedFactor * 100): 100; },
-			set(value) { this.sendCode(`M220 S${value}`); }
+			set(value) {
+				//this.sendCode(`M98 P"/macros/HONEYPRINT/Set_Speed_Factor" S${value}`);
+				this.sendCode(`M220 S${value}`); 
+			}
 		},
 		speedFactorMin() { return Math.max(1, Math.min(100, this.speedFactor - 50)); },
 		speedFactorMax() { return Math.max(150, this.speedFactor + 50); },
@@ -305,7 +308,7 @@ export default {
 			this.sendCode(`M98 P"/macros/HONEYPRINT/Compensation_Start" H"heightmap-${today}.csv"`);
 		},
 		async handleHoming() {
-			//await this.sendCode('M991');
+			//this.sendCode(`M98 P"/macros/HONEYPRINT/Home_Btn"`)
 			this.sendCode('G28');
 		},
 		async toggleZLimits() {
@@ -315,7 +318,8 @@ export default {
 			await this.sendCode("M98 P\"/sys/memory_BED.g\"");
 		},
 		async bedTemperatureStop() {
-			await this.sendCode("M140 S0"); //Bed set to 0°C
+			//this.sendCode(`M98 P"/macros/HONEYPRINT/Bed_Off"`)
+			await this.sendCode("M140 S0 R0"); //Bed set to 0°C
 			await this.sendCode("M140 S-273.1"); //Bed off
 		}
 	},

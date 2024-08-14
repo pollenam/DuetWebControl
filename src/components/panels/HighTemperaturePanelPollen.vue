@@ -108,7 +108,8 @@ export default {
 			await this.sendCode("M98 P\"/sys/memory_CHAMBER.g\"");
 		}, */
 		async chamberTemperatureStop() {
-			await this.sendCode("M141 S0"); //Chamber set to 0°C
+			//await this.sendCode(`M98 P"/macros/HONEYPRINT/Chamber_Off"`)
+			await this.sendCode("M141 S0 R0"); //Chamber set to 0°C
 			await this.sendCode("M141 S-273.1"); //Chamber off
 		}
 	},
