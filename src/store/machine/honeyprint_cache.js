@@ -3,7 +3,8 @@
 // import { FileNotFoundError } from '@/utils/errors.js'
 import patch from '@/utils/patch.js'
 import Path from '@/utils/path.js'
-//import Vue from 'vue'
+import Vue from 'vue'
+import i18n from '@/i18n'
 
 export default function(connector) {
 	return {
