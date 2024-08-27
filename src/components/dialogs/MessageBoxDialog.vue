@@ -186,7 +186,7 @@ export default {
 			return classes;
 		},
 		getMoveCode(axis, index, decrementing) {
-			return `M120\nG91\nG1 H2 ${/[a-z]/.test(axis.letter) ? '\'' : ''}${axis.letter.toUpperCase()}${decrementing ? '-' : ''}${this.moveSteps(axis.letter)[index]} F${this.moveFeedrate}\nM121`;
+			return `M120\nG91\nG1 ${/[a-z]/.test(axis.letter) ? '\'' : ''}${axis.letter.toUpperCase()}${decrementing ? '-' : ''}${this.moveSteps(axis.letter)[index]} F${this.moveFeedrate}\nM121`;
 		},
 		showSign: (value) => (value > 0) ? `+${value}` : value,
 		async ok() {

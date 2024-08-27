@@ -225,7 +225,7 @@ export class MachineModel {
 		atxPowerPort: null,
     doorsLocked: null, // FIXME: Compute initial state ?
     beep: null,
-		currentTool: -1,
+		currentTool: 1,
     deferredPowerDown: null,
 		displayMessage: '',
 		dsfVersion: null,						// *** missing in RRF
@@ -303,6 +303,13 @@ export const DefaultMachineModel = new MachineModel({
 				homed: true,
 				machinePosition: 0,
 				userPosition: 0
+			}),
+			new Axis({
+				letter: 'U',
+				drives: [3],
+				homed: true,
+				machinePosition: 0,
+				userPosition: 0
 			})
 		],
 		extruders: [
@@ -331,6 +338,7 @@ export const DefaultMachineModel = new MachineModel({
 	},
 	tools: [
 		new Tool({
+			axes: [0, 1, 2],
 			name: "T0 - Hemera",
 			number: 0,
 			active: [0],
@@ -341,6 +349,7 @@ export const DefaultMachineModel = new MachineModel({
 			spindleRpm: 0,
 		}),
 		new Tool({
+			axes: [3, 1, 2],
 			name: "T1 - Mahor",
 			number: 1,
 			active: [0],

@@ -195,7 +195,9 @@ import { KinematicsName, StatusType } from '@/store/machine/modelEnums'
 export default {
 	computed: {
 		...mapGetters(['isConnected', 'uiFrozen']),
-		...mapState('machine/model', ['move', 'state', 'heat', 'fans']),
+		...mapGetters('machine/settings', ['moveSteps', 'numMoveSteps']),
+		...mapGetters('machine/model', ['currentTool']),
+		...mapState('machine/model', ['move', 'state', 'heat', 'fans', 'tools']),
 		...mapState('machine/settings', ['moveFeedrate']),
 		...mapState('machine/settings', ['babystepAmount']),
 		//...mapState('machine/honeyprint_cache', ['zLimit']),
@@ -213,10 +215,15 @@ export default {
 		},
 		speedFactorMin() { return Math.max(1, Math.min(100, this.speedFactor - 50)); },
 		speedFactorMax() { return Math.max(150, this.speedFactor + 50); },
-		...mapGetters('machine/settings', ['moveSteps', 'numMoveSteps']),
 		isCompensationEnabled() { return this.move.compensation.type.toLowerCase() !== 'none' },
 		visibleAxes() {
-			return this.move.axes.filter(axis => axis.visible);
+			var allAxes = this.move.axes;
+			if (this.currentTool){
+				return this.currentTool.axes
+				.filter(i => allAxes[i].visible)
+				.map(i => allAxes[i]);
+			}
+			return allAxes.filter(axis => axis.visible);
 		},
 		isDelta() {
 			return (this.move.kinematics.name === KinematicsName.delta ||
@@ -271,7 +278,7 @@ export default {
 			return classes;
 		},
 		getMoveCode(axis, index, decrementing) {
-			return `M120\nG91\nG1 H2 ${/[a-z]/.test(axis.letter) ? '\'' : ''}${axis.letter.toUpperCase()}${decrementing ? '-' : ''}${this.moveSteps(axis.letter)[index]} F${this.moveFeedrate}\nM121`;
+			return `M120\nG91\nG1 ${/[a-z]/.test(axis.letter) ? '\'' : ''}${axis.letter.toUpperCase()}${decrementing ? '-' : ''}${this.moveSteps(axis.letter)[index]} F${this.moveFeedrate}\nM121`;
 		},
 		showSign: (value) => (value > 0) ? `+${value}` : value,
 		showMoveStepDialog(axis, index) {
