@@ -473,7 +473,7 @@ export default {
       await this.sendCode("M568 P" + this.tool.number +" A2");
     },
     async temperatureStop() {
-      await this.sendCode(`M98 P"/macros/HONEYPRINT/Temperature_Stop" P${this.tool.number}`)
+      await this.sendCode(`M98 P"/macros/HONEYPRINT/Temperature_Stop" T${this.tool.number}`)
       //await this.sendCode("G10 P" + this.tool.number +" S65:0:0 R65:0:0");
       //await this.sendCode("M568 P" + this.tool.number +" A0");
       await this.sendCode("M991");
