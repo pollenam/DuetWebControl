@@ -10,9 +10,10 @@
 			<v-combobox ref="input" :solo="solo" hide-details :disabled="uiFrozen"
 						:placeholder="$t('input.code.placeholder')"
 						:search-input="(code instanceof Object) ? code.value : (code ?? '')"
-						@update:search-input="code = $event" :loading="doingCode" @keyup.enter="send" @change="change"
-						@blur="wasFocused = showItems = false" @click="click" :items="displayedCodes" hide-selected
-						@keyup.down="showItems = true" append-icon="" maxlength="255">
+						@update:search-input="code = $event" :loading="doingCode" @keyup.enter="sendOnEnter"
+						@change="change" @blur="wasFocused = showItems = ignoreEnter = false" @click="click"
+						:items="displayedCodes" hide-selected @keyup.down="showItems = true" append-icon=""
+						maxlength="255">
 				<template #item="{ item }">
 					<code>{{ item.text }}</code>
 					<v-spacer></v-spacer>
@@ -35,6 +36,7 @@
 import Vue from "vue";
 
 import store from "@/store";
+import { MessageBox } from "@duet3d/objectmodel";
 
 const conditionalKeywords = ["abort", "echo", "if", "elif", "else", "while", "break", "continue", "var", "global", "set"];
 
@@ -50,11 +52,13 @@ export default Vue.extend({
 					.reverse();
 			}
 			return [];
-		}
+		},
+		messageBox(): MessageBox | null { return store.state.machine.model.state.messageBox; }
 	},
 	data() {
 		return {
 			code: "" as string | { value: string },
+			ignoreEnter: false,
 			wasFocused: false,
 			showItems: false,
 			sendPending: false,
@@ -80,7 +84,15 @@ export default Vue.extend({
 			this.code = (value !== null) ? value : "";
 		},
 		hasUnprecedentedParameters: (code: string) => !code || /(M23|M28|M30|M32|M36|M117)[^0-9]/i.test(code),
+		async sendOnEnter() {
+			if (this.ignoreEnter) {
+				this.ignoreEnter = false;
+			} else {
+				await this.send();
+			}
+		},
 		async send() {
+			this.ignoreEnter = false;
 			this.showItems = false;
 
 			const code = (this.code instanceof Object) ? this.code.value : this.code;
@@ -168,6 +180,13 @@ export default Vue.extend({
 			if (to) {
 				// Clear input when the UI is frozen
 				this.code = "";
+			}
+		},
+		messageBox(to: MessageBox | null) {
+			if (to) {
+				// Don't handle "Enter" immediately when returning from a message box
+				this.ignoreEnter = true;
+				setTimeout(() => this.ignoreEnter = false, 1000);
 			}
 		}
 	}
