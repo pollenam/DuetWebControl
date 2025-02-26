@@ -189,6 +189,15 @@ export default function (connector: BaseConnector | null): MachineModel {
 							clonedVariables.set(key, value);
 						}
 						Vue.set(state, "global", clonedVariables);
+					} else if (key === "job") {
+						patch(state.job, typedState.job);
+						if (data.job.file && data.job.file.customInfo !== undefined) {
+							const clonedCustomInfo = new Map<string, any>();
+							for (const [key, value] of typedState.job.file!.customInfo) {
+								clonedCustomInfo.set(key, value);
+							}
+							Vue.set(state.job.file!, "customInfo", data.job.file.customInfo);
+						}
 					} else if (key === "plugins") {
 						const clonedPlugins = new Map<string, Plugin>();
 						for (const [key, value] of typedState.plugins) {
