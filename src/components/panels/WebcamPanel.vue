@@ -201,6 +201,9 @@ function update() {
 
 		// Apply it
 		url.value = urlValue;
+	} else {
+		// Use URL as specified in the settings
+		url.value = webcam.value.url;
 	}
 }
 
