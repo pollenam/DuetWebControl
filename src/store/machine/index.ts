@@ -819,8 +819,10 @@ export default function(connector: BaseConnector | null): MachineModule {
 						await connector.installSystemPackage(filename, packageData, cancellationToken, onProgress);
 						makeNotification(LogType.success, i18n.t("notification.systemPackageInstall.success", [filename]));
 					} catch (e) {
-						makeNotification(LogType.error, i18n.t("notification.systemPackageInstall.error", [filename]), getErrorMessage(e));
-						throw e;
+						if (!(e instanceof OperationCancelledError)) {
+							makeNotification(LogType.error, i18n.t("notification.systemPackageInstall.error", [filename]), getErrorMessage(e));
+							throw e;
+						}
 					}
 				} finally {
 					notification.close();

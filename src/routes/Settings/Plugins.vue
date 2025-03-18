@@ -90,7 +90,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { Plugin, PluginManifest } from "@duet3d/objectmodel";
+import { PluginManifest } from "@duet3d/objectmodel";
 
 import packageInfo from "@/../package.json";
 
