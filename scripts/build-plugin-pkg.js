@@ -192,9 +192,16 @@ service
 				filesAdded = true;
 
 				pluginManifest.dsfFiles ??= [];
-				for (const file of fs.readdirSync(dsfPluginDir)) {
-					pluginManifest.dsfFiles.push(file.substring(dsfPluginDir.length));
+				function addDsfFiles(dir, subDir) {
+					for (const file of fs.readdirSync(dir)) {
+						if (fs.lstatSync(dir + '/' + file).isDirectory()) {
+							addDsfFiles(dir + '/' + file, subDir ? subDir + '/' + file : file);
+						} else {
+							pluginManifest.dsfFiles.push(subDir ? subDir + '/' + file : file);
+						}
+					}
 				}
+				addDsfFiles(dsfPluginDir);
 			}
 
 			const extraDwcPluginDir = `${pluginDir}/dwc/`;
@@ -203,9 +210,16 @@ service
 				filesAdded = true;
 
 				pluginManifest.dwcFiles ??= [];
-				for (const file of fs.readdirSync(extraDwcPluginDir)) {
-					pluginManifest.dwcFiles.push(file.substring(extraDwcPluginDir.length));
+				function addDwcFiles(dir, subDir) {
+					for (const file of fs.readdirSync(dir)) {
+						if (fs.lstatSync(dir + '/' + file).isDirectory()) {
+							addDwcFiles(dir + '/' + file, subDir ? subDir + '/' + file : file);
+						} else {
+							pluginManifest.dwcFiles.push(subDir ? subDir + '/' + file : file);
+						}
+					}
 				}
+				addDwcFiles(extraDwcPluginDir);
 			}
 
 			const sdPluginDir = `${pluginDir}/sd/`;
@@ -214,9 +228,16 @@ service
 				filesAdded = true;
 
 				pluginManifest.rrfFiles ??= [];
-				for (const file of fs.readdirSync(sdPluginDir)) {
-					pluginManifest.rrfFiles.push(file.substring(sdPluginDir.length));
+				function addRrfFiles(dir, subDir) {
+					for (const file of fs.readdirSync(dir)) {
+						if (fs.lstatSync(dir + '/' + file).isDirectory()) {
+							addRrfFiles(dir + '/' + file, subDir ? subDir + '/' + file : file);
+						} else {
+							pluginManifest.rrfFiles.push(subDir ? subDir + '/' + file : file);
+						}
+					}
 				}
+				addRrfFiles(sdPluginDir);
 			}
 
 			// Add plugin JSON
