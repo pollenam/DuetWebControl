@@ -10,6 +10,7 @@
       "serve": "vue-cli-service serve",
       "build": "vue-cli-service build",
       "build-plugin": "node scripts/build-plugin.js",
+      "build-plugin-pkg": "node scripts/build-plugin-pkg.js",
       "report": "vue-cli-service build --report"
    },
    "dependencies": {
