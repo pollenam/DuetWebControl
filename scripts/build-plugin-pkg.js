@@ -258,6 +258,14 @@ service
 				const v = dwcManifest.version.split('.');
 				pluginManifest.sbcDsfVersion = `${v[0]}.${v[1]}`;
 			}
+
+			if (pluginManifest.rrfVersion === "auto") {
+				pluginManifest.rrfVersion = dwcManifest.version;
+			} else if (pluginManifest.rrfVersion === "auto-major") {
+				const v = dwcManifest.version.split('.');
+				pluginManifest.rrfVersion = `${v[0]}.${v[1]}`;
+			}
+
 			archive.append(JSON.stringify(pluginManifest, null, 2), { name: "plugin.json" });
 
 			// Make sure the ZIP isn't empty

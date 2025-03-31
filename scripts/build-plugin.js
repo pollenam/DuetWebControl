@@ -164,7 +164,8 @@ service
 			// Add plugin JSON
 			if (pluginManifest.version === "auto" ||
 				pluginManifest.dwcVersion === "auto" || pluginManifest.dwcVersion === "auto-major" ||
-				pluginManifest.sbcDsfVersion === "auto" || pluginManifest.sbcDsfVersion === "auto-major"
+				pluginManifest.sbcDsfVersion === "auto" || pluginManifest.sbcDsfVersion === "auto-major" ||
+				pluginManifest.rrfVersion === "auto" || pluginManifest.rrfVersion === "auto-major"
 			) {
 				if (pluginManifest.version === "auto") {
 					pluginManifest.version = dwcManifest.version;
@@ -183,6 +184,14 @@ service
 					const v = dwcManifest.version.split('.');
 					pluginManifest.sbcDsfVersion = `${v[0]}.${v[1]}`;
 				}
+
+				if (pluginManifest.rrfVersion === "auto") {
+					pluginManifest.rrfVersion = dwcManifest.version;
+				} else if (pluginManifest.rrfVersion === "auto-major") {
+					const v = dwcManifest.version.split('.');
+					pluginManifest.rrfVersion = `${v[0]}.${v[1]}`;
+				}
+
 				archive.append(JSON.stringify(pluginManifest, null, 2), { name: "plugin.json" });
 			} else {
 				archive.file(pluginDir + "/plugin.json", { name: "plugin.json" });
