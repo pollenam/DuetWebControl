@@ -872,7 +872,8 @@
       "allBeds": "Wszystkie łóżka",
       "beds": "Łóżka",
       "allChambers": "Wszystkie izby",
-      "chambers": "Kancelaria"
+      "chambers": "Kancelaria",
+      "reassignFilament": "Ponowne złożenie filamentu"
     },
     "webcam": {
       "caption": "Podgląd obrazu z kamery",

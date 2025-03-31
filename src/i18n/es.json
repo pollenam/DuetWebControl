@@ -884,7 +884,8 @@
       "allBeds": "Todas las camas",
       "beds": "Camas",
       "allChambers": "Todas las Cámaras",
-      "chambers": "Cámaras"
+      "chambers": "Cámaras",
+      "reassignFilament": "Reasignar filamento"
     },
     "webcam": {
       "caption": "Vigilancia por webcam",

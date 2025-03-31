@@ -872,7 +872,8 @@
       "allBeds": "Tüm Yataklar",
       "beds": "yataklar",
       "allChambers": "Tüm Odalar",
-      "chambers": "Odalar"
+      "chambers": "Odalar",
+      "reassignFilament": "Filament'i yeniden atama"
     },
     "webcam": {
       "caption": "Web Kamerası Gözetimi",

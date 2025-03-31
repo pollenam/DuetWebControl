@@ -884,7 +884,8 @@
       "allBeds": "Alle Betten",
       "beds": "Betten",
       "allChambers": "Alle Kammern",
-      "chambers": "Kammern"
+      "chambers": "Kammern",
+      "reassignFilament": "Filament neu zuweisen"
     },
     "webcam": {
       "caption": "Webcamüberwachung",

@@ -883,7 +883,8 @@
       "allBeds": "All Beds",
       "beds": "Beds",
       "chambers": "Chambers",
-      "allChambers": "All Chambers"
+      "allChambers": "All Chambers",
+      "reassignFilament": "Reassign Filament"
     },
     "webcam": {
       "caption": "Webcam Surveillance",

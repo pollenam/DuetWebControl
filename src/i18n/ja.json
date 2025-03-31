@@ -884,7 +884,8 @@
       "allBeds": "すべてのベッド",
       "beds": "ベッド",
       "allChambers": "すべての商工会議所",
-      "chambers": "チャンバー"
+      "chambers": "チャンバー",
+      "reassignFilament": "フィラメントを再割り当てします"
     },
     "webcam": {
       "caption": "ウェブカメラ監視",

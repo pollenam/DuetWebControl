@@ -39,6 +39,10 @@ import { LogType } from "@/utils/logging";
 
 export default Vue.extend({
 	props: {
+		runMacros: {
+			type: Boolean,
+			default: true
+		},
 		shown: {
 			type: Boolean,
 			required: true
@@ -87,16 +91,16 @@ export default Vue.extend({
 			if (this.tool.filamentExtruder >= 0 && this.tool.filamentExtruder < store.state.machine.model.move.extruders.length &&
 				store.state.machine.model.move.extruders[this.tool.filamentExtruder].filament) {
 				// Unload current filament if it is still loaded
-				code += "M702\n";
+				code += this.runMacros ? "M702\n" : "M702 P0\n";
 
 				// Show message box between unload/load if required
-				if (store.state.settings.behaviour.promptDuringFilamentChange) {
-					code += `M291 P"${this.$t("dialog.filament.changePrompt.message")}" R"${this.$t("dialog.filament.changePrompt.title")}" S2\n`;
+				if (this.runMacros && store.state.settings.behaviour.promptDuringFilamentChange) {
+					code += `M400 M291 P"${this.$t("dialog.filament.changePrompt.message")}" R"${this.$t("dialog.filament.changePrompt.title")}" S2\n`;
 				}
 			}
 
 			// Run load sequence and configure current tool for it
-			code += `M701 S"${filament}"\nM703`;
+			code += this.runMacros ? `M701 S"${filament}"\nM703` : `M701 P0 S"${filament}"\nM703`;
 			await store.dispatch("machine/sendCode", code);
 		},
 		hide() {

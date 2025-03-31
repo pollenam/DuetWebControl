@@ -872,7 +872,8 @@
       "allBeds": "Tous les lits",
       "beds": "Des lits",
       "allChambers": "Toutes les chambres",
-      "chambers": "Chambres"
+      "chambers": "Chambres",
+      "reassignFilament": "Réaffectation"
     },
     "webcam": {
       "caption": "Surveillance Webcam",

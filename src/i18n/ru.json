@@ -872,7 +872,8 @@
       "allBeds": "Все столы",
       "beds": "Столы",
       "allChambers": "Все термокамеры",
-      "chambers": "Термокамеры"
+      "chambers": "Термокамеры",
+      "reassignFilament": "Переведите нить"
     },
     "webcam": {
       "caption": "Обзор камеры",

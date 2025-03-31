@@ -50,9 +50,13 @@
                                     </template>
 
                                     <v-list>
-                                        <v-list-item @click="showFilamentDialog(tool)">
+                                        <v-list-item @click="showFilamentDialog(tool, true)">
                                             <v-icon class="mr-1">mdi-swap-vertical</v-icon>
                                             {{ $t("panel.tools.changeFilament") }}
+                                        </v-list-item>
+                                        <v-list-item @click="showFilamentDialog(tool, false)">
+                                            <v-icon class="mr-1">mdi-pencil</v-icon>
+                                            {{ $t("panel.tools.reassignFilament") }}
                                         </v-list-item>
                                         <v-list-item @click="unloadFilament(tool)">
                                             <v-icon class="mr-1">mdi-arrow-up</v-icon>
@@ -60,7 +64,7 @@
                                         </v-list-item>
                                     </v-list>
                                 </v-menu>
-                                <a v-else href="javascript:void(0)" @click="showFilamentDialog(tool)">
+                                <a v-else href="javascript:void(0)" @click="showFilamentDialog(tool, true)">
                                     {{ $t("panel.tools.loadFilament") }}
                                 </a>
                             </template>
@@ -142,7 +146,7 @@
                         </td>
                     </template>
 
-                    <filament-dialog v-if="toolIndex === 0" :shown.sync="filamentDialogShown" :tool="filamentDialogTool" />
+                    <filament-dialog v-if="toolIndex === 0" :shown.sync="filamentDialogShown" :runMacros="filamentRunMacros" :tool="filamentDialogTool" />
                 </tr>
 
                 <!-- Divider -->
@@ -297,7 +301,7 @@ async function toolClick(tool: Tool) {
 }
 
 // Filament management
-const loadingFilament = ref(false), filamentDialogShown = ref(false), filamentDialogTool = ref<Tool | null>(null);
+const loadingFilament = ref(false), filamentDialogShown = ref(false), filamentRunMacros = ref(true), filamentDialogTool = ref<Tool | null>(null);
 
 function getFilament(tool: Tool) {
     if ((tool.filamentExtruder >= 0) && (tool.filamentExtruder < store.state.machine.model.move.extruders.length)) {
@@ -310,12 +314,13 @@ function canLoadFilament(tool: Tool) {
     return !uiFrozen.value && (tool.filamentExtruder >= 0) && (tool.filamentExtruder < store.state.machine.model.move.extruders.length);
 }
 
-async function showFilamentDialog(tool: Tool) {
+async function showFilamentDialog(tool: Tool, runMacros: bool) {
     if (busyTool.value !== null) {
         return;
     }
 
     filamentDialogTool.value = tool;
+    filamentRunMacros.value = runMacros;
     filamentDialogShown.value = true;
 }
 

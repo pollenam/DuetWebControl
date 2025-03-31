@@ -883,7 +883,8 @@
       "allBeds": "Összes asztal",
       "beds": "Asztalok",
       "chambers": "Kamrák",
-      "allChambers": "Összes kamra"
+      "allChambers": "Összes kamra",
+      "reassignFilament": "Átruházza az izzót"
     },
     "webcam": {
       "caption": "Webkamerás megfigyelés",

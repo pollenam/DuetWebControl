@@ -883,7 +883,8 @@
       "allBeds": "所有热床",
       "beds": "热床",
       "chambers": "加热室",
-      "allChambers": "所有加热室"
+      "allChambers": "所有加热室",
+      "reassignFilament": "重新分配细丝"
     },
     "webcam": {
       "caption": "网络摄像头监控",

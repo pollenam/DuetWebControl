@@ -883,7 +883,8 @@
       "standby": "Stand-by",
       "tool": "Gereedschap {0}",
       "turnEverythingOff": "Schakel alles uit",
-      "unloadFilament": "Filament ontladen"
+      "unloadFilament": "Filament ontladen",
+      "reassignFilament": "Wijs de gloeidraad opnieuw toe"
     },
     "webcam": {
       "alt": "(webcambeeld)",
