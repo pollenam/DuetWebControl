@@ -1,3 +1,19 @@
+<style scoped>
+.disabled {
+    color: inherit;
+    cursor: default;
+}
+
+.disabled-heater {
+    cursor: default;
+}
+
+.disabled:hover,
+.disabled-heater {
+    text-decoration: none;
+}
+</style>
+
 <template>
     <tbody>
         <template v-if="toolsToDisplay.length > 0">
@@ -11,7 +27,7 @@
                         :class="{ 'pt-2 pb-2': !tool.heaters.length && !toolHeater }">
 
                         <!-- Tool Name or Dropdown -->
-                        <a v-if="!isToolCollapsed(tool)" href="javascript:void(0)" @click="toolClick(tool)">
+                        <a v-if="!isToolCollapsed(tool)" href="javascript:void(0)" :class="{ disabled: disabled }" @click="toolClick(tool)">
                             <v-progress-circular v-if="tool === busyTool" indeterminate color="primary" :size="14" />
                             <v-icon v-if="getToolIcon(tool)" small v-text="getToolIcon(tool)" />
                             {{ tool.name || $t("panel.tools.tool", [tool.number]) }}
@@ -20,7 +36,7 @@
                             <template #activator="{ on }">
                                 <a v-on="on" href="javascript:void(0)">
                                     <v-progress-circular v-if="isCollapsedToolBusy(tool)" indeterminate color="primary"
-                                                        :size="14" />
+                                                         :size="14" />
                                     <v-icon v-if="getToolIcon(tool)" small v-text="getToolIcon(tool)" />
                                     {{ tool.name || $t("panel.tools.tool", [tool.number]) }}
                                     <v-icon small>mdi-menu-down</v-icon>
@@ -29,7 +45,7 @@
 
                             <v-list>
                                 <v-list-item v-for="otherTool in getCollapsedTools(tool)" @click="toolClick(otherTool)"
-                                            :key="otherTool.number">
+                                             :key="otherTool.number">
                                     <v-icon v-if="getToolIcon(tool)" class="mr-1" v-text="getToolIcon(tool)" />
                                     {{ `${otherTool.name} (T${otherTool.number})` || $t("panel.tools.tool", [otherTool.number]) }}
                                 </v-list-item>
@@ -42,9 +58,9 @@
 
                             <template v-if="canLoadFilament(tool)">
                                 -
-                                <v-menu v-if="getFilament(tool)" offset-y auto>
+                                <v-menu v-if="getFilament(tool)" offset-y auto :disabled="disabled">
                                     <template #activator="{ on }">
-                                        <a v-on="on" href="javascript:void(0)" class="font-weight-regular">
+                                        <a v-on="on" href="javascript:void(0)" class="font-weight-regular" :class="{ disabled: disabled }">
                                             {{ getFilament(tool) }}
                                         </a>
                                     </template>
@@ -115,7 +131,7 @@
                         <th>
                             <template v-if="toolHeater">
                                 <a href="javascript:void(0)" @click="toolHeaterClick(tool, toolHeater)"
-                                :class="getHeaterColor(tool.heaters[toolHeaterIndex])">
+                                   :class="getHeaterClasses(tool.heaters[toolHeaterIndex])">
                                     {{ getHeaterName(toolHeater, tool.heaters[toolHeaterIndex]) }}
                                 </a>
                                 <template v-if="toolHeater.state !== null">
@@ -137,16 +153,19 @@
 
                         <!-- Heater active -->
                         <td class="pl-2 pr-1">
-                            <control-input :disabled="isToolBusy(tool)" type="tool" :index="tool.number" :tool-heater-index="toolHeaterIndex" active />
+                            <control-input :disabled="isToolBusy(tool)" type="tool" :index="tool.number"
+                                           :tool-heater-index="toolHeaterIndex" active />
                         </td>
 
                         <!-- Heater standby -->
                         <td class="pl-1 pr-2">
-                            <control-input :disabled="isToolBusy(tool)" type="tool" :index="tool.number" :tool-heater-index="toolHeaterIndex" standby />
+                            <control-input :disabled="isToolBusy(tool)" type="tool" :index="tool.number"
+                                           :tool-heater-index="toolHeaterIndex" standby />
                         </td>
                     </template>
 
-                    <filament-dialog v-if="toolIndex === 0" :shown.sync="filamentDialogShown" :runMacros="filamentRunMacros" :tool="filamentDialogTool" />
+                    <filament-dialog v-if="toolIndex === 0" :shown.sync="filamentDialogShown"
+                                     :runMacros="filamentRunMacros" :tool="filamentDialogTool" />
                 </tr>
 
                 <!-- Divider -->
@@ -161,7 +180,7 @@
 </template>
 
 <script setup lang="ts">
-import { Heater, HeaterState, SpindleState, Tool } from "@duet3d/objectmodel";
+import { Heater, HeaterState, MachineStatus, SpindleState, Tool } from "@duet3d/objectmodel";
 import { computed, ref } from "vue";
 
 import i18n from "@/i18n";
@@ -175,7 +194,7 @@ const emit = defineEmits<{
     (e: "resetHeaterFault", heater: number): void
 }>();
 
-const uiFrozen = computed<boolean>(() => store.getters["uiFrozen"]);
+const disabled = computed<boolean>(() => store.getters["uiFrozen"] || [MachineStatus.pausing, MachineStatus.processing, MachineStatus.resuming].includes(store.state.machine.model.state.status));
 
 // Tool display
 const toolsToDisplay = computed<Array<Tool>>(() => {
@@ -279,7 +298,7 @@ function getToolIcon(tool: Tool) {
 const toolChangeParameter = computed<string>(() => store.getters["machine/settings/toolChangeParameter"]);
 
 async function toolClick(tool: Tool) {
-    if (uiFrozen.value || busyTool.value !== null) {
+    if (disabled.value || busyTool.value !== null) {
         return;
     }
 
@@ -311,7 +330,7 @@ function getFilament(tool: Tool) {
 }
 
 function canLoadFilament(tool: Tool) {
-    return !uiFrozen.value && (tool.filamentExtruder >= 0) && (tool.filamentExtruder < store.state.machine.model.move.extruders.length);
+    return (tool.filamentExtruder >= 0) && (tool.filamentExtruder < store.state.machine.model.move.extruders.length);
 }
 
 async function showFilamentDialog(tool: Tool, runMacros: bool) {
@@ -351,6 +370,14 @@ function getToolHeaters(tool: Tool) {
     return (toolHeaters.length > 0) ? toolHeaters : [null];
 }
 
+function getHeaterClasses(heater: number) {
+    const classes = [getHeaterColor(heater)];
+    if (disabled.value) {
+        classes.push("disabled-heater");
+    }
+    return classes;
+}
+
 function getHeaterName(heater: Heater | null, heaterIndex: number) {
     if ((heater !== null) && (heater.sensor >= 0) && (heater.sensor < store.state.machine.model.sensors.analog.length)) {
         const sensor = store.state.machine.model.sensors.analog[heater.sensor];
@@ -376,7 +403,7 @@ function getHeaterValue(heater: Heater | null) {
 }
 
 async function toolHeaterClick(tool: Tool, heater: Heater) {
-    if (uiFrozen.value || isToolBusy(tool)) {
+    if (disabled.value || isToolBusy(tool)) {
         return;
     }
 

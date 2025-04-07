@@ -1,3 +1,19 @@
+<style scoped>
+.disabled {
+    color: inherit;
+    cursor: default;
+}
+
+.disabled-heater {
+    cursor: default;
+}
+
+.disabled:hover,
+.disabled-heater {
+    text-decoration: none;
+}
+</style>
+
 <template>
     <tbody>
         <template v-if="singleControl && firstHeater !== null">
@@ -5,9 +21,9 @@
             <tr>
                 <!-- Heater item name -->
                 <th class="pl-2">
-                    <v-menu bottom offset-y>
+                    <v-menu bottom offset-y :disabled="disabled">
                         <template #activator="{ on, attrs }">
-                            <a href="javascript:void(0)" v-bind="attrs" v-on="on">
+                            <a href="javascript:void(0)" v-bind="attrs" :classes="{ disabled: disabled }" v-on="on">
                                 {{ singleHeaterCaption }}
                                 <v-icon dense class="ms-n1">mdi-menu-down</v-icon>
                             </a>
@@ -37,8 +53,7 @@
 
                 <!-- Heater name -->
                 <th v-if="selectedHeater !== null">
-                    <a href="javascript:void(0)" @click="heaterClick(selectedIndex, selectedHeater)"
-                       :class="getHeaterColor(selectedHeaterIndex)">
+                    <a href="javascript:void(0)" :class="getHeaterClasses(selectedHeaterIndex)" @click="heaterClick(selectedIndex, selectedHeater)">
                         {{ getHeaterName(selectedHeater, selectedHeaterIndex) }}
                     </a>
                     <br>
@@ -82,17 +97,15 @@
                     <tr :key="index">
                         <!-- Heater item name -->
                         <th class="pl-2">
-                            <a href="javascript:void(0)" @click="heaterClick(index, heater)">
-                                <v-icon small
-                                        v-text="(props.type === 'bed') ? 'mdi-radiator' : 'mdi-heat-pump-outline'" />
+                            <a href="javascript:void(0)" :class="{ disabled: disabled }" @click="heaterClick(index, heater)">
+                                <v-icon small v-text="(props.type === 'bed') ? 'mdi-radiator' : 'mdi-heat-pump-outline'" />
                                 {{ (props.type === "bed") ? $t("panel.tools.bed", [(heaterItems.length === 1) ? "" : index]) : $t("panel.tools.chamber", [(heaterItems.length === 1) ? "" : index]) }}
                             </a>
                         </th>
 
                         <!-- Heater name -->
                         <th>
-                            <a href="javascript:void(0)" @click="heaterClick(index, heater)"
-                               :class="getHeaterColor(heaterIndex)">
+                            <a href="javascript:void(0)" :class="getHeaterClasses(heaterIndex)" @click="heaterClick(index, heater)">
                                 {{ getHeaterName(heater, heaterIndex) }}
                             </a>
                             <br>
@@ -123,7 +136,7 @@
 </template>
 
 <script setup lang="ts">
-import { Heater, HeaterState } from "@duet3d/objectmodel";
+import { Heater, HeaterState, MachineStatus } from "@duet3d/objectmodel";
 import { computed, PropType, ref } from "vue";
 
 import i18n from "@/i18n";
@@ -139,7 +152,7 @@ const emit = defineEmits<{
     (e: "resetHeaterFault", heater: number): void
 }>();
 
-const uiFrozen = computed<boolean>(() => store.getters["uiFrozen"]);
+const disabled = computed<boolean>(() => store.getters["uiFrozen"] || [MachineStatus.pausing, MachineStatus.processing, MachineStatus.resuming].includes(store.state.machine.model.state.status));
 
 // Settings
 const singleControl = computed(() => (props.type === "bed") ? store.state.machine.settings.singleBedControl : store.state.machine.settings.singleChamberControl);
@@ -182,7 +195,7 @@ const singleHeaterCaption = computed(() => {
 });
 
 async function allHeatersClick() {
-    if (uiFrozen.value) {
+    if (disabled.value) {
         return;
     }
 
@@ -242,6 +255,14 @@ async function allHeatersClick() {
 }
 
 // Individual heater control
+function getHeaterClasses(heater: number) {
+    const classes = [getHeaterColor(heater)];
+    if (disabled.value) {
+        classes.push("disabled-heater");
+    }
+    return classes;
+}
+
 function getHeaterName(heater: Heater | null, heaterIndex: number) {
     if ((heater !== null) && (heater.sensor >= 0) && (heater.sensor < store.state.machine.model.sensors.analog.length)) {
         const sensor = store.state.machine.model.sensors.analog[heater.sensor];
@@ -267,7 +288,7 @@ function getHeaterValue(heater: Heater | null) {
 }
 
 async function heaterClick(index: number, heater: Heater | null) {
-    if (uiFrozen.value || !heater) {
+    if (disabled.value || !heater) {
         return;
     }
 
