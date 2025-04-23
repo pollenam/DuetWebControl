@@ -80,7 +80,7 @@
                                         </v-list-item>
                                     </v-list>
                                 </v-menu>
-                                <a v-else href="javascript:void(0)" @click="showFilamentDialog(tool, true)">
+                                <a v-else href="javascript:void(0)" @click="showFilamentDialog(tool, true)" :class="{ disabled: disabled }">
                                     {{ $t("panel.tools.loadFilament") }}
                                 </a>
                             </template>
@@ -194,7 +194,7 @@ const emit = defineEmits<{
     (e: "resetHeaterFault", heater: number): void
 }>();
 
-const disabled = computed<boolean>(() => store.getters["uiFrozen"] || [MachineStatus.pausing, MachineStatus.processing, MachineStatus.resuming].includes(store.state.machine.model.state.status));
+const disabled = computed<boolean>(() => store.getters["uiFrozen"] || [MachineStatus.pausing, MachineStatus.processing, MachineStatus.resuming, MachineStatus.simulating].includes(store.state.machine.model.state.status));
 
 // Tool display
 const toolsToDisplay = computed<Array<Tool>>(() => {
@@ -334,7 +334,7 @@ function canLoadFilament(tool: Tool) {
 }
 
 async function showFilamentDialog(tool: Tool, runMacros: bool) {
-    if (busyTool.value !== null) {
+    if (busyTool.value !== null || disabled.value) {
         return;
     }
 
@@ -344,7 +344,7 @@ async function showFilamentDialog(tool: Tool, runMacros: bool) {
 }
 
 async function unloadFilament(tool: Tool) {
-    if (busyTool.value !== null) {
+    if (busyTool.value !== null || disabled.value) {
         return;
     }
 
