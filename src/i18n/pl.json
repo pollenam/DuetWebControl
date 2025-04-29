@@ -681,7 +681,8 @@
       "file": "Postęp pliku",
       "layer": "Czas nakładania warstwy",
       "slicer": "Slicer",
-      "simulation": "Symulacja"
+      "simulation": "Symulacja",
+      "toPause": "Następna pauza"
     },
     "jobInfo": {
       "caption": "Informacja o pracy",

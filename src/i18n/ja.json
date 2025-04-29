@@ -681,7 +681,8 @@
       "file": "ファイルの進捗",
       "layer": "レイヤー時間",
       "slicer": "スライサー",
-      "simulation": "シミュレーション"
+      "simulation": "シミュレーション",
+      "toPause": "次の一時停止"
     },
     "jobInfo": {
       "caption": "ジョブ情報",

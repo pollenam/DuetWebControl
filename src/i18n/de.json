@@ -681,7 +681,8 @@
       "file": "Dateifortschritt",
       "layer": "Schichtdauer",
       "slicer": "Slicer",
-      "simulation": "Simulation"
+      "simulation": "Simulation",
+      "toPause": "Nächste Pause"
     },
     "jobInfo": {
       "caption": "Jobinformationen",

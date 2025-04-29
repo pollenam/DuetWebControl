@@ -680,7 +680,8 @@
       "file": "Eddigi haladás alapján",
       "layer": "Réteg idő",
       "slicer": "Slicer által számított",
-      "simulation": "Szimuláció alapján"
+      "simulation": "Szimuláció alapján",
+      "toPause": "Következő szünet"
     },
     "jobInfo": {
       "caption": "Munka információ",

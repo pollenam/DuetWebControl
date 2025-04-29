@@ -681,7 +681,8 @@
       "file": "Progrès du Fichier",
       "layer": "Durée de la Dernière Couche",
       "slicer": "Trancheur",
-      "simulation": "Simulation"
+      "simulation": "Simulation",
+      "toPause": "Paute suivante"
     },
     "jobInfo": {
       "caption": "Information du Travail",

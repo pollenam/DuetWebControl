@@ -680,7 +680,8 @@
       "file": "文件进度",
       "layer": "层时间",
       "slicer": "切片",
-      "simulation": "模拟"
+      "simulation": "模拟",
+      "toPause": "下一个暂停"
     },
     "jobInfo": {
       "caption": "任务信息",

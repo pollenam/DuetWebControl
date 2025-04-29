@@ -680,7 +680,8 @@
       "file": "Bestandsvoortgang",
       "layer": "Laag tijd",
       "simulation": "Simulatie",
-      "slicer": "Snijmachine"
+      "slicer": "Snijmachine",
+      "toPause": "Volgende pauze"
     },
     "jobInfo": {
       "caption": "Job informatie",

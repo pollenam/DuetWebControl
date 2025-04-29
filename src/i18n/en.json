@@ -680,7 +680,8 @@
       "file": "File Progress",
       "layer": "Layer Time",
       "slicer": "Slicer",
-      "simulation": "Simulation"
+      "simulation": "Simulation",
+      "toPause": "Next pause"
     },
     "jobInfo": {
       "caption": "Job Information",

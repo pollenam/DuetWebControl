@@ -34,6 +34,15 @@
 					</span>
 				</v-col>
 
+				<v-col v-if="timesLeft.toPause !== null" class="d-flex flex-column">
+					<strong>
+						{{ $t("panel.jobEstimations.toPause") }}
+					</strong>
+					<span>
+						{{ $displayTime(timesLeft.toPause) }}
+					</span>
+				</v-col>
+
 				<v-col v-if="simulationTime !== null" class="d-flex flex-column">
 					<strong>
 						{{ $t("panel.jobEstimations.simulation") }}

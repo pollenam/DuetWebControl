@@ -681,7 +681,8 @@
       "file": "Progresso do Arquivo",
       "layer": "Tempo da Camada",
       "slicer": "Fatiador",
-      "simulation": "Simulação"
+      "simulation": "Simulação",
+      "toPause": "Próxima pausa"
     },
     "jobInfo": {
       "caption": "Informação da Tarefa",

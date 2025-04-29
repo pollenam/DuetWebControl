@@ -681,7 +681,8 @@
       "file": "Dosya İlerleme Durumu",
       "layer": "Katman Zamanı",
       "slicer": "Dilimleyici",
-      "simulation": "Simülasyon"
+      "simulation": "Simülasyon",
+      "toPause": "Sonraki Duraklama"
     },
     "jobInfo": {
       "caption": "İş bilgisi",

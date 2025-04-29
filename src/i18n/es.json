@@ -681,7 +681,8 @@
       "file": "Progreso de archivo",
       "layer": "Tiempo de capa",
       "slicer": "Troceado",
-      "simulation": "Simulación"
+      "simulation": "Simulación",
+      "toPause": "Siguiente pausa"
     },
     "jobInfo": {
       "caption": "Información (trabajo)",
