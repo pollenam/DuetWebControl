@@ -99,6 +99,7 @@ import Vue from "vue";
 
 import store from "@/store";
 import { isNumber } from "@/utils/numbers";
+import { log } from "@/utils/logging";
 
 export default Vue.extend({
 	computed: {
@@ -179,26 +180,28 @@ export default Vue.extend({
 			return `M120\nG91\nG1 ${/[a-z]/.test(axis.letter) ? '\'' : ""}${axis.letter}${decrementing ? '-' : ""}${this.moveSteps(axis.letter)[index]} F${store.state.machine.settings.moveFeedrate}\nM121`;
 		},
 		showSign: (value: number): string => (value > 0) ? `+${value}` : value.toString(),
+		// NOTE: The following calls use noWait because we don't want M292 replies to be logged.
+		// This option will become obsolete in 3.7 or 3.8 when RRF is able to return G-code replies for each G-code request
 		async ok() {
 			this.shown = false;
 			if ([MessageBoxMode.closeOnly, MessageBoxMode.okOnly, MessageBoxMode.okCancel].includes(this.messageBox.mode)) {
-				await store.dispatch("machine/sendCode", `M292 S${this.messageBox.seq}`);
+				await store.dispatch("machine/sendCode", { code: `M292 S${this.messageBox.seq}`, noWait: true });
 			} else if (this.messageBox.mode === MessageBoxMode.intInput || this.messageBox.mode === MessageBoxMode.floatInput) {
-				await store.dispatch("machine/sendCode", `M292 R{${this.numberInput}} S${this.messageBox.seq}`);
+				await store.dispatch("machine/sendCode", { code: `M292 R{${this.numberInput}} S${this.messageBox.seq}`, noWait: true });
 			} else if (this.messageBox.mode === MessageBoxMode.stringInput) {
-				await store.dispatch("machine/sendCode", `M292 R{"${this.stringInput.replace(/"/g, '""').replace(/'/g, "''")}"} S${this.messageBox.seq}`);
+				await store.dispatch("machine/sendCode", { code: `M292 R{"${this.stringInput.replace(/"/g, '""').replace(/'/g, "''")}"} S${this.messageBox.seq}`, noWait: true });
 			}
 		},
 		async accept(choice: number) {
 			this.shown = false;
 			if (this.messageBox.mode >= MessageBoxMode.multipleChoice) {
-				await store.dispatch("machine/sendCode", `M292 R{${choice}} S${this.messageBox.seq}`);
+				await store.dispatch("machine/sendCode", { code: `M292 R{${choice}} S${this.messageBox.seq}`, noWait: true });
 			}
 		},
 		async cancel() {
 			this.shown = false;
 			if (this.messageBox.cancelButton) {
-				await store.dispatch("machine/sendCode", `M292 P1 S${this.messageBox.seq}`);
+				await store.dispatch("machine/sendCode", { code: `M292 P1 S${this.messageBox.seq}`, noWait: true });
 			}
 		}
 	},
