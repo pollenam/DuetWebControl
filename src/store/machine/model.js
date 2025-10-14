@@ -339,7 +339,7 @@ export const DefaultMachineModel = new MachineModel({
 	tools: [
 		new Tool({
 			axes: [0, 1, 2],
-			name: "T0 - Hemera",
+			name: "T0",
 			number: 0,
 			active: [0],
 			standby: [0],
@@ -350,7 +350,7 @@ export const DefaultMachineModel = new MachineModel({
 		}),
 		new Tool({
 			axes: [3, 1, 2],
-			name: "T1 - Mahor",
+			name: "T1",
 			number: 1,
 			active: [0],
 			standby: [0],

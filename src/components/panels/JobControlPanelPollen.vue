@@ -184,7 +184,7 @@ export default {
 	},
 	methods: {
 		...mapActions('machine', ['sendCode']),
-		...mapMutations('machine/honeyprint_cache', ['updateHistory']),
+		...mapMutations('machine/honeyprint_cache', ['addJobHistory', 'updateHistory']),
 		/* processAnotherCode() {
 			if (this.lastFileName) {
 				if (this.lastFileSimulated) {
@@ -197,7 +197,7 @@ export default {
 		}, */
 		async resume() {
 			try {
-				//await this.sendCode('M991');
+				await this.sendCode("M98 P\"/macros/HONEYPRINT/ExtrusionInfini.g\" D0");
 				await this.sendCode('M24');
 			} catch (e) {
 				if (!(e instanceof DisconnectedError)) {
@@ -223,14 +223,15 @@ export default {
 				if (this.lastFileSimulated) {
 					let printDetails = {printDate: new Date().toLocaleString(), type: this.$t('list.jobs.type.simulation'), status: this.$t('list.jobs.status.ongoing'), duration: 0, lastModified: this.jobFile.lastModified.toLocaleString()}
 					this.addJobHistory({filePath:this.lastFileName, printDetails:printDetails});
-					//await this.sendCode(`M98 P"/macros/HONEYPRINT/Simulate_GCode_Again" S"${this.lastFileName}"`)
-					this.sendCode(`M37 P"${this.lastFileName}"`);
+					this.sendCode(`M98 P"/macros/HONEYPRINT/Simulate_GCode_Again" S"${this.lastFileName}"`)
+					//this.sendCode(`M37 P"${this.lastFileName}"`);
 				}
 				else {
 					let printDetails = {printDate: new Date().toLocaleString(), type: this.$t('list.jobs.type.print'), status: this.$t('list.jobs.status.ongoing'), duration: 0, lastModified: this.jobFile.lastModified.toLocaleString()}
 					this.addJobHistory({filePath:this.lastFileName, printDetails:printDetails});
-					//await this.sendCode(`M98 P"/macros/HONEYPRINT/Start_GCode_Again" S"${this.lastFileName}"`)
-					this.sendCode(`M32 "${this.lastFileName}"`);
+					//await this.sendCode("M98 P\"/macros/HONEYPRINT/ExtrusionInfini.g\" D0");
+					this.sendCode(`M98 P"/macros/HONEYPRINT/Start_GCode_Again" S"${this.lastFileName}"`)
+					//this.sendCode(`M32 "${this.lastFileName}"`);
 				}
 			}
 		}

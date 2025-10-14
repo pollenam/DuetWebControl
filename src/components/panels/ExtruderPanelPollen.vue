@@ -41,11 +41,11 @@
 		<v-card-text class="d-flex flex-column v-card__text--with-rows-highlighted">
 			<v-row dense class="row--highlighted">
         <v-col cols="12 d-flex flex-column">
-          <div class="center-label">{{ feedrate }} {{ $t('generic.mmPerSec') }}</div>
-          <percentage-input-pollen :value="feedrate" :min="getExtrusionSpeedMin()" :max="getExtrusionSpeedMax()" :step="0.1" @input="setFeedrate($event)" :disabled="uiFrozen"></percentage-input-pollen>
+          <div class="center-label">{{ extrusionSpeed }} {{ $t('generic.mmPerSec') }}</div>
+          <percentage-input-pollen :value="extrusionSpeed" :min="getExtrusionSpeedMin()" :max="getExtrusionSpeedMax()" :step="0.1" @input="setExtrusionSpeed($event)" :disabled="uiFrozen"></percentage-input-pollen>
         </v-col>
       </v-row>
-      <v-row dense>
+      <!--<v-row dense>
         <v-col>
           <span class="pollen-attr-header">
           {{ $t('panel.extrude.amount', ['mm']) }}
@@ -56,10 +56,10 @@
             </v-btn>
           </v-btn-toggle>
         </v-col>
-      </v-row>
+      </v-row> -->
       <v-row dense>
-        <template>
-          <v-col cols="6">
+        <template v-if="shouldShowInfinite">
+          <v-col cols="12">
             <v-btn block @click="buttonClicked(true)" :loading="busy" elevation="0" :disabled="uiFrozen || this.isProcessing() || tool.extruders.length == 0">
               <v-icon class="mr-1">mdi-arrow-down-bold</v-icon>
               <span class="hidden-lg-only">
@@ -70,7 +70,7 @@
               </span>
             </v-btn>
           </v-col>
-          <v-col cols="6">
+          <!--<v-col cols="6">
             <v-btn block @click="buttonClicked(false)" :loading="busy" elevation="0" :disabled="uiFrozen || this.isProcessing() || tool.extruders.length == 0">
               <v-icon class="mr-1">mdi-arrow-up-bold</v-icon>
               <span class="hidden-lg-only">
@@ -80,9 +80,9 @@
                 {{ $t('panel.extruderPollen.retractShort') }}
               </span>
             </v-btn>
-          </v-col>
+          </v-col> -->
         </template>
-        <!-- <template  v-if="shouldShowStop">
+        <template  v-if="shouldShowStop">
           <v-col cols="12">
             <v-btn block @click="stopInfinite()" elevation="0" :disabled="uiFrozen">
               <v-icon class="mr-1">mdi-stop</v-icon>
@@ -90,8 +90,8 @@
               <v-progress-circular indeterminate class="ml-5" size="15"></v-progress-circular>
             </v-btn>
           </v-col>
-        </template> -->
-          <!-- <v-col cols="6">
+        </template>
+          <v-col cols="6">
             <v-btn block @click="temperatureMemory()" elevation="0" :disabled="this.isProcessing()">
               <v-icon class="mr-1">mdi-restore</v-icon>
               <span class="hidden-sm-only hidden-lg-only">
@@ -101,8 +101,8 @@
                 {{ $t('panel.extruderPollen.memoryShort') }}
               </span>
             </v-btn>
-          </v-col> -->
-          <v-col cols="12">
+          </v-col> 
+          <v-col cols="6">
             <v-btn block @click="temperatureStop()" elevation="0" :disabled="this.isProcessing()">
               <v-icon class="mr-1">mdi-power</v-icon>
               <span class="hidden-sm-only hidden-lg-only">
@@ -152,7 +152,7 @@
           <span class="pollen-attr-header">{{ $t('panel.extruderPollen.extrusionFactor') }}</span>
         </v-col>
         <v-col cols="9 d-flex align-center">
-          <percentage-input-pollen :value="getExtrusionFactor()" @input="setExtrusionFactor($event)" :max="getMaxExtrusionFactor()" :step="1" :disabled="uiFrozen || !shouldShowExtruderFactor"></percentage-input-pollen>
+          <percentage-input-pollen :value="extrusionSpeed" :min="getExtrusionSpeedMin()" :max="getExtrusionSpeedMax()" :step="0.1" @input="setExtrusionSpeed($event)" :disabled="uiFrozen"></percentage-input-pollen>
         </v-col>
 			</v-row>
 			<v-row dense>
@@ -172,9 +172,10 @@
         </v-col>
 			</v-row>
 		</v-card-text>
-
+    
     <input-dialog :shown.sync="editAmountDialog.shown" :title="$t('dialog.editExtrusionAmount.title')" :prompt="$t('dialog.editExtrusionAmount.prompt')" :preset="editAmountDialog.preset" is-numeric-value @confirmed="setAmount"></input-dialog>
-	</v-card>
+    
+  </v-card>
 </template>
 
 <script>
@@ -199,12 +200,12 @@ export default {
 	  ...mapState('machine/model', {
 	  macrosDirectory: state => state.directories.macros,
 	  //tools: state => state.tools,
-	  /* infiniteExtrusionStatus: state => state.infiniteExtrusionStatus,
+	  infiniteExtrusionStatus: state => state.global.infiniteExtrusionStatus,
     infiniteStatus: state => state.infiniteStatus,
     T1Selected: state => state.global.T1_Selected,
     T2Selected: state => state.global.T2_Selected,
     T3Selected: state => state.global.T3_Selected,
-    T4Selected: state => state.global.T4_Selected, */
+    T4Selected: state => state.global.T4_Selected, 
 	}),
   truncatedToolName(){
     return this.tool.name.substring(0, 10) + '...';
@@ -233,20 +234,20 @@ export default {
     /* sortedExtruderAmounts() {
       return this.extruderAmounts.slice().sort((a, b) => a - b)
     }, */
-    /* shouldShowInfinite() {
+    shouldShowInfinite() {
 		if (this.infiniteExtrusionStatus === null || this.infiniteExtrusionStatus === undefined)
 		{
 			return false;
 		}
 		return this.infiniteExtrusionStatus[this.toolIndex] === 'stopped'
-    }, */
-    /* shouldShowStop() {
+    }, 
+    shouldShowStop() {
 		if (this.infiniteExtrusionStatus === null || this.infiniteExtrusionStatus === undefined)
 		{
 			return false;
 		}
 		return this.infiniteExtrusionStatus[this.toolIndex] !== 'stopped'
-    }, */
+    }, 
     shouldShowExtruderFactor() {
       return true
       /* if (this.infiniteExtrusionStatus === null || this.infiniteExtrusionStatus === undefined)
@@ -297,6 +298,7 @@ export default {
       currentPid: "",
       amount: 10,
       feedrate: 5,
+      extrusionSpeed: 5,
       editAmountDialog: {
         shown: false,
         index: 0,
@@ -357,7 +359,7 @@ export default {
       return this.feedrate;
     }, */
     getExtrusionSpeedMax() {
-      var candidateValue = this.feedrate + this.feedrate * 0.5;
+      var candidateValue = this.extrusionSpeed + this.extrusionSpeed * 0.5;
       if (candidateValue >= EXTRUSION_SPEED_MAX)
       {
         return EXTRUSION_SPEED_MAX;
@@ -368,7 +370,7 @@ export default {
       }
     },
     getExtrusionSpeedMin() {
-      var candidateValue = this.feedrate - this.feedrate * 0.5;
+      var candidateValue = this.extrusionSpeed - this.extrusionSpeed * 0.5;
       if (candidateValue <= EXTRUSION_SPEED_MIN)
       {
         return EXTRUSION_SPEED_MIN;
@@ -435,16 +437,16 @@ export default {
     setFeedrate(value){
       this.feedrate = value;
     },
-    /* async setExtrusionSpeed(value) {
+    async setExtrusionSpeed(value) {
       this.extrusionSpeed = value;
 
       if (this.infiniteExtrusionStatus[this.toolIndex] !== "stopped") {
         try {
           // await this.sendInfinite({code: "stop", toolNumber:this.tool.number});
-          if (this.infiniteExtrusionStatus[this.toolIndex] === "extrude") {
-            await this.sendCode("M98 P\"/macros/HONEYPRINT/Set_Extrusion_Rate\" X1 " + this.getRPMForInfinite(true));
+          if (this.infiniteExtrusionStatus[this.toolIndex] === "extruding") {
+            await this.sendCode("M98 P\"/macros/HONEYPRINT/ExtrusionInfini.g\" T" + this.tool.number + " A" + this.extrusionSpeed);
           } else {
-            await this.sendCode("M98 P\"/macros/HONEYPRINT/Set_Extrusion_Rate\" X1 " + this.getRPMForInfinite(false));
+            //await this.sendCode("M98 P\"/macros/HONEYPRINT/Set_Extrusion_Rate\" X1 " + this.this.extrusionSpeed);
           }
           // await this.sendInfinite({code: "startExtrude", toolNumber: this.tool.number});
 				} catch (e) {
@@ -455,7 +457,7 @@ export default {
       }
 
       this.selectInfiniteExtrusionRate({ index: this.toolIndex, value: this.extrusionSpeed });
-    }, */
+    }, 
     async PIDComboBoxChange(newValue) {
 			await this.sendCode(`M98 P"${Path.combine(this.macrosDirectory, "PID", newValue)}" B${this.tool.number}`);
       this.selectSelectedPid({
@@ -551,7 +553,7 @@ export default {
         return  "D";
       }
     }, */
-    /* async temperatureMemory() {
+    async temperatureMemory() {
       if (this.state.atxPower){
         await this.sendCode("M98 P\"/sys/memory_T" + this.tool.number +".g\"");
         await this.sendCode("M568 P" + this.tool.number +" A2");
@@ -559,13 +561,15 @@ export default {
       else{
         this.$log('warning', this.$t('notification.turnOnVPower'));
       }
-    }, */
+    }, 
     async temperatureStop() {
-      await this.sendCode("G10 P" + this.tool.number +" S0");
-      await this.sendCode("M568 P" + this.tool.number +" A0");
+      await this.sendCode(`M98 P"/macros/HONEYPRINT/Temperature_Stop" T${this.tool.number}`)
+      //await this.sendCode("G10 P" + this.tool.number +" S0");
+      //await this.sendCode("M568 P" + this.tool.number +" A0");
       //await this.sendCode("M991");
     },
-    async buttonClicked(extrude) {
+
+    /*async buttonClicked(extrude) {
       if (!this.currentTool.extruders.length) {
 				return;
 			}
@@ -576,7 +580,30 @@ export default {
 				// handled before we get here
 			}
 			this.busy = false;
+		}, */
+    async buttonClicked(extrude) {
+      if (!this.currentTool.extruders.length) {
+				return;
+			}
+			this.busy = true;
+			try {
+				await this.sendCode("M98 P\"/macros/HONEYPRINT/ExtrusionInfini.g\" T" + this.tool.number + " A" + this.extrusionSpeed + " B\"" + extrude + "\"");
+        this.infiniteExtrusionStatus[this.toolIndex] === "Extruding"
+			} catch (e) {
+				// handled before we get here
+			}
+			this.busy = false;
 		},
+    async stopInfinite() {
+      try {
+        await this.sendCode("M98 P\"/macros/HONEYPRINT/ExtrusionInfini.g\" T" + this.tool.number + " A0 B\"False\"");
+        this.infiniteExtrusionStatus[this.toolIndex] === "Stopped"
+      } catch (e) {
+        if (!(e instanceof DisconnectedError)) {
+          console.warn(e);
+        }
+      }
+    },
     editAmount(index) {
 			this.editAmountDialog.index = index;
 			this.editAmountDialog.preset = this.extruderAmounts[index];

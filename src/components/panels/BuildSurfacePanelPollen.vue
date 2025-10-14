@@ -140,14 +140,14 @@
             </v-col>
           </v-row>
 		  <v-row class="row--highlighted" dense>
-			<!-- <v-col cols="6">
+			<v-col cols="4">
 			  <v-btn block @click="bedTemperatureMemory()" elevation="0" :disabled="this.isProcessing()" class="mb-1">
 				<v-icon small class="mr-1">mdi-restore</v-icon>
 				<span class="hidden-xs-only hidden-md-only hidden-lg-only">
 					{{ $t('panel.extruderPollen.memoryShort') }}
 				</span>
               </v-btn>
-            </v-col> -->
+            </v-col> 
 			<v-col cols="2">
 				<v-btn block @click="bedTemperatureStop()" elevation="0" :disabled="this.isProcessing()">
 					<v-icon small class="mr-1 hidden-xs-only hidden-md-only hidden-lg-only">mdi-power</v-icon>
@@ -315,8 +315,8 @@ export default {
 			this.sendCode(`M98 P"/macros/HONEYPRINT/Compensation_Start" H"heightmap-${today}.csv"`);
 		},
 		async handleHoming() {
-			//this.sendCode(`M98 P"/macros/HONEYPRINT/Home_Btn"`)
-			this.sendCode('G28');
+			this.sendCode(`M98 P"/macros/HONEYPRINT/Home_Btn"`)
+			//this.sendCode('G28');
 		},
 		async toggleZLimits() {
 			await this.sendCode(this.move.limitAxes ? 'M98 P"/macros/HONEYPRINT/Z_Limits" S0' : 'M98 P"/macros/HONEYPRINT/Z_Limits" S1');
@@ -325,9 +325,9 @@ export default {
 			await this.sendCode("M98 P\"/sys/memory_BED.g\"");
 		},
 		async bedTemperatureStop() {
-			//this.sendCode(`M98 P"/macros/HONEYPRINT/Bed_Off"`)
-			await this.sendCode("M140 S0 R0"); //Bed set to 0°C
-			await this.sendCode("M140 S-273.1"); //Bed off
+			this.sendCode(`M98 P"/macros/HONEYPRINT/Bed_Off"`)
+			//await this.sendCode("M140 S0 R0"); //Bed set to 0°C
+			//await this.sendCode("M140 S-273.1"); //Bed off
 		}
 	},
 	watch: {
