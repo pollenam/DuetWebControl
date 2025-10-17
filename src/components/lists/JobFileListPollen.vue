@@ -344,8 +344,8 @@ export default {
 			const printDetails = {printDate: new Date().toLocaleString(), type: this.$t('list.jobs.type.print'), status: this.$t('list.jobs.status.ongoing'), duration: 0, lastModified: obj.lastModified.toLocaleString()}
 			const targetPath = Path.combine(this.directory, obj.name);
 			this.addJobHistory({filePath:targetPath, printDetails:printDetails});
-			//this.sendCode(`M98 P"/macros/HONEYPRINT/Start_GCode" S"${targetPath}"`);
-			this.sendCode(`M32 "${targetPath}"`);
+			this.sendCode(`M98 P"/macros/HONEYPRINT/Start_GCode" S"${targetPath}"`);
+			//this.sendCode(`M32 "${targetPath}"`);
 		},
 		simulate(item) {
 			// if right click on job then click on "Simulate" -> this.selection[0]

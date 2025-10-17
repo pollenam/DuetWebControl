@@ -1,7 +1,7 @@
 {
   "name": "duetwebcontrol",
   "version": "3.4.5",
-  "pollenVersion": "R1.2 - PAM PRO",
+  "pollenVersion": "R1.2.1 - PAM PRO",
   "pkgVersion": "3.4.5",
   "repository": "github:chrishamm/DuetWebControl",
   "homepage": "https://forum.duet3d.com/category/27/duet-web-control",

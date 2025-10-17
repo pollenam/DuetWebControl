@@ -152,7 +152,7 @@
           <span class="pollen-attr-header">{{ $t('panel.extruderPollen.extrusionFactor') }}</span>
         </v-col>
         <v-col cols="9 d-flex align-center">
-          <percentage-input-pollen :value="extrusionSpeed" :min="getExtrusionSpeedMin()" :max="getExtrusionSpeedMax()" :step="0.1" @input="setExtrusionSpeed($event)" :disabled="uiFrozen"></percentage-input-pollen>
+          <percentage-input-pollen :value="getExtrusionFactor()" @input="setExtrusionFactor($event)" :max="getMaxExtrusionFactor()" :step="1" :disabled="uiFrozen || !shouldShowExtruderFactor"></percentage-input-pollen>
         </v-col>
 			</v-row>
 			<v-row dense>
