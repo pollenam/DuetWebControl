@@ -767,7 +767,7 @@ export default {
             updateNote: 'Note: You can install updates on the System page.',
             notConnected: 'Not Connected'
         },
-				settingsPollen: {
+		settingsPollen: {
           enableLegacyMode: "Enable Legacy Mode",
           disableLegacyMode: "Disable Legacy Mode",
 					legacyMode: "Legacy Mode",
@@ -776,7 +776,17 @@ export default {
           passwordHint: 'The password used to active legacy mode',
           networking: 'Networking',
           ipAddress: 'IP Address'
-				},
+		},
+		settingsExpertPollen: {
+          enableExpertMode: "Enable Expert Mode",
+          disableExpertMode: "Disable Expert Mode",
+					ExpertMode: "Expert Mode",
+					passwordDescription: "Enter the admin password for the machine to enable Expert mode (all DWC defaut screen)",
+          password: 'Password',
+          passwordHint: 'The password used to active Expert mode',
+          networking: 'Networking',
+          ipAddress: 'IP Address'
+		},					
         settingsEndstops: {
             caption: 'Endstops',
             index: 'Index',

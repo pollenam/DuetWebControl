@@ -24,7 +24,7 @@ export default {
                     icon: 'mdi-view-dashboard',
                     caption: 'Dashboard (legacy)',
                     path: '/legacy',
-										condition: () => store.state.settings.legacyMode == true
+					condition: () => store.state.settings.legacyMode == true
                 }
             }
         });

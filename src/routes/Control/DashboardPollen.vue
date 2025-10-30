@@ -10,7 +10,7 @@
 import { mapState } from 'vuex';
 
 import { registerRoute } from '..'
-
+import store from '@/store'
 export default {
     install() {
         // Register a route via Control -> Dashboard
@@ -19,7 +19,8 @@ export default {
                 Dashboard: {
                     icon: 'mdi-view-dashboard',
                     caption: 'menu.control.dashboard',
-                    path: '/'
+                    path: '/Expert',
+                    condition: () => store.state.settings.ExpertMode == true
                 }
             }
         });

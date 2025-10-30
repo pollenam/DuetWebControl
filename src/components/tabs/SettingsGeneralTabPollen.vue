@@ -26,6 +26,11 @@
 			</v-row>
 			<v-row :dense="$vuetify.breakpoint.mobile">
 				<v-col cols="12">
+					<settings-general-expert-pollen-panel></settings-general-expert-pollen-panel>
+				</v-col>
+			</v-row>
+			<v-row :dense="$vuetify.breakpoint.mobile">
+				<v-col cols="12">
 					<settings-apperance-pollen-panel></settings-apperance-pollen-panel>
 				</v-col>
 			</v-row>

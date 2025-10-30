@@ -15,7 +15,7 @@
 import { mapMutations } from 'vuex'
 
 import { registerRoute } from '..'
-
+import store from '@/store'
 export default {
 	install() {
 		// Register a route via Control -> Console
@@ -24,7 +24,8 @@ export default {
 				Console: {
 					icon: 'mdi-console',
 					caption: 'menu.control.console',
-					path: '/Console'
+					path: '/Expert/Console',
+					condition: () => store.state.settings.ExpertMode == true
 				}
 			}
 		});

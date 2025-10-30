@@ -41,6 +41,7 @@ import LightFactorPanelPollen from './LightFactorPanelPollen.vue'
 import BuildSurfacePanelPollen from './BuildSurfacePanelPollen.vue'
 import ExtruderPanelPollen from './ExtruderPanelPollen.vue'
 import SettingsGeneralPanelPollen from './SettingsGeneralPanelPollen.vue'
+import SettingsGeneralExpertPanelPollen from './SettingsGeneralExpertPanelPollen.vue'  
 import SettingsAboutPanelPollen from './SettingsAboutPanelPollen.vue'
 import SettingsAppearancePanelPollen from './SettingsAppearancePanelPollen.vue'
 import SettingsElectronicsPanelPollen from './SettingsElectronicsPanelPollen.vue'
@@ -85,6 +86,7 @@ Vue.component('light-factor-pollen-panel', LightFactorPanelPollen)
 Vue.component('build-surface-pollen-panel', BuildSurfacePanelPollen)
 Vue.component('extruder-panel-pollen', ExtruderPanelPollen)
 Vue.component('settings-general-pollen-panel', SettingsGeneralPanelPollen)
+Vue.component('settings-general-expert-pollen-panel', SettingsGeneralExpertPanelPollen)
 Vue.component('settings-about-pollen-panel', SettingsAboutPanelPollen)
 Vue.component('settings-apperance-pollen-panel', SettingsAppearancePanelPollen)
 Vue.component('settings-electronics-pollen-panel', SettingsElectronicsPanelPollen)

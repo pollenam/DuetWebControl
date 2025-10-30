@@ -111,14 +111,14 @@
           <v-row>
             <v-col>
 							<span class="pollen-attr-header">{{ $t('panel.buildSurfacePollen.level') }}</span>
-							<code-btn :code="`M2901 R1 Z${babystepAmount}`" no-wait block class="mt-3">
+							<v-btn @click="BabyStep(babystepAmount)" no-wait block class="mt-3">
 								<v-icon style="font-size: 22px;">mdi-arrow-split-horizontal</v-icon>
                 +{{ $displayZ(babystepAmount) }}
-							</code-btn>
-							<code-btn :code="`M2901 R1 Z${-babystepAmount}`" no-wait block class="mt-2">
+							</v-btn>
+							<v-btn @click="BabyStep(-babystepAmount)" no-wait block class="mt-3">
 								<v-icon> mdi-arrow-collapse-vertical</v-icon>
                 {{ $displayZ(-babystepAmount) }}
-							</code-btn>
+							</v-btn>
             </v-col>
           </v-row>
           <v-row>
@@ -328,7 +328,10 @@ export default {
 			this.sendCode(`M98 P"/macros/HONEYPRINT/Bed_Off"`)
 			//await this.sendCode("M140 S0 R0"); //Bed set to 0°C
 			//await this.sendCode("M140 S-273.1"); //Bed off
-		}
+		},
+		async BabyStep(value) {
+			this.sendCode("M98 P\"/macros/HONEYPRINT/Babystep_Tool_Offset\" Z" + value)
+		},
 	},
 	watch: {
 		isConnected() {

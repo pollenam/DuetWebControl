@@ -10,7 +10,7 @@
 'use strict'
 
 import { registerRoute } from '..'
-
+import store from '@/store'
 export default {
 	install() {
 		// Register a route via Settings -> Macros
@@ -19,7 +19,8 @@ export default {
 				Automation: {
 					icon: 'mdi-file-cog-outline',
 					caption: 'list.macro.pollenTitle',
-					path: '/Settings/Automation'
+					path: '/Expert/Settings/Automation',
+					condition: () => store.state.settings.ExpertMode == true
 				}
 			}
 		});

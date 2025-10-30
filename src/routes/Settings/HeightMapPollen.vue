@@ -9,7 +9,7 @@
 'use strict'
 
 import { registerRoute } from '..'
-
+import store from '@/store'
 export default {
 	install() {
 		// Register a route via Settings -> General
@@ -18,7 +18,8 @@ export default {
 				HeightMap: {
 					icon: 'mdi-grid',
 					caption: 'plugins.heightmap.menuCaption',
-					path: '/HeightMap'
+					path: '/Expert/HeightMap',
+					condition: () => store.state.settings.ExpertMode == true
 				}
 			}
 		});

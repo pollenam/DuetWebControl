@@ -328,10 +328,10 @@ let heightMapViewer;
 const default_x = 0;
 const default_y = 0;
 const default_z = 0;
-const factory_default_spacing = 50;
-const factory_default_repeat = 4;
-const factory_default_x_range = [100,500];
-const factory_default_y_range = [100,320];
+//const factory_default_spacing = 50;
+//const factory_default_repeat = 2;
+//const factory_default_x_range = [50,650];
+//const factory_default_y_range = [50,650];
 
 export default {
 	computed: {
@@ -350,6 +350,10 @@ export default {
 			tools: state => state.tools,
 			//extruders: state => state.global.PAM_EXTRUDERS,
 			appliedFile: state => state.global.heightmap_file_name,
+			factory_default_spacing: state => state.global.FACTORY_DEFAULT_SPACING,
+			factory_default_repeat: state => state.global.FACTORY_DEFAULT_REPEAT,
+			factory_default_x_range: state => state.global.FACTORY_DEFAULT_Y_RANGE,
+			factory_default_y_range: state => state.global.FACTORY_DEFAULT_Y_RANGE,
 			default_spacing: state => state.global.DEFAULT_S_SPACING,
 			default_repeat: state => state.global.DEFAULT_S_REPEAT,
 			default_x_range: state => state.global.DEFAULT_S_X_RANGE,
@@ -467,6 +471,10 @@ export default {
 			s_repeat: this.default_repeat,
 			s_x_range: this.default_x_range,
 			s_y_range: this.default_y_range,
+			factory_default_spacing: this.factory_default_spacing,
+			factory_default_repeat: this.factory_default_repeat,
+			factory_default_x_range: this.factory_default_x_range,
+			factory_default_y_range: this.factory_default_y_range,
 			toolOffsets: {0: {}},
 		};
 	},
@@ -539,6 +547,12 @@ export default {
 			await this.sendCode(`M98 P"/macros/HONEYPRINT/Compensation_Start" H"heightmap-${today}.csv" S${spacing} R${repeat} X{${x_range[0]},${x_range[1]}} Y{${y_range[0]},${y_range[1]}}`);
 		},
 		async restoreSettingsFactoryDefault(){
+
+			var factory_default_spacing =  this.factory_default_spacing;
+			var factory_default_repeat = this.factory_default_repeat;
+			var factory_default_x_range =  this.factory_default_x_range;
+			var factory_default_y_range =  this.factory_default_y_range;
+			
 			await this.sendCode(`M98 P"/macros/HONEYPRINT/Set_Heightmap_Settings_Default" S${factory_default_spacing} R${factory_default_repeat} X{${factory_default_x_range[0]},${factory_default_x_range[1]}} Y{${factory_default_y_range[0]},${factory_default_y_range[1]}}`);
 		},
 		async saveParameters(){

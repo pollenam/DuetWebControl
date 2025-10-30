@@ -19,7 +19,7 @@ export default {
 				Jobs: {
 					icon: 'mdi-file-multiple-outline',
 					caption: 'menu.files.jobs',
-					path: '/Job/Jobs'
+					path: '/'
 				}
 			}
 		});

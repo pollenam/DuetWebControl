@@ -1,13 +1,13 @@
 <template>
 	<v-card outlined>
 		<v-card-title class="pb-0">
-			{{ $t('panel.settingsPollen.legacyMode') }}
+			{{ $t('panel.settingsExpertPollen.ExpertMode') }}
 		</v-card-title>
 
 		<v-card-text>
 			<v-row :dense="$vuetify.breakpoint.mobile">
 				<v-col cols="12" sm="12">
-					<div>{{ $t('panel.settingsPollen.passwordDescription') }}</div>
+					<div>{{ $t('panel.settingsExpertPollen.passwordDescription') }}</div>
 				</v-col>
 			</v-row>
 			<v-row :dense="$vuetify.breakpoint.mobile">
@@ -17,8 +17,8 @@
 							:append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
 							:type="show1 ? 'text' : 'password'"
 							name="input-10-1"
-							:label="$t('panel.settingsPollen.password')"
-							:hint="$t('panel.settingsPollen.passwordHint')"
+							:label="$t('panel.settingsExpertPollen.password')"
+							:hint="$t('panel.settingsExpertPollen.passwordHint')"
 							@click:append="show1 = !show1"
 							:error="error"
 							@keydown.enter="submit"
@@ -27,7 +27,7 @@
 			</v-row>
 			<v-row :dense="$vuetify.breakpoint.mobile">
 				<v-col cols="12" sm="12">
-					<v-btn elevation="0" @click="clickLegacyModeBtn">{{ getBtnStateText() }}</v-btn>
+					<v-btn elevation="0" @click="clickExpertModeBtn">{{ getBtnStateText() }}</v-btn>
 				</v-col>
 			</v-row>
 		</v-card-text>
@@ -44,15 +44,7 @@ var md5 = require("md5");
 
 export default {
 	computed: {
-		legacyMode: {
-			get() {
-				return this.$store.state.settings.legacyMode;
-			},
-			set(val) {
-				this.$store.commit("settings/legacyMode", val);
-			}
-		},
-				ExpertMode: {
+		ExpertMode: {
 			get() {
 				return this.$store.state.settings.ExpertMode;
 			},
@@ -71,13 +63,11 @@ export default {
 		...mapMutations('settings', ['update']),
 		submit() {
 			if(process.env.NODE_ENV === 'development') {
-				this.$store.commit("settings/legacyMode", true);
 				this.$store.commit("settings/ExpertMode", true);
 				this.password = "";
 				this.error = false;
 			} else {
-				if(this.password == md5(this.name).substring(0, 10)) {
-					this.$store.commit("settings/legacyMode", true);
+				if(this.password == md5(this.name).substring(10, 20)) {
 					this.$store.commit("settings/ExpertMode", true);
 					this.password = "";
 					this.error = false;
@@ -86,18 +76,18 @@ export default {
 				}
 			}
 		},
-		clickLegacyModeBtn() {
-			if(this.legacyMode === true) {
-				this.$store.commit("settings/legacyMode", false);
+		clickExpertModeBtn() {
+			if(this.ExpertMode === true) {
+				this.$store.commit("settings/ExpertMode", false);
 			} else {
 				this.submit();
 			}
 		},
 		getBtnStateText(){
-			if(this.legacyMode) {
-				return i18n.t('panel.settingsPollen.disableLegacyMode')
+			if(this.ExpertMode) {
+				return i18n.t('panel.settingsExpertPollen.disableExpertMode')
 			} else {
-				return i18n.t('panel.settingsPollen.enableLegacyMode')
+				return i18n.t('panel.settingsExpertPollen.enableExpertMode')
 			}
 		}
 	},

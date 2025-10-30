@@ -59,7 +59,8 @@ export default {
 
 		enabledPlugins: ['Height Map', 'G-Code Viewer'],
 		plugins: {},									    // Third-party values
-		legacyMode: false
+		legacyMode: false,
+		ExpertMode: false
 	},
 	actions: {
 		async applyDefaults({ state, dispatch }) {
@@ -157,6 +158,9 @@ export default {
 		},
 		legacyMode(state, legacyMode) {
 			state.legacyMode = legacyMode
+		},
+		ExpertMode(state, ExpertMode) {
+			state.ExpertMode = ExpertMode
 		},
 		load(state, payload) {
 			const updateSettingsTime = (payload.ignoreFileTimestamps === undefined) && (payload.settingsSaveDelay === 2000);
