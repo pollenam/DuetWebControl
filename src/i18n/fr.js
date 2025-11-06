@@ -679,6 +679,14 @@ export default {
       networking: 'Réseau',
       ipAddress: 'Adresse IP'
 		},
+		settingsExpertPollen: {
+          enableExpertMode: "Activer Mode Expert",
+          disableExpertMode: "Désactiver Mode Expert",
+					ExpertMode: "Mode Expert",
+					passwordDescription: "Entrer le mot de passe administrateur de la machine pour activer le mode expert (Tous les écran par défaut de DWC)",
+          password: 'Mot de passe',
+          passwordHint: 'Le mot de passe utilisé pour activer le mode expert',
+		},		
 		settingsEndstops: {
 			caption: 'Interrupteur de position',
 			index: 'Index',

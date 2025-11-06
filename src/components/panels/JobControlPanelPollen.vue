@@ -197,7 +197,7 @@ export default {
 		}, */
 		async resume() {
 			try {
-				await this.sendCode("M98 P\"/macros/HONEYPRINT/ExtrusionInfini.g\" D0");
+				await this.sendCode("M98 P\"/macros/HONEYPRINT/ExtrusionInfini.g\" A0");
 				await this.sendCode('M24');
 			} catch (e) {
 				if (!(e instanceof DisconnectedError)) {

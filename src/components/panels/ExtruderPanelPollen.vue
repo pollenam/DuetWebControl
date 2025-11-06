@@ -41,7 +41,7 @@
 		<v-card-text class="d-flex flex-column v-card__text--with-rows-highlighted">
 			<v-row dense class="row--highlighted">
         <v-col cols="12 d-flex flex-column">
-          <div class="center-label">{{ extrusionSpeed }} {{ $t('generic.mmPerSec') }}</div>
+          <div class="center-label">{{ extrusionSpeed }} {{ $t('generic.rpm') }}</div>
           <percentage-input-pollen :value="extrusionSpeed" :min="getExtrusionSpeedMin()" :max="getExtrusionSpeedMax()" :step="0.1" @input="setExtrusionSpeed($event)" :disabled="uiFrozen"></percentage-input-pollen>
         </v-col>
       </v-row>
@@ -60,7 +60,7 @@
       <v-row dense>
         <template v-if="shouldShowInfinite">
           <v-col cols="12">
-            <v-btn block @click="buttonClicked(true)" :loading="busy" elevation="0" :disabled="uiFrozen || this.isProcessing() || tool.extruders.length == 0">
+            <v-btn block @click="buttonClicked()" :loading="busy" elevation="0" :disabled="uiFrozen || this.isProcessing() || tool.extruders.length == 0">
               <v-icon class="mr-1">mdi-arrow-down-bold</v-icon>
               <span class="hidden-lg-only">
                 {{ $t('panel.extruderPollen.extrude') }}
@@ -346,7 +346,8 @@ export default {
 		},
 		setExtrusionFactor(value) {
       if(this.move.extruders[this.toolIndex] != null) {
-        this.sendCode(`M221 D${this.toolIndex} S${value}`);
+        this.sendCode(`M98 P"/macros/HONEYPRINT/Set_Extrusion_Factor" D${this.toolIndex} S${value}`);
+        //this.sendCode(`M221 D${this.toolIndex} S${value}`);
       }
 		},
 		getMaxExtrusionFactor() {
@@ -581,13 +582,13 @@ export default {
 			}
 			this.busy = false;
 		}, */
-    async buttonClicked(extrude) {
+    async buttonClicked() {
       if (!this.currentTool.extruders.length) {
 				return;
 			}
 			this.busy = true;
 			try {
-				await this.sendCode("M98 P\"/macros/HONEYPRINT/ExtrusionInfini.g\" T" + this.tool.number + " A" + this.extrusionSpeed + " B\"" + extrude + "\"");
+				await this.sendCode("M98 P\"/macros/HONEYPRINT/ExtrusionInfini.g\" T" + this.tool.number + " A" + this.extrusionSpeed);
         this.infiniteExtrusionStatus[this.toolIndex] === "Extruding"
 			} catch (e) {
 				// handled before we get here
@@ -596,7 +597,7 @@ export default {
 		},
     async stopInfinite() {
       try {
-        await this.sendCode("M98 P\"/macros/HONEYPRINT/ExtrusionInfini.g\" T" + this.tool.number + " A0 B\"False\"");
+        await this.sendCode("M98 P\"/macros/HONEYPRINT/ExtrusionInfini.g\" T" + this.tool.number + " A0");
         this.infiniteExtrusionStatus[this.toolIndex] === "Stopped"
       } catch (e) {
         if (!(e instanceof DisconnectedError)) {

@@ -354,8 +354,8 @@ export default {
 			const printDetails = {printDate: new Date().toLocaleString(), type: this.$t('list.jobs.type.simulation'), status: this.$t('list.jobs.status.ongoing'), duration: 0, lastModified: obj.lastModified.toLocaleString()}
 			const targetPath = Path.combine(this.directory, obj.name)
 			this.addJobHistory({filePath:targetPath, printDetails:printDetails});
-			//this.sendCode(`M98 P"/macros/HONEYPRINT/Simulate_GCode" S"${targetPath}"`);
-			this.sendCode(`M37 P"${Path.combine(this.directory, (item && item.name) ? item.name : this.selection[0].name)}"`);
+			this.sendCode(`M98 P"/macros/HONEYPRINT/Simulate_GCode" S"${targetPath}"`);
+			//this.sendCode(`M37 P"${Path.combine(this.directory, (item && item.name) ? item.name : this.selection[0].name)}"`);
 		},
 		contextMenuAction(menuItem){
 			let path = Path.combine(this.directory, this.selection[0].name);
