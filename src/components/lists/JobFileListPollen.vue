@@ -115,7 +115,7 @@
 import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
 
 import i18n from '@/i18n'
-import { isPrinting, StatusType } from '@/store/machine/modelEnums.js'
+import { isPrinting } from '@/store/machine/modelEnums.js'
 import { DisconnectedError, InvalidPasswordError } from '@/utils/errors.js'
 import Path from '@/utils/path.js'
 
@@ -124,14 +124,10 @@ export default {
 		...mapState('machine/cache', ['fileInfos']),
 		...mapState('machine/model', {
 			gCodesDirectory: state => state.directories.gCodes,
-			currentJob: state => state.job.file.fileName,
 			lastJobFile: state => state.job.lastFileName,
-			job: state => state.job,
-			lastFileDuration: state => state.job.lastDuration,
 			status: state => state.state.status,
 			volumes: state => state.volumes
 		}),
-		...mapState('machine/honeyprint_cache', ['jobsHistory']),
 		...mapState('settings', ['language']),
 		...mapState('uiInjection', ['contextMenuItems']),
 		...mapGetters(['isConnected', 'uiFrozen']),
@@ -202,13 +198,11 @@ export default {
 			},
 			showNewDirectory: false,
 			fab: false,
-			customCurrentJob: undefined,
 		}
 	},
 	methods: {
 		...mapActions('machine', ['sendCode', 'getFileInfo']),
 		...mapMutations('machine/cache', ['clearFileInfo', 'setFileInfo']),
-		...mapMutations('machine/honeyprint_cache', ['addJobHistory', 'updateHistory']),
 		getBigThumbnail(thumbnails) {
 			let biggestThumbnail = null;
 			for (const thumbnail of thumbnails) {
@@ -341,9 +335,7 @@ export default {
 			// if right click on job then click on "Start" -> this.selection[0]
 			// if click on job, then "Yes" on the dialog window -> item
 			const obj = (item && item.name) ? item : this.selection[0];
-			const printDetails = {printDate: new Date().toLocaleString(), type: this.$t('list.jobs.type.print'), status: this.$t('list.jobs.status.ongoing'), duration: 0, lastModified: obj.lastModified.toLocaleString()}
 			const targetPath = Path.combine(this.directory, obj.name);
-			this.addJobHistory({filePath:targetPath, printDetails:printDetails});
 			this.sendCode(`M98 P"/macros/HONEYPRINT/Start_GCode" S"${targetPath}"`);
 			//this.sendCode(`M32 "${targetPath}"`);
 		},
@@ -351,9 +343,7 @@ export default {
 			// if right click on job then click on "Simulate" -> this.selection[0]
 			// no other options actually
 			const obj = (item && item.name) ? item : this.selection[0];
-			const printDetails = {printDate: new Date().toLocaleString(), type: this.$t('list.jobs.type.simulation'), status: this.$t('list.jobs.status.ongoing'), duration: 0, lastModified: obj.lastModified.toLocaleString()}
 			const targetPath = Path.combine(this.directory, obj.name)
-			this.addJobHistory({filePath:targetPath, printDetails:printDetails});
 			this.sendCode(`M98 P"/macros/HONEYPRINT/Simulate_GCode" S"${targetPath}"`);
 			//this.sendCode(`M37 P"${Path.combine(this.directory, (item && item.name) ? item.name : this.selection[0].name)}"`);
 		},
@@ -381,53 +371,6 @@ export default {
 			if (Path.equals(this.directory, Path.extractDirectory(to))) {
 				// Refresh the filelist after a short moment so DSF and RRF can update the simulation time first
 				setTimeout(this.$refs.filelist.refresh.bind(this), 2000);
-			}
-		},
-		status(to, from) {
-			//const printing = isPrinting(to);
-			const wasPrinting = isPrinting(from);
-			if (to === StatusType.halted && wasPrinting){
-				// When "Emergency stop". duration seems to be difficult to get here since job is not running anymore at this time.
-				// duration is only an approximation is it manages to get it, probably slightly below the real duration.
-				this.updateHistory({filePath:this.customCurrentJob, duration:this.job.duration, status:this.$t('list.jobs.status.halted')});
-			}
-
-			/* if (from === StatusType.cancelling && !printing){
-				// Cancelling with M0 doesn't really seem to trigger StatusType.cancelling, so it never goes here.
-				this.updateHistory({filePath:this.job.file.fileName, duration:this.job.duration, status:this.$t('list.jobs.status.cancelled')});
-			} */
-
-			if (this.customCurrentJob !== undefined && from === StatusType.disconnected && to == StatusType.idle && this.jobsHistory[this.customCurrentJob].status === this.$t('list.jobs.status.ongoing')){
-				// If disconnexion just occured, not printing anymore, and last job done is still labelled as "ongoing"
-				if (this.lastFileDuration !== null && this.lastFileDuration > 0){
-					// In case the current print finished successfully while a disconnexion was occuring
-					this.updateHistory({filePath:this.customCurrentJob, duration:this.lastFileDuration, status:this.$t('list.jobs.status.success')});
-				}
-				else if (this.lastFileDuration === 0){
-					// In case the current print was cancelled by the machine while a disconnexion was occuring
-					this.updateHistory({filePath:this.customCurrentJob, duration:undefined, status:this.$t('list.jobs.status.cancelled')});
-				}
-			}
-		},
-		currentJob(to) {
-			// This is only updated when a new job is printed. This allows to access the current job even if it has just been cancelled / halted.
-			if((to !== null && to !== undefined)){
-				this.customCurrentJob = to;
-			}
-		},
-		lastFileDuration(to) {
-			if(to === 0){
-				// Can be "cancelled by user", "cancelled by machine" or "halted". duration is only an approximation here, probably slightly below the real duration.
-				// If "cancelled by user" : already set to "Cancelled by user" when clicking Cancel button
-				// If "halted" : already set to "Halted" when status changes
-				// The only option left is "Cancelled by machine"
-				//console.log(`lastFileDuration to : ${to} (should be 0)`);
-				this.updateHistory({filePath:this.customCurrentJob, duration:undefined, status:this.$t('list.jobs.status.cancelled')});
-			}
-			else if(to !== null){
-				// if lastFileDuration is updated to something different than 0 or null, then it must be a success.
-				//console.log(`lastFileDuration to : ${to} (should not be null)`);
-				this.updateHistory({filePath:this.customCurrentJob, duration:to, status:this.$t('list.jobs.status.success')});
 			}
 		},
 	}

@@ -24,7 +24,7 @@ export default function(connector) {
 					return;
 				}
 
-				let cache;
+				let cache, legacyJobsHistory;
 				try {
 					cache = await dispatch(`machine/download`, {
 						filename: Path.honeyprintStoreFile,
@@ -66,7 +66,30 @@ export default function(connector) {
         */
 
 				if (cache) {
+					if (cache.jobsHistory) {
+						legacyJobsHistory = cache.jobsHistory;
+						delete cache.jobsHistory;
+					}
 					commit('load', cache);
+				}
+
+				let jobsHistoryCache;
+				try {
+					jobsHistoryCache = await dispatch(`machine/download`, {
+						filename: Path.honeyprintJobsHistoryFile,
+						showProgress: false,
+						showSuccess: false,
+						showError: false
+					}, { root: true });
+				} catch (e) {
+					console.log("HoneyprintCache load: error downloading jobs history");
+				}
+
+				if (jobsHistoryCache && jobsHistoryCache.jobsHistory) {
+					commit('loadJobsHistory', jobsHistoryCache.jobsHistory);
+				} else if (legacyJobsHistory) {
+					commit('loadJobsHistory', legacyJobsHistory);
+					dispatch('save');
 				}
 
 				// setTimeout(() => {
@@ -80,9 +103,25 @@ export default function(connector) {
 				}
 
 				try {
-					const content = new Blob([JSON.stringify(state)]);
+					const storeState = Object.assign({}, state);
+					delete storeState.jobsHistory;
+
+					const content = new Blob([JSON.stringify(storeState)]);
 					dispatch(`machine/upload`, {
 						filename: Path.honeyprintStoreFile,
+						content,
+						showProgress: false,
+						showSuccess: false,
+						showError: false
+					}, { root: true });
+				} catch (e) {
+					// handled before we get here
+				}
+
+				try {
+					const content = new Blob([JSON.stringify({ jobsHistory: state.jobsHistory })]);
+					dispatch(`machine/upload`, {
+						filename: Path.honeyprintJobsHistoryFile,
 						content,
 						showProgress: false,
 						showSuccess: false,
@@ -97,6 +136,9 @@ export default function(connector) {
 		//The first one is "state", the second one can be anything (simple variable or object containing several key, value pairs)
 		mutations: {
 			load: (state, content) => patch(state, content),
+			loadJobsHistory: (state, jobsHistory) => {
+				state.jobsHistory = jobsHistory || {};
+			},
 			addFileToShowedMacro(state, filename) {
 				state.showed_macros = state.showed_macros.filter(item => item !== filename);
 				state.showed_macros.push(filename);
@@ -148,7 +190,7 @@ export default function(connector) {
 				}
 
 				if(!(data.filePath in state.jobsHistory)){
-					state.jobsHistory[data.filePath] = [];
+					Vue.set(state.jobsHistory, data.filePath, []);
 				}
 				state.jobsHistory[data.filePath].push(data.printDetails);
 			},
@@ -160,22 +202,21 @@ export default function(connector) {
 					return;
 				}
 
-				if(!(data.filePath in state.jobsHistory)){
-					state.jobsHistory[data.filePath] = [];
+				const jobHistory = state.jobsHistory[data.filePath];
+				if (!(jobHistory instanceof Array) || jobHistory.length === 0) {
+					return;
 				}
-				else{
-					const jobHistory = state.jobsHistory[data.filePath];
-					const itemToUpdate = jobHistory[jobHistory.length - 1]; // get last element of array
-					const newStatus = itemToUpdate.status == i18n.t('list.jobs.status.ongoing') ? data.status : itemToUpdate.status; // only change the status if it was 'Ongoing' (default)
-					const printDetails = {
-						'printDate': itemToUpdate.printDate, 
-						'lastModified': itemToUpdate.lastModified,
-						'duration': data.duration === undefined ? itemToUpdate.duration : data.duration,
-						'status': data.status === undefined ? itemToUpdate.status : newStatus,
-						'type': itemToUpdate.type
-					}
-					state.jobsHistory[data.filePath][jobHistory.length - 1] = printDetails;
-				}				
+
+				const itemToUpdate = jobHistory[jobHistory.length - 1]; // get last element of array
+				const newStatus = itemToUpdate.status == i18n.t('list.jobs.status.ongoing') ? data.status : itemToUpdate.status; // only change the status if it was 'Ongoing' (default)
+				const printDetails = {
+					'printDate': itemToUpdate.printDate,
+					'lastModified': itemToUpdate.lastModified,
+					'duration': data.duration === undefined ? itemToUpdate.duration : data.duration,
+					'status': data.status === undefined ? itemToUpdate.status : newStatus,
+					'type': itemToUpdate.type
+				}
+				Vue.set(state.jobsHistory[data.filePath], jobHistory.length - 1, printDetails);
 			}
 		}
 	}
