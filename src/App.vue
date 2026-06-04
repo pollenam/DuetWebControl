@@ -195,6 +195,7 @@ export default {
 			menuDirectory: state => state.machine.model.directories.menu,
 			name: state => state.machine.model.network.name,
 			status: state => state.machine.model.state.status,
+			stopByUser: state => state.machine.model.global.stop_by_user,
 
 			darkTheme: state => state.settings.darkTheme,
 			webcam: state => state.settings.webcam,
@@ -250,11 +251,13 @@ export default {
 			injectedComponentNames: [],
 			showConnectButton: process.env.NODE_ENV === 'development',
 			trackedHistoryJob: null,
-			trackedHistoryCompleted: false
+			trackedHistoryCompleted: false,
+			stopByUserPending: false
 		}
 	},
 	methods: {
 		...mapActions(['connect', 'disconnectAll']),
+		...mapActions('machine', { sendMachineCode: 'sendCode' }),
 		...mapActions('settings', ['load']),
 		...mapMutations('machine/honeyprint_cache', ['addJobHistory', 'updateHistory']),
 		isExpanded(category) {
@@ -328,12 +331,54 @@ export default {
 			this.updateHistory({ filePath, duration, status });
 			this.trackedHistoryCompleted = true;
 		},
+		getTrackedHistoryFilePath() {
+			return this.trackedHistoryJob || this.currentJobFile || this.lastFileName;
+		},
+		getTrackedHistoryDuration() {
+			return (this.job.duration !== null && this.job.duration !== undefined) ? this.job.duration : this.lastFileDuration;
+		},
+		isStopByUser(value) {
+			return value === true || value === 'true' || value === 1 || value === '1';
+		},
+		async resetStopByUser() {
+			try {
+				await this.sendMachineCode({ code: 'set global.stop_by_user = false', log: false, noWait: true });
+			} catch (e) {
+				console.warn(e);
+			}
+		},
+		markTrackedJobCancelledByUser() {
+			const filePath = this.getTrackedHistoryFilePath();
+			if (!filePath) {
+				return;
+			}
+
+			this.updateHistory({
+				filePath,
+				duration: this.getTrackedHistoryDuration(),
+				status: this.$t('list.jobs.status.cancelledByUser'),
+				forceStatus: true
+			});
+			this.trackedHistoryCompleted = true;
+		},
+		handleStopByUser(value) {
+			if (!this.isStopByUser(value)) {
+				return;
+			}
+
+			this.stopByUserPending = true;
+			this.markTrackedJobCancelledByUser();
+			this.resetStopByUser();
+		},
 		finishTrackedJobFromDuration(duration) {
 			if (duration === null || duration === undefined) {
 				return;
 			}
 
-			if (duration > 0) {
+			if (this.stopByUserPending) {
+				this.finishTrackedJob(this.$t('list.jobs.status.cancelledByUser'), this.getTrackedHistoryDuration());
+				this.stopByUserPending = false;
+			} else if (duration > 0) {
 				this.finishTrackedJob(this.$t('list.jobs.status.success'), duration);
 			} else {
 				this.finishTrackedJob(this.$t('list.jobs.status.cancelled'), undefined);
@@ -399,6 +444,7 @@ export default {
 			if (printing !== isPrinting(from)) {
 				if (printing) {
 					this.trackStartedJob();
+					this.stopByUserPending = false;
 
 					// Go to Job Status when a print starts
 					if (this.$router.currentRoute.path !== '/Job/Status') {
@@ -420,6 +466,9 @@ export default {
 			if (to && isPrinting(this.status)) {
 				this.trackStartedJob();
 			}
+		},
+		stopByUser(to) {
+			this.handleStopByUser(to);
 		},
 		lastFileDuration(to) {
 			this.finishTrackedJobFromDuration(to);

@@ -208,7 +208,8 @@ export default function(connector) {
 				}
 
 				const itemToUpdate = jobHistory[jobHistory.length - 1]; // get last element of array
-				const newStatus = itemToUpdate.status == i18n.t('list.jobs.status.ongoing') ? data.status : itemToUpdate.status; // only change the status if it was 'Ongoing' (default)
+				const canUpdateStatus = data.status !== undefined && (data.forceStatus || itemToUpdate.status == i18n.t('list.jobs.status.ongoing')); // only change the status if it was 'Ongoing' (default), unless explicitly forced
+				const newStatus = canUpdateStatus ? data.status : itemToUpdate.status;
 				const printDetails = {
 					'printDate': itemToUpdate.printDate,
 					'lastModified': itemToUpdate.lastModified,
