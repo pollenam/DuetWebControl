@@ -11,7 +11,8 @@ export default function(connector) {
 		namespaced: true,
 		state: {
 			showed_macros: [],
-      		extrudersAvailableMaterials: ['ABS', 'PLA', 'TPU'],
+      		extrudersAvailableMaterials: [], // Populated from pam_materials.json (only entries with show_material === true)
+      		pamMaterials: {}, // Full material data loaded from pam_materials.json: { <name>: { Cold, Extruder, Nozzle, show_material } }
       		extrudersSelectedMaterials: ['ABS', 'ABS', 'ABS', 'ABS'],
 			selectedPid: ['','','',''],
 			jobsHistory: {}, // Used to store jobs history. For each job launched, contains : printDate, lastModified, duration, status, type
@@ -70,7 +71,28 @@ export default function(connector) {
 						legacyJobsHistory = cache.jobsHistory;
 						delete cache.jobsHistory;
 					}
+					// Available materials must come exclusively from pam_materials.json,
+					// never from the (possibly stale) honeyprint store cache.
+					delete cache.extrudersAvailableMaterials;
+					delete cache.pamMaterials;
 					commit('load', cache);
+				}
+
+				// Load the list of selectable materials from pam_materials.json
+				let pamMaterials;
+				try {
+					pamMaterials = await dispatch(`machine/download`, {
+						filename: Path.pamMaterialsFile,
+						showProgress: false,
+						showSuccess: false,
+						showError: false
+					}, { root: true });
+				} catch (e) {
+					console.log("HoneyprintCache load: error downloading pam_materials.json");
+				}
+
+				if (pamMaterials) {
+					commit('loadMaterials', pamMaterials);
 				}
 
 				let jobsHistoryCache;
@@ -105,6 +127,9 @@ export default function(connector) {
 				try {
 					const storeState = Object.assign({}, state);
 					delete storeState.jobsHistory;
+					// Materials are sourced from pam_materials.json, not persisted here
+					delete storeState.extrudersAvailableMaterials;
+					delete storeState.pamMaterials;
 
 					const content = new Blob([JSON.stringify(storeState)]);
 					dispatch(`machine/upload`, {
@@ -153,10 +178,24 @@ export default function(connector) {
 			setZlimit(state, data) {
 				state.zLimit = data;
 			},
+			loadMaterials(state, materials) {
+				// materials : { <name>: { Cold, Extruder, Nozzle, show_material } }
+				state.pamMaterials = materials || {};
+				// Only expose materials explicitly flagged with show_material === true
+				state.extrudersAvailableMaterials = Object.keys(state.pamMaterials)
+					.filter(name => state.pamMaterials[name] && state.pamMaterials[name].show_material === true);
+
+				// Default each extruder to the first visible material when its current
+				// selection isn't part of the available list (e.g. hidden or unknown material)
+				const firstMaterial = state.extrudersAvailableMaterials[0] || '';
+				state.extrudersSelectedMaterials = state.extrudersSelectedMaterials.map(selected =>
+					state.extrudersAvailableMaterials.indexOf(selected) === -1 ? firstMaterial : selected);
+			},
 			selectedExtruderMaterial(state, data) {
-				if (state.extrudersAvailableMaterials.indexOf(data.newValue) == -1)
-				{
-				state.extrudersAvailableMaterials.push(data.newValue);
+				// Creation of new materials is not allowed: only accept values
+				// that exist in the list loaded from pam_materials.json
+				if (state.extrudersAvailableMaterials.indexOf(data.newValue) == -1) {
+					return;
 				}
 
 				// We have to manually do that and not use v-model on the combobox to avoid errors

@@ -28,13 +28,13 @@
         <v-icon class="mr-1">mdi-printer-3d-nozzle</v-icon>
         {{ tool.name.length > 13 ? truncatedToolName : tool.name }}
       </div>
-      <v-combobox
+      <v-select
       class="mx-2 extruder-material-combobox"
           :value="extrudersSelectedMaterials[toolIndex]"
           :items="extrudersAvailableMaterials"
           @change="materialComboboxChange"
           label="Select material"
-        ></v-combobox>
+        ></v-select>
 			<v-checkbox class="v-input--checkbox--extruder-selection" hide-details="auto" color="success" :input-value="isSelected" @change="selectExtruder()" :disabled="uiFrozen || shouldAllowSelect"></v-checkbox>
 		</v-card-title>
 
@@ -429,11 +429,17 @@ export default {
 
       return selectedTools[0];
     }, */
-    materialComboboxChange(newValue) {
+    async materialComboboxChange(newValue) {
       this.selectedExtruderMaterial({
         extruderIndex: this.toolIndex,
         newValue: newValue
       });
+
+      if (!newValue) {
+        return;
+      }
+
+      await this.sendCode(`M98 P"/macros/HONEYPRINT/Change_Material" T${this.tool.number} S"${newValue}"`);
     },
     setFeedrate(value){
       this.feedrate = value;
