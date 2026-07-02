@@ -168,6 +168,8 @@ const pathObj = {
 	legacyDwcFactoryDefaults: '0:/sys/dwc2-defaults.json',
 	dwcPluginsFile: '0:/sys/dwc-plugins.json',
 	honeyprintStoreFile: '0:/sys/honeyprint-store.json',
+	honeyprintJobsHistoryFile: '0:/sys/honeyprint-jobs-history.json',
+	pamMaterialsFile: '0:/sys/pam_materials.json',
 
 	boardFile: '0:/sys/board.txt',
 	configFile: 'config.g',

@@ -11,7 +11,8 @@ export default function(connector) {
 		namespaced: true,
 		state: {
 			showed_macros: [],
-      		extrudersAvailableMaterials: ['ABS', 'PLA', 'TPU'],
+      		extrudersAvailableMaterials: [], // Populated from pam_materials.json (only entries with show_material === true)
+      		pamMaterials: {}, // Full material data loaded from pam_materials.json: { <name>: { Cold, Extruder, Nozzle, show_material } }
       		extrudersSelectedMaterials: ['ABS', 'ABS', 'ABS', 'ABS'],
 			selectedPid: ['','','',''],
 			jobsHistory: {}, // Used to store jobs history. For each job launched, contains : printDate, lastModified, duration, status, type
@@ -24,7 +25,7 @@ export default function(connector) {
 					return;
 				}
 
-				let cache;
+				let cache, legacyJobsHistory;
 				try {
 					cache = await dispatch(`machine/download`, {
 						filename: Path.honeyprintStoreFile,
@@ -66,7 +67,51 @@ export default function(connector) {
         */
 
 				if (cache) {
+					if (cache.jobsHistory) {
+						legacyJobsHistory = cache.jobsHistory;
+						delete cache.jobsHistory;
+					}
+					// Available materials must come exclusively from pam_materials.json,
+					// never from the (possibly stale) honeyprint store cache.
+					delete cache.extrudersAvailableMaterials;
+					delete cache.pamMaterials;
 					commit('load', cache);
+				}
+
+				// Load the list of selectable materials from pam_materials.json
+				let pamMaterials;
+				try {
+					pamMaterials = await dispatch(`machine/download`, {
+						filename: Path.pamMaterialsFile,
+						showProgress: false,
+						showSuccess: false,
+						showError: false
+					}, { root: true });
+				} catch (e) {
+					console.log("HoneyprintCache load: error downloading pam_materials.json");
+				}
+
+				if (pamMaterials) {
+					commit('loadMaterials', pamMaterials);
+				}
+
+				let jobsHistoryCache;
+				try {
+					jobsHistoryCache = await dispatch(`machine/download`, {
+						filename: Path.honeyprintJobsHistoryFile,
+						showProgress: false,
+						showSuccess: false,
+						showError: false
+					}, { root: true });
+				} catch (e) {
+					console.log("HoneyprintCache load: error downloading jobs history");
+				}
+
+				if (jobsHistoryCache && jobsHistoryCache.jobsHistory) {
+					commit('loadJobsHistory', jobsHistoryCache.jobsHistory);
+				} else if (legacyJobsHistory) {
+					commit('loadJobsHistory', legacyJobsHistory);
+					dispatch('save');
 				}
 
 				// setTimeout(() => {
@@ -80,9 +125,28 @@ export default function(connector) {
 				}
 
 				try {
-					const content = new Blob([JSON.stringify(state)]);
+					const storeState = Object.assign({}, state);
+					delete storeState.jobsHistory;
+					// Materials are sourced from pam_materials.json, not persisted here
+					delete storeState.extrudersAvailableMaterials;
+					delete storeState.pamMaterials;
+
+					const content = new Blob([JSON.stringify(storeState)]);
 					dispatch(`machine/upload`, {
 						filename: Path.honeyprintStoreFile,
+						content,
+						showProgress: false,
+						showSuccess: false,
+						showError: false
+					}, { root: true });
+				} catch (e) {
+					// handled before we get here
+				}
+
+				try {
+					const content = new Blob([JSON.stringify({ jobsHistory: state.jobsHistory })]);
+					dispatch(`machine/upload`, {
+						filename: Path.honeyprintJobsHistoryFile,
 						content,
 						showProgress: false,
 						showSuccess: false,
@@ -97,6 +161,9 @@ export default function(connector) {
 		//The first one is "state", the second one can be anything (simple variable or object containing several key, value pairs)
 		mutations: {
 			load: (state, content) => patch(state, content),
+			loadJobsHistory: (state, jobsHistory) => {
+				state.jobsHistory = jobsHistory || {};
+			},
 			addFileToShowedMacro(state, filename) {
 				state.showed_macros = state.showed_macros.filter(item => item !== filename);
 				state.showed_macros.push(filename);
@@ -111,10 +178,24 @@ export default function(connector) {
 			setZlimit(state, data) {
 				state.zLimit = data;
 			},
+			loadMaterials(state, materials) {
+				// materials : { <name>: { Cold, Extruder, Nozzle, show_material } }
+				state.pamMaterials = materials || {};
+				// Only expose materials explicitly flagged with show_material === true
+				state.extrudersAvailableMaterials = Object.keys(state.pamMaterials)
+					.filter(name => state.pamMaterials[name] && state.pamMaterials[name].show_material === true);
+
+				// Default each extruder to the first visible material when its current
+				// selection isn't part of the available list (e.g. hidden or unknown material)
+				const firstMaterial = state.extrudersAvailableMaterials[0] || '';
+				state.extrudersSelectedMaterials = state.extrudersSelectedMaterials.map(selected =>
+					state.extrudersAvailableMaterials.indexOf(selected) === -1 ? firstMaterial : selected);
+			},
 			selectedExtruderMaterial(state, data) {
-				if (state.extrudersAvailableMaterials.indexOf(data.newValue) == -1)
-				{
-				state.extrudersAvailableMaterials.push(data.newValue);
+				// Creation of new materials is not allowed: only accept values
+				// that exist in the list loaded from pam_materials.json
+				if (state.extrudersAvailableMaterials.indexOf(data.newValue) == -1) {
+					return;
 				}
 
 				// We have to manually do that and not use v-model on the combobox to avoid errors
@@ -148,7 +229,7 @@ export default function(connector) {
 				}
 
 				if(!(data.filePath in state.jobsHistory)){
-					state.jobsHistory[data.filePath] = [];
+					Vue.set(state.jobsHistory, data.filePath, []);
 				}
 				state.jobsHistory[data.filePath].push(data.printDetails);
 			},
@@ -160,22 +241,22 @@ export default function(connector) {
 					return;
 				}
 
-				if(!(data.filePath in state.jobsHistory)){
-					state.jobsHistory[data.filePath] = [];
+				const jobHistory = state.jobsHistory[data.filePath];
+				if (!(jobHistory instanceof Array) || jobHistory.length === 0) {
+					return;
 				}
-				else{
-					const jobHistory = state.jobsHistory[data.filePath];
-					const itemToUpdate = jobHistory[jobHistory.length - 1]; // get last element of array
-					const newStatus = itemToUpdate.status == i18n.t('list.jobs.status.ongoing') ? data.status : itemToUpdate.status; // only change the status if it was 'Ongoing' (default)
-					const printDetails = {
-						'printDate': itemToUpdate.printDate, 
-						'lastModified': itemToUpdate.lastModified,
-						'duration': data.duration === undefined ? itemToUpdate.duration : data.duration,
-						'status': data.status === undefined ? itemToUpdate.status : newStatus,
-						'type': itemToUpdate.type
-					}
-					state.jobsHistory[data.filePath][jobHistory.length - 1] = printDetails;
-				}				
+
+				const itemToUpdate = jobHistory[jobHistory.length - 1]; // get last element of array
+				const canUpdateStatus = data.status !== undefined && (data.forceStatus || itemToUpdate.status == i18n.t('list.jobs.status.ongoing')); // only change the status if it was 'Ongoing' (default), unless explicitly forced
+				const newStatus = canUpdateStatus ? data.status : itemToUpdate.status;
+				const printDetails = {
+					'printDate': itemToUpdate.printDate,
+					'lastModified': itemToUpdate.lastModified,
+					'duration': data.duration === undefined ? itemToUpdate.duration : data.duration,
+					'status': data.status === undefined ? itemToUpdate.status : newStatus,
+					'type': itemToUpdate.type
+				}
+				Vue.set(state.jobsHistory[data.filePath], jobHistory.length - 1, printDetails);
 			}
 		}
 	}

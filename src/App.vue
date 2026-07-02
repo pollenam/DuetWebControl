@@ -176,7 +176,7 @@ textarea {
 
 import Vue from 'vue'
 import Piecon from 'piecon'
-import { mapState, mapGetters, mapActions } from 'vuex'
+import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
 
 import { Menu, Routes } from './routes'
 import { isPrinting, StatusType } from './store/machine/modelEnums.js'
@@ -187,9 +187,15 @@ export default {
 	computed: {
 		...mapState({
 			boards: state => state.machine.model.boards,
+			job: state => state.machine.model.job,
+			currentJobFile: state => state.machine.model.job.file.fileName,
+			lastFileDuration: state => state.machine.model.job.lastDuration,
+			lastFileName: state => state.machine.model.job.lastFileName,
+			jobsHistory: state => state.machine.honeyprint_cache.jobsHistory,
 			menuDirectory: state => state.machine.model.directories.menu,
 			name: state => state.machine.model.network.name,
 			status: state => state.machine.model.state.status,
+			stopByUser: state => state.machine.model.global.stop_by_user,
 
 			darkTheme: state => state.settings.darkTheme,
 			webcam: state => state.settings.webcam,
@@ -243,12 +249,17 @@ export default {
 		return {
 			drawer: this.$vuetify.breakpoint.lgAndUp,
 			injectedComponentNames: [],
-			showConnectButton: process.env.NODE_ENV === 'development'
+			showConnectButton: process.env.NODE_ENV === 'development',
+			trackedHistoryJob: null,
+			trackedHistoryCompleted: false,
+			stopByUserPending: false
 		}
 	},
 	methods: {
 		...mapActions(['connect', 'disconnectAll']),
+		...mapActions('machine', { sendMachineCode: 'sendCode' }),
 		...mapActions('settings', ['load']),
+		...mapMutations('machine/honeyprint_cache', ['addJobHistory', 'updateHistory']),
 		isExpanded(category) {
 			if (this.$vuetify.breakpoint.smAndDown) {
 				const route = this.$route;
@@ -260,6 +271,118 @@ export default {
 			return category.pages.filter(page => {
 				return page.condition
 				});
+		},
+		formatHistoryDate(value) {
+			if (!value) {
+				return '';
+			}
+
+			if (value instanceof Date) {
+				return value.toLocaleString();
+			}
+
+			const date = new Date(value);
+			return isNaN(date.getTime()) ? value.toString() : date.toLocaleString();
+		},
+		getLastHistoryEntry(filePath) {
+			const history = this.jobsHistory[filePath];
+			return (history instanceof Array && history.length) ? history[history.length - 1] : null;
+		},
+		hasOngoingHistory(filePath) {
+			const lastEntry = this.getLastHistoryEntry(filePath);
+			return lastEntry && lastEntry.status === this.$t('list.jobs.status.ongoing');
+		},
+		trackStartedJob() {
+			const filePath = this.currentJobFile;
+			if (!filePath || !isPrinting(this.status)) {
+				return;
+			}
+
+			this.trackedHistoryJob = filePath;
+			this.trackedHistoryCompleted = false;
+
+			if (this.hasOngoingHistory(filePath)) {
+				return;
+			}
+
+			this.addJobHistory({
+				filePath,
+				printDetails: {
+					printDate: new Date().toLocaleString(),
+					lastModified: this.formatHistoryDate(this.job.file.lastModified),
+					duration: 0,
+					status: this.$t('list.jobs.status.ongoing'),
+					type: this.status === StatusType.simulating ? this.$t('list.jobs.type.simulation') : this.$t('list.jobs.type.print')
+				}
+			});
+		},
+		finishTrackedJob(status, duration) {
+			const filePath = this.trackedHistoryJob || this.currentJobFile || this.lastFileName;
+			if (!filePath || this.trackedHistoryCompleted) {
+				return;
+			}
+
+			const lastEntry = this.getLastHistoryEntry(filePath);
+			if (!lastEntry || lastEntry.status !== this.$t('list.jobs.status.ongoing')) {
+				this.trackedHistoryCompleted = true;
+				return;
+			}
+
+			this.updateHistory({ filePath, duration, status });
+			this.trackedHistoryCompleted = true;
+		},
+		getTrackedHistoryFilePath() {
+			return this.trackedHistoryJob || this.currentJobFile || this.lastFileName;
+		},
+		getTrackedHistoryDuration() {
+			return (this.job.duration !== null && this.job.duration !== undefined) ? this.job.duration : this.lastFileDuration;
+		},
+		isStopByUser(value) {
+			return value === true || value === 'true' || value === 1 || value === '1';
+		},
+		async resetStopByUser() {
+			try {
+				await this.sendMachineCode({ code: 'set global.stop_by_user = false', log: false, noWait: true });
+			} catch (e) {
+				console.warn(e);
+			}
+		},
+		markTrackedJobCancelledByUser() {
+			const filePath = this.getTrackedHistoryFilePath();
+			if (!filePath) {
+				return;
+			}
+
+			this.updateHistory({
+				filePath,
+				duration: this.getTrackedHistoryDuration(),
+				status: this.$t('list.jobs.status.cancelledByUser'),
+				forceStatus: true
+			});
+			this.trackedHistoryCompleted = true;
+		},
+		handleStopByUser(value) {
+			if (!this.isStopByUser(value)) {
+				return;
+			}
+
+			this.stopByUserPending = true;
+			this.markTrackedJobCancelledByUser();
+			this.resetStopByUser();
+		},
+		finishTrackedJobFromDuration(duration) {
+			if (duration === null || duration === undefined) {
+				return;
+			}
+
+			if (this.stopByUserPending) {
+				this.finishTrackedJob(this.$t('list.jobs.status.cancelledByUser'), this.getTrackedHistoryDuration());
+				this.stopByUserPending = false;
+			} else if (duration > 0) {
+				this.finishTrackedJob(this.$t('list.jobs.status.success'), duration);
+			} else {
+				this.finishTrackedJob(this.$t('list.jobs.status.cancelled'), undefined);
+			}
 		},
 		updateTitle() {
 			if (this.status === StatusType.disconnected) {
@@ -320,15 +443,35 @@ export default {
 			const printing = isPrinting(to);
 			if (printing !== isPrinting(from)) {
 				if (printing) {
+					this.trackStartedJob();
+					this.stopByUserPending = false;
+
 					// Go to Job Status when a print starts
 					if (this.$router.currentRoute.path !== '/Job/Status') {
 						this.$router.push('/Job/Status');
 					}
 				} else {
+					if (to === StatusType.halted) {
+						this.finishTrackedJob(this.$t('list.jobs.status.halted'), this.job.duration);
+					} else {
+						this.finishTrackedJobFromDuration(this.lastFileDuration);
+					}
+
 					// Remove the Piecon again when the print has finished
 					Piecon.reset();
 				}
 			}
+		},
+		currentJobFile(to) {
+			if (to && isPrinting(this.status)) {
+				this.trackStartedJob();
+			}
+		},
+		stopByUser(to) {
+			this.handleStopByUser(to);
+		},
+		lastFileDuration(to) {
+			this.finishTrackedJobFromDuration(to);
 		},
 		name() { this.updateTitle(); },
 		jobProgress(to, from) {
