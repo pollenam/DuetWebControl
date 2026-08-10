@@ -117,8 +117,8 @@ td {
 								<td >{{ item.printDate }}</td>
 								<td>{{ item.lastModified }}</td>
 								<td>{{ displayJobDuration(item.duration) }}</td>
-								<td><span class="ms-3 status px-2 " :class="jobHistoryStatusClass(item.status)">{{ item.status }}</span></td>
-								<td>{{ item.type }}</td>
+								<td><span class="ms-3 status px-2 " :class="jobHistoryStatusClass(item.status)">{{ displayJobStatus(item.status) }}</span></td>
+								<td>{{ displayJobType(item.type) }}</td>
 								</tr>
 							</template>
 							</v-data-table>
@@ -321,13 +321,25 @@ export default {
 		...mapMutations('machine/cache', ['setSorting']),
 		...mapMutations('machine/honeyprint_cache', ['addFileToShowedMacro', 'removeFileToShowedMacro', 'deleteJobHistory', 'renameJobHistory']),
 		jobHistoryStatusClass(jobStatus) {
-			if (jobStatus === i18n.t('list.jobs.status.success')) {
+			if (jobStatus === 'success') {
 				return 'green white--text';
-			} else if (jobStatus === i18n.t('list.jobs.status.ongoing')) {
+			} else if (jobStatus === 'ongoing') {
 				return 'amber darken-2 white--text';
+			} else if (jobStatus === 'unknown') {
+				return 'grey darken-1 white--text';
 			} else {
 				return 'red darken-2 white--text';
 			}
+		},
+		displayJobStatus(status) {
+			// History entries store locale-independent keys; fall back to the raw
+			// value for anything unexpected
+			const key = `list.jobs.status.${status}`;
+			return i18n.te(key) ? i18n.t(key) : status;
+		},
+		displayJobType(type) {
+			const key = `list.jobs.type.${type}`;
+			return i18n.te(key) ? i18n.t(key) : type;
 		},
 		combinePath(directory, filename){
 			return Path.combine(directory, filename);

@@ -474,7 +474,8 @@ export default {
 				cancelled:'Cancelled by machine',
 				success:'Success',
 				halted:'Halted',
-				ongoing:'Ongoing'
+				ongoing:'Ongoing',
+				unknown:'Unknown'
 			},
 			history:{
 				lastModified:'Last modified',

@@ -28,6 +28,8 @@ const machines = {
 
 const pluginCacheFields = {}, pluginSettingFields = {}
 
+let honeyprintRefreshTimer = null
+
 const store = new Vuex.Store({
 	state: {
 		isConnecting: false,
@@ -84,11 +86,17 @@ const store = new Vuex.Store({
 				} catch (e) {
 					console.warn('Failed to load honeyprint cache: ' + e);
 				}
-				setInterval(() => {
+				// Periodically refresh the showed macros and materials from the board.
+				// Do NOT use 'load' here: reloading the jobs history from disk would
+				// overwrite in-memory updates whose upload is still pending
+				if (honeyprintRefreshTimer) {
+					clearInterval(honeyprintRefreshTimer);
+				}
+				honeyprintRefreshTimer = setInterval(() => {
 					try {
-						dispatch('machine/honeyprint_cache/load');
+						dispatch('machine/honeyprint_cache/refresh');
 					} catch (e) {
-						console.warn('Failed to load honeyprint cache: ' + e);
+						console.warn('Failed to refresh honeyprint cache: ' + e);
 					}
 				}, 5000);
 

@@ -398,7 +398,8 @@ export default {
 				cancelled:'Annulé par le système',
 				success:'Succès',
 				halted:'Interrompu',
-				ongoing:'En cours'
+				ongoing:'En cours',
+				unknown:'Inconnu'
 			},
 			history:{
 				lastModified:'Dernière modification',

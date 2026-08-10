@@ -78,7 +78,7 @@
 'use strict'
 
 import Vue from 'vue'
-import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
+import { mapState, mapGetters, mapActions } from 'vuex'
 import { DisconnectedError } from '@/utils/errors'
 import { MachineMode, StatusType, isPaused, isPrinting } from '@/store/machine/modelEnums'
 import { extractFileName } from '../../utils/path.js'
@@ -184,7 +184,6 @@ export default {
 	},
 	methods: {
 		...mapActions('machine', ['sendCode']),
-		...mapMutations('machine/honeyprint_cache', ['updateHistory']),
 		/* processAnotherCode() {
 			if (this.lastFileName) {
 				if (this.lastFileSimulated) {
@@ -213,9 +212,14 @@ export default {
 				this.sendCode('M25'); // triggers pause.g file
 			}
 		},
-		async cancel(){ 
-			// Updates the current job history. Sets the duration to the duration just before cancelling. Sets the status to cancelled by user.
-			this.updateHistory({filePath:this.job.file.fileName, duration:this.job.duration, status:this.$t('list.jobs.status.cancelledByUser')});
+		async cancel(){
+			// Signal a user cancellation so the external history daemon records it as
+			// 'cancelledByUser' (it watches global.stop_by_user); then trigger the cancel.
+			try {
+				await this.sendCode('set global.stop_by_user = true');
+			} catch (e) {
+				console.warn(e);
+			}
 			await this.sendCode('M0'); // triggers cancel.g file
 		},
 		async processAnotherCode(){

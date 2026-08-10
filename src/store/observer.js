@@ -27,7 +27,8 @@ export default function(store) {
 	// Observe the mutations of the store and make sure the cache and
 	// settings are saved automatically after a certain debounce delay
 	store.subscribe(function(mutation, state) {
-		if (!mutation.type.endsWith('/load') && !mutation.type.endsWith('/setLastHostname')) {
+		if (!mutation.type.endsWith('/load') && !mutation.type.endsWith('/loadMaterials') &&
+			!mutation.type.endsWith('/loadJobsHistory') && !mutation.type.endsWith('/setLastHostname')) {
 			const machineMatches = /^machines\/(.+)\//.exec(mutation.type);
 			const machine = machineMatches ? machineMatches[1] : state.selectedMachine;
 			if (machine === defaultMachine) {
